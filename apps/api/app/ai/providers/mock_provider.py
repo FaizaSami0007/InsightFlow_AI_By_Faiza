@@ -82,7 +82,7 @@ class MockLLMProvider(LLMProvider):
         query = user_text.lower()
         all_context = ((system_instruction or "") + " " + " ".join([m.content for m in messages])).lower()
 
-        # 0. Unsupported requests check
+        # 0. Unsupported requests check (ML, forecasting, real-time streams, layout generation, etc.)
         if any(
             w in query
             for w in [
@@ -91,17 +91,52 @@ class MockLLMProvider(LLMProvider):
                 "machine learning",
                 "regression",
                 "dashboard",
-                "chart",
-                "pipeline",
                 "layout",
                 "arima",
                 "churn",
+                "real-time",
+                "realtime",
+                "streaming",
+                "stream",
             ]
         ):
             return LLMResponse(
-                message="Forecasting, predictive modeling, and automated dashboard generation are not currently supported in this analytical workspace.",
+                message="Forecasting, predictive modeling, real-time streaming, and automated dashboard generation are not currently supported in this analytical workspace.",
                 finish_reason="stop",
                 usage=LLMUsage(prompt_tokens=40, completion_tokens=20, total_tokens=60),
+            )
+
+        # 0b. Visual presentation requests (chart switching without re-executing analysis)
+        if any(
+            w in query
+            for w in [
+                "horizontal",
+                "as a bar chart",
+                "as a line chart",
+                "as a pie chart",
+                "as a donut chart",
+                "as a table",
+                "view as table",
+                "make it horizontal",
+                "use a line chart",
+                "show as a donut",
+                "show as a pie",
+            ]
+        ):
+            chart_name = "Bar Chart"
+            if "horizontal" in query:
+                chart_name = "Horizontal Bar Chart"
+            elif "line" in query:
+                chart_name = "Line Chart"
+            elif "donut" in query or "pie" in query:
+                chart_name = "Donut Chart"
+            elif "table" in query:
+                chart_name = "Data Table"
+
+            return LLMResponse(
+                message=f"I have updated the visualization display to a {chart_name}.",
+                finish_reason="stop",
+                usage=LLMUsage(prompt_tokens=40, completion_tokens=15, total_tokens=55),
             )
 
         # 1. Ambiguity detection
@@ -109,7 +144,7 @@ class MockLLMProvider(LLMProvider):
             "category" in query
             and "which" not in query
             and not query.startswith("use ")
-            and not query.strip() in ["product_category", "customer_category"]
+            and query.strip() not in ["product_category", "customer_category"]
             and (
                 "sales by category" in query
                 or "group by category" in query

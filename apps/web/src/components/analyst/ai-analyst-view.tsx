@@ -27,10 +27,13 @@ import {
   AIConversationSummary,
   AIConversationDetail,
   AIMessageItem,
+  VisualizationSpec,
+  AnalysisResponse,
 } from "@/types";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { VisualizationRenderer } from "@/components/visualization/visualization-renderer";
 
 interface AIAnalystViewProps {
   initialDatasetId?: string;
@@ -54,7 +57,50 @@ interface MessageBubble {
     tool_operations: string[];
     provenance: Record<string, unknown>[];
   } | null;
+  visualization?: VisualizationSpec | null;
   createdAt: string;
+}
+
+function MessageVisualizationCard({ spec }: { spec: VisualizationSpec }) {
+  const [data, setData] = useState<Record<string, unknown>[]>([]);
+  const [columns, setColumns] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const analysisId = spec.provenance?.analysis_id;
+
+  useEffect(() => {
+    if (!analysisId) return;
+    let isMounted = true;
+    setLoading(true);
+    api
+      .get<AnalysisResponse>(`/api/v1/analytics/${analysisId}`)
+      .then((res) => {
+        if (isMounted) {
+          setData(res.rows || []);
+          setColumns(res.columns || []);
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load full analysis rows for chart:", err);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [analysisId]);
+
+  if (loading && data.length === 0 && spec.chart_type !== "kpi" && spec.chart_type !== "boxplot") {
+    return (
+      <div className="flex items-center gap-2 p-3 text-xs text-slate bg-cloud/50 rounded-xl border border-border my-2">
+        <RefreshCw className="w-3.5 h-3.5 animate-spin text-teal" />
+        <span>Loading chart visualization data...</span>
+      </div>
+    );
+  }
+
+  return <VisualizationRenderer spec={spec} data={data} columns={columns} />;
 }
 
 export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystViewProps) {
@@ -146,6 +192,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
         toolCalls: m.tool_calls || undefined,
         toolResults: m.tool_results as any,
         analysisIds: m.analysis_ids || undefined,
+        visualization: m.visualization || null,
         createdAt: m.created_at,
       }));
       setMessages(mappedMessages);
@@ -250,6 +297,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
         analysisIds: res.analysis_ids,
         suggestedQuestions: res.suggested_questions,
         evidence: res.evidence,
+        visualization: res.visualization || null,
         createdAt: res.created_at || new Date().toISOString(),
       };
 
@@ -495,6 +543,11 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
 
                   {/* Message Body */}
                   <div className="whitespace-pre-wrap">{msg.content}</div>
+
+                  {/* Grounded Interactive Visualization */}
+                  {msg.visualization && (
+                    <MessageVisualizationCard spec={msg.visualization} />
+                  )}
 
                   {/* Evidence & Provenance Section */}
                   {msg.evidence && (

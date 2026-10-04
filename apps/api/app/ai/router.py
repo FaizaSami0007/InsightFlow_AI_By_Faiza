@@ -138,6 +138,7 @@ async def get_conversation(
             tool_calls=m.tool_calls_json,
             tool_results=m.tool_results_json,
             analysis_ids=m.analysis_ids,
+            visualization=m.visualization_json,
             created_at=m.created_at,
         )
         for m in conv.messages

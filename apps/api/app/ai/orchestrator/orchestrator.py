@@ -235,6 +235,64 @@ class AIOrchestrator:
         execution_time_ms = round((time.perf_counter() - start_time) * 1000, 2)
         total_tokens = total_prompt_tokens + total_completion_tokens
 
+        # Step 5b: Resolve Visualization Specification (if applicable)
+        visual_pref = self._extract_chart_preference(request.message)
+        visualization_spec = None
+        target_analysis_id = executed_analysis_ids[-1] if executed_analysis_ids else None
+
+        if not target_analysis_id and raw_history:
+            # Check previous history for the latest analysis ID if user asked for a presentation follow-up
+            for m in reversed(raw_history):
+                if m.analysis_ids:
+                    target_analysis_id = m.analysis_ids[-1]
+                    break
+
+        if target_analysis_id:
+            try:
+                from app.database.models.analytics import AnalysisJob
+                from app.visualization.engine.rules import recommendation_engine
+                from app.visualization.engine.validator import chart_validator
+
+                job_stmt = select(AnalysisJob).where(
+                    AnalysisJob.id == target_analysis_id,
+                    AnalysisJob.user_id == user.id,
+                )
+                job_res = await db.execute(job_stmt)
+                target_job = job_res.scalar_one_or_none()
+                if target_job and target_job.result_json:
+                    cols = target_job.result_json.get("columns", [])
+                    rows = target_job.result_json.get("rows", [])
+                    summary_payload = target_job.summary_json or {}
+                    params_payload = target_job.parameters_json or {}
+                    filters_payload = target_job.filters_json or {}
+
+                    candidate_spec = recommendation_engine.recommend(
+                        operation=target_job.operation,
+                        columns=cols,
+                        rows=rows,
+                        summary=summary_payload,
+                        parameters=params_payload,
+                        filters=filters_payload,
+                        dataset_id=dataset.id,
+                        dataset_version_id=version.id,
+                        analysis_id=target_job.id,
+                        preferred_chart_type=visual_pref,
+                    )
+
+                    val_result = chart_validator.validate(
+                        spec=candidate_spec,
+                        operation=target_job.operation,
+                        columns=cols,
+                        rows=rows,
+                        summary=summary_payload,
+                        dataset_id=dataset.id,
+                        dataset_version_id=version.id,
+                        analysis_id=target_job.id,
+                    )
+                    visualization_spec = val_result.validated_spec or val_result.fallback_spec
+            except Exception as e:
+                logger.warning("Visualization recommendation failed: %s", str(e))
+
         # Step 6: Persist assistant message and AI Request Log
         assistant_db_msg = AIMessage(
             conversation_id=conversation.id,
@@ -243,6 +301,7 @@ class AIOrchestrator:
             tool_calls_json=executed_tool_calls if executed_tool_calls else None,
             tool_results_json=executed_tool_results if executed_tool_results else None,
             analysis_ids=executed_analysis_ids if executed_analysis_ids else None,
+            visualization_json=visualization_spec.model_dump(mode="json") if visualization_spec else None,
             created_at=datetime.utcnow(),
         )
         db.add(assistant_db_msg)
@@ -292,8 +351,39 @@ class AIOrchestrator:
             provenance=provenances,
             suggested_questions=suggested_questions,
             evidence=evidence,
+            visualization=visualization_spec,
             needs_clarification=needs_clarification,
             execution_time_ms=execution_time_ms,
             tokens_used=total_tokens,
             created_at=assistant_db_msg.created_at,
         )
+
+    @classmethod
+    def _extract_chart_preference(cls, query: str) -> Optional[Any]:
+        """Infers requested chart type from natural language visual commands."""
+        from app.visualization.schemas import ChartType
+
+        q = query.lower()
+        if "horizontal" in q or "horizontal bar" in q:
+            return ChartType.HORIZONTAL_BAR
+        if "bar chart" in q or "as a bar" in q or "bars" in q:
+            return ChartType.BAR
+        if "line chart" in q or "as a line" in q or "trend line" in q:
+            return ChartType.LINE
+        if "area chart" in q or "as an area" in q:
+            return ChartType.AREA
+        if "donut" in q or "donut chart" in q:
+            return ChartType.DONUT
+        if "pie chart" in q or "as a pie" in q:
+            return ChartType.PIE
+        if "scatter" in q or "scatter plot" in q:
+            return ChartType.SCATTER
+        if "histogram" in q:
+            return ChartType.HISTOGRAM
+        if "boxplot" in q or "box plot" in q:
+            return ChartType.BOXPLOT
+        if "kpi" in q or "metric card" in q:
+            return ChartType.KPI
+        if "table" in q or "as a table" in q or "tabular" in q:
+            return ChartType.TABLE
+        return None

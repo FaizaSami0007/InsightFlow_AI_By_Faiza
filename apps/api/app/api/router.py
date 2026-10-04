@@ -6,6 +6,7 @@ from app.api.routes.health import router as health_router
 from app.datasets.router import router as datasets_router
 from app.profiling.router import router as profiling_router
 from app.users.router import router as auth_router
+from app.visualization.router import router as visualization_router
 
 api_router = APIRouter()
 
@@ -26,3 +27,6 @@ api_router.include_router(analytics_router, prefix="", tags=["analytics"])
 
 # 6. AI Orchestrator & Conversational Analyst endpoints
 api_router.include_router(ai_router, prefix="", tags=["ai"])
+
+# 7. Visualization Intelligence endpoints
+api_router.include_router(visualization_router, prefix="", tags=["visualizations"])

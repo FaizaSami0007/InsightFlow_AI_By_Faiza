@@ -4,6 +4,7 @@ unsupported capabilities, and prompt injection defense cases.
 """
 
 import io
+
 import pytest
 from fastapi.testclient import TestClient
 

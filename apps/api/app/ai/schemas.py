@@ -1,9 +1,9 @@
-"""Pydantic schemas for AI Analyst conversations, messages, and orchestration responses."""
-
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
+
+from app.visualization.schemas import VisualizationSpec
 
 
 class ToolCallItem(BaseModel):
@@ -28,6 +28,7 @@ class MessageItem(BaseModel):
     tool_calls: Optional[List[Dict[str, Any]]] = None
     tool_results: Optional[List[Dict[str, Any]]] = None
     analysis_ids: Optional[List[str]] = None
+    visualization: Optional[VisualizationSpec] = None
     created_at: datetime
 
 
@@ -74,7 +75,9 @@ class ChatResponse(BaseModel):
     provenance: List[Dict[str, Any]] = Field(default_factory=list)
     suggested_questions: List[str] = Field(default_factory=list)
     evidence: Optional[Dict[str, Any]] = None
+    visualization: Optional[VisualizationSpec] = None
     needs_clarification: bool = False
     execution_time_ms: float = 0.0
     tokens_used: int = 0
     created_at: datetime
+

@@ -73,6 +73,7 @@ class AIMessage(Base):
     tool_calls_json: Mapped[Optional[List[dict[str, Any]]]] = mapped_column(JSON, nullable=True)
     tool_results_json: Mapped[Optional[List[dict[str, Any]]]] = mapped_column(JSON, nullable=True)
     analysis_ids: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
+    visualization_json: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
 

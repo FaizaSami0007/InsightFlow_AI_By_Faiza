@@ -320,6 +320,7 @@ export interface AIMessageItem {
   tool_calls?: ChatToolCall[] | null;
   tool_results?: ChatToolResult[] | null;
   analysis_ids?: string[] | null;
+  visualization?: VisualizationSpec | null;
   created_at: string;
 }
 
@@ -367,9 +368,81 @@ export interface AIChatResponse {
     tool_operations: string[];
     provenance: Record<string, unknown>[];
   } | null;
+  visualization?: VisualizationSpec | null;
   needs_clarification: boolean;
   execution_time_ms: number;
   tokens_used: number;
   created_at: string;
 }
+
+// Phase 7 Visualization Intelligence Types
+export type ChartType =
+  | "bar"
+  | "horizontal_bar"
+  | "line"
+  | "area"
+  | "pie"
+  | "donut"
+  | "scatter"
+  | "histogram"
+  | "boxplot"
+  | "kpi"
+  | "table";
+
+export interface VisualizationProvenance {
+  analysis_id: string;
+  dataset_id: string;
+  dataset_version_id: string;
+  operation: string;
+  row_count: number;
+  created_at: string;
+}
+
+export interface VisualizationSpec {
+  chart_type: ChartType;
+  title: string;
+  subtitle?: string | null;
+  x_axis?: string | null;
+  y_axis?: string | string[] | null;
+  series?: string | null;
+  sort?: "asc" | "desc" | "none" | null;
+  limit?: number | null;
+  format?: string | null;
+  cardinality?: number | null;
+  options?: Record<string, unknown>;
+  provenance?: VisualizationProvenance | null;
+  explanation?: string | null;
+  is_fallback?: boolean;
+  available_chart_types?: ChartType[];
+}
+
+export interface VisualizationRecommendRequest {
+  analysis_id: string;
+  preferred_chart_type?: ChartType | null;
+  intent?: string | null;
+}
+
+export interface VisualizationValidateRequest {
+  analysis_id: string;
+  spec: VisualizationSpec;
+}
+
+export interface VisualizationValidationResult {
+  valid: boolean;
+  errors: string[];
+  warnings: string[];
+  validated_spec?: VisualizationSpec | null;
+  fallback_spec?: VisualizationSpec | null;
+}
+
+export interface ChartTypeMetadata {
+  chart_type: ChartType;
+  label: string;
+  description: string;
+  required_axes: string[];
+  max_cardinality?: number | null;
+  min_values?: number | null;
+  supports_series: boolean;
+}
+
 
