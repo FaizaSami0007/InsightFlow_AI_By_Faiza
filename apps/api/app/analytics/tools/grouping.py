@@ -83,7 +83,11 @@ class GroupByTool(AnalysisTool):
         filters: Optional[Any] = None,
     ) -> None:
         # Normalize dimensions
-        raw_dims = parameters.get("dimensions") or parameters.get("dimension")
+        raw_dims = (
+            parameters.get("dimensions")
+            or parameters.get("dimension")
+            or parameters.get("group_column")
+        )
         if not raw_dims:
             raise ValueError("Parameter 'dimensions' is required")
         dims = [raw_dims] if isinstance(raw_dims, str) else raw_dims
@@ -95,8 +99,12 @@ class GroupByTool(AnalysisTool):
         # Normalize aggregations
         raw_aggs = parameters.get("aggregations")
         if not raw_aggs:
-            # Fallback for shorthand parameter format: metric + aggregation
-            metric = parameters.get("metric")
+            # Fallback for shorthand parameter format: metric/aggregate_column + aggregation
+            metric = (
+                parameters.get("metric")
+                or parameters.get("aggregate_column")
+                or parameters.get("column")
+            )
             agg = parameters.get("aggregation") or "sum"
             if metric:
                 raw_aggs = [{"column": metric, "agg_type": agg.upper()}]
@@ -135,13 +143,21 @@ class GroupByTool(AnalysisTool):
         offset: int = 0,
     ) -> Tuple[List[str], List[dict[str, Any]], Optional[dict[str, Any]]]:
         # Normalize dimensions
-        raw_dims = parameters.get("dimensions") or parameters.get("dimension")
+        raw_dims = (
+            parameters.get("dimensions")
+            or parameters.get("dimension")
+            or parameters.get("group_column")
+        )
         dims = [raw_dims] if isinstance(raw_dims, str) else raw_dims
 
         # Normalize aggregations
         raw_aggs = parameters.get("aggregations")
         if not raw_aggs:
-            metric = parameters.get("metric")
+            metric = (
+                parameters.get("metric")
+                or parameters.get("aggregate_column")
+                or parameters.get("column")
+            )
             agg = parameters.get("aggregation") or "sum"
             if metric:
                 raw_aggs = [{"column": metric, "agg_type": agg.upper()}]

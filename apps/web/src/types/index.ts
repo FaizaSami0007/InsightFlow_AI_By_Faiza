@@ -445,4 +445,118 @@ export interface ChartTypeMetadata {
   supports_series: boolean;
 }
 
+// Phase 8 Dashboard Intelligence Types
+export type DashboardStatus = "GENERATING" | "READY" | "PARTIAL" | "FAILED";
+export type DashboardWidgetType = "kpi" | "chart" | "table";
+
+export interface DashboardWidget {
+  id: string;
+  dashboard_id: string;
+  analysis_id: string | null;
+  widget_type: DashboardWidgetType;
+  title: string;
+  description?: string | null;
+  chart_spec?: VisualizationSpec | null;
+  grid_x: number;
+  grid_y: number;
+  grid_w: number;
+  grid_h: number;
+  metadata?: Record<string, unknown>;
+  analysis_status?: string | null;
+  result_data?: {
+    columns?: string[];
+    rows?: Record<string, unknown>[];
+  } | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DashboardFilter {
+  id: string;
+  dashboard_id: string;
+  column_name: string;
+  display_name: string;
+  filter_type: "categorical" | "temporal" | "numeric";
+  operator: string;
+  current_value?: unknown;
+  allowed_values?: unknown[] | null;
+  scope: "global" | "widget";
+  target_widget_ids: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Dashboard {
+  id: string;
+  name: string;
+  description?: string | null;
+  dataset_id: string;
+  dataset_name?: string | null;
+  dataset_version_id: string;
+  dataset_version_num?: number | null;
+  user_id: string;
+  status: DashboardStatus;
+  theme: string;
+  layout_type: string;
+  layout_config: Record<string, unknown>;
+  metadata: Record<string, unknown>;
+  widgets: DashboardWidget[];
+  filters: DashboardFilter[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DashboardPlanWidget {
+  title: string;
+  description?: string | null;
+  widget_type: DashboardWidgetType;
+  operation: string;
+  params: Record<string, unknown>;
+  preferred_chart_type?: ChartType | null;
+  grid_w: number;
+  grid_h: number;
+}
+
+export interface DashboardPlan {
+  title: string;
+  purpose: string;
+  dataset_id: string;
+  dataset_version_id: string;
+  widgets: DashboardPlanWidget[];
+  suggested_filters: string[];
+  reasoning_summary?: string | null;
+}
+
+export interface DashboardPatch {
+  op:
+    | "ADD_WIDGET"
+    | "REMOVE_WIDGET"
+    | "MOVE_WIDGET"
+    | "RESIZE_WIDGET"
+    | "CHANGE_CHART"
+    | "CHANGE_METRIC"
+    | "CHANGE_FILTER"
+    | "RENAME_DASHBOARD";
+  widget_id?: string | null;
+  params: Record<string, unknown>;
+}
+
+export interface DashboardQualityReport {
+  overall_score: number;
+  valid_widget_ratio: number;
+  visual_diversity_score: number;
+  redundancy_penalty: number;
+  data_coverage_score: number;
+  breakdown: Record<string, unknown>;
+}
+
+export interface DashboardGenerateRequest {
+  dataset_id: string;
+  dataset_version_id: string;
+  purpose?: string | null;
+  intent?: string | null;
+  min_widgets?: number;
+  max_widgets?: number;
+}
+
 
