@@ -1,0 +1,9 @@
+order_date,region,category,revenue,units
+2026-01-05,North,Software,12000,10
+2026-01-08,South,Software,9000,8
+2026-02-03,North,Services,15000,12
+2026-02-11,West,Software,7000,6
+2026-03-02,South,Services,11000,9
+2026-03-14,North,Software,18000,14
+2026-03-18,West,Services,8000,7
+2026-04-01,South,Software,13000,11
