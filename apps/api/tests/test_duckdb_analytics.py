@@ -20,7 +20,10 @@ def test_duckdb_registration_and_query():
         assert manager.is_registered(version_id)
 
         # Basic SELECT
-        res = manager.execute_query(version_id, "SELECT region, SUM(sales) as total_sales FROM dataset GROUP BY region ORDER BY total_sales DESC")
+        res = manager.execute_query(
+            version_id,
+            "SELECT region, SUM(sales) as total_sales FROM dataset GROUP BY region ORDER BY total_sales DESC",
+        )
         assert res["columns"] == ["region", "total_sales"]
         assert len(res["rows"]) == 2
         assert res["rows"][0][0] == "North"

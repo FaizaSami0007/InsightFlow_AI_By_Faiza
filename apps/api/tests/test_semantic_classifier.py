@@ -1,4 +1,3 @@
-
 from app.database.models.profiling import ConceptualType, SemanticRole
 from app.profiling.semantics.semantic_classifier import SemanticClassifier
 

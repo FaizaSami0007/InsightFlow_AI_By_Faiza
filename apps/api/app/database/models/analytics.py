@@ -21,12 +21,19 @@ class AnalysisJob(Base):
     Persisted metadata and execution record for deterministic analysis operations.
     Maintains full provenance tracing back to exact dataset version and parameters.
     """
+
     __tablename__ = "analysis_jobs"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False)
-    dataset_id: Mapped[str] = mapped_column(String(36), ForeignKey("datasets.id", ondelete="CASCADE"), index=True, nullable=False)
-    dataset_version_id: Mapped[str] = mapped_column(String(36), ForeignKey("dataset_versions.id", ondelete="CASCADE"), index=True, nullable=False)
+    user_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    dataset_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("datasets.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    dataset_version_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("dataset_versions.id", ondelete="CASCADE"), index=True, nullable=False
+    )
 
     operation: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
     parameters_json: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)

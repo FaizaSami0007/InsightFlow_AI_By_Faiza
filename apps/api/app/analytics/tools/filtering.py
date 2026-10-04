@@ -161,10 +161,7 @@ class SortDataTool(AnalysisTool):
         offset: int = 0,
     ) -> Tuple[List[str], List[dict[str, Any]], Optional[dict[str, Any]]]:
         raw_sort = parameters.get("sort_by") or []
-        sort_specs = [
-            SortSpecification(**s) if isinstance(s, dict) else s
-            for s in raw_sort
-        ] if raw_sort else sort_by
+        sort_specs = [SortSpecification(**s) if isinstance(s, dict) else s for s in raw_sort] if raw_sort else sort_by
 
         target_cols = parameters.get("columns") or dataset.columns
         select_cols = ", ".join([SafeSQLBuilder.quote_identifier(c) for c in target_cols])

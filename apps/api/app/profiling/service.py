@@ -103,6 +103,7 @@ class ProfilingService:
 
             # 3. Infer Semantics
             from app.profiling.semantics.semantic_classifier import SemanticClassifier
+
             semantic_classifier = SemanticClassifier()
             semantic_meta = semantic_classifier.classify_all(
                 profile_meta["columns"],

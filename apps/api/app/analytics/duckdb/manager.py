@@ -8,6 +8,7 @@ import duckdb
 
 class DuckDBSecurityError(Exception):
     """Raised when a query attempts prohibited destructive or unsafe SQL operations."""
+
     pass
 
 

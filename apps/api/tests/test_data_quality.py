@@ -1,12 +1,26 @@
-
 from app.profiling.quality.quality_engine import DataQualityEngine
 
 
 def test_data_quality_perfect_score():
     engine = DataQualityEngine()
     columns_profile = [
-        {"column_name": "id", "null_percentage": 0.0, "null_count": 0, "is_constant": False, "is_near_constant": False, "outlier_count": 0},
-        {"column_name": "val", "null_percentage": 0.0, "null_count": 0, "is_constant": False, "is_near_constant": False, "outlier_count": 0, "numeric_stats": {"lower_bound": 0, "upper_bound": 10}},
+        {
+            "column_name": "id",
+            "null_percentage": 0.0,
+            "null_count": 0,
+            "is_constant": False,
+            "is_near_constant": False,
+            "outlier_count": 0,
+        },
+        {
+            "column_name": "val",
+            "null_percentage": 0.0,
+            "null_count": 0,
+            "is_constant": False,
+            "is_near_constant": False,
+            "outlier_count": 0,
+            "numeric_stats": {"lower_bound": 0, "upper_bound": 10},
+        },
     ]
     report = engine.evaluate_quality(
         row_count=100,
@@ -27,9 +41,33 @@ def test_data_quality_perfect_score():
 def test_data_quality_penalties_and_warnings():
     engine = DataQualityEngine()
     columns_profile = [
-        {"column_name": "id", "null_percentage": 10.0, "null_count": 10, "is_constant": False, "is_near_constant": False, "outlier_count": 0},
-        {"column_name": "const", "null_percentage": 0.0, "null_count": 0, "is_constant": True, "unique_count": 1, "is_near_constant": False, "outlier_count": 0},
-        {"column_name": "num", "null_percentage": 30.0, "null_count": 30, "is_constant": False, "is_near_constant": False, "outlier_count": 5, "outlier_percentage": 5.0, "numeric_stats": {"lower_bound": 0, "upper_bound": 100}},
+        {
+            "column_name": "id",
+            "null_percentage": 10.0,
+            "null_count": 10,
+            "is_constant": False,
+            "is_near_constant": False,
+            "outlier_count": 0,
+        },
+        {
+            "column_name": "const",
+            "null_percentage": 0.0,
+            "null_count": 0,
+            "is_constant": True,
+            "unique_count": 1,
+            "is_near_constant": False,
+            "outlier_count": 0,
+        },
+        {
+            "column_name": "num",
+            "null_percentage": 30.0,
+            "null_count": 30,
+            "is_constant": False,
+            "is_near_constant": False,
+            "outlier_count": 5,
+            "outlier_percentage": 5.0,
+            "numeric_stats": {"lower_bound": 0, "upper_bound": 100},
+        },
     ]
     report = engine.evaluate_quality(
         row_count=100,

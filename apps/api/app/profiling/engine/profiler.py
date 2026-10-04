@@ -19,8 +19,14 @@ def normalize_column_name(name: str) -> str:
 def map_polars_type_to_conceptual(dtype: pl.DataType) -> ConceptualType:
     """Map native Polars data types to standardized conceptual data types."""
     if dtype in (
-        pl.Int8, pl.Int16, pl.Int32, pl.Int64,
-        pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64,
+        pl.Int8,
+        pl.Int16,
+        pl.Int32,
+        pl.Int64,
+        pl.UInt8,
+        pl.UInt16,
+        pl.UInt32,
+        pl.UInt64,
     ):
         return ConceptualType.INTEGER
     if dtype in (pl.Float32, pl.Float64, pl.Decimal):

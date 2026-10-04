@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.ai.router import router as ai_router
 from app.analytics.router import router as analytics_router
 from app.api.routes.health import router as health_router
 from app.datasets.router import router as datasets_router
@@ -22,3 +23,6 @@ api_router.include_router(profiling_router, prefix="", tags=["profiling"])
 
 # 5. Deterministic Analytics Engine endpoints
 api_router.include_router(analytics_router, prefix="", tags=["analytics"])
+
+# 6. AI Orchestrator & Conversational Analyst endpoints
+api_router.include_router(ai_router, prefix="", tags=["ai"])

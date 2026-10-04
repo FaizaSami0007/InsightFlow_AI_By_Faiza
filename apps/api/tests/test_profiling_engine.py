@@ -75,10 +75,12 @@ def test_outlier_detection_iqr():
 
 
 def test_categorical_and_boolean_profiling():
-    df = pl.DataFrame({
-        "category": ["A", "B", "A", "C", "A", None],
-        "is_active": [True, False, True, True, False, True],
-    })
+    df = pl.DataFrame(
+        {
+            "category": ["A", "B", "A", "C", "A", None],
+            "is_active": [True, False, True, True, False, True],
+        }
+    )
     engine = ProfilingEngine()
     profile = engine.profile_dataframe(df)
 

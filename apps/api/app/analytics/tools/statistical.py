@@ -93,12 +93,14 @@ class FrequencyTool(AnalysisTool):
             cnt = r.get("count", 0)
             pct = (cnt / total_records * 100.0) if total_records > 0 else 0.0
             cumulative += pct
-            rows.append({
-                "value": r.get("value"),
-                "count": cnt,
-                "percentage": round(pct, 2),
-                "cumulative_percentage": round(min(cumulative, 100.0), 2),
-            })
+            rows.append(
+                {
+                    "value": r.get("value"),
+                    "count": cnt,
+                    "percentage": round(pct, 2),
+                    "cumulative_percentage": round(min(cumulative, 100.0), 2),
+                }
+            )
 
         output_cols = ["value", "count", "percentage", "cumulative_percentage"]
         summary = {
@@ -318,7 +320,9 @@ class DistributionTool(AnalysisTool):
         bin_rows = []
         if min_v is not None and max_v is not None and max_v > min_v and total_cnt > 0:
             bin_width = (max_v - min_v) / bin_count
-            hist_where_clause = f"WHERE {where_sql} AND {quoted_col} IS NOT NULL" if where_sql else f"WHERE {quoted_col} IS NOT NULL"
+            hist_where_clause = (
+                f"WHERE {where_sql} AND {quoted_col} IS NOT NULL" if where_sql else f"WHERE {quoted_col} IS NOT NULL"
+            )
             hist_sql = f"""
             SELECT
                 FLOOR(({quoted_col} - {min_v}) / {bin_width}) AS bin_idx,
@@ -336,21 +340,25 @@ class DistributionTool(AnalysisTool):
                 b_end = min_v + ((idx + 1) * bin_width)
                 cnt = h_map.get(idx, 0)
                 pct = (cnt / total_cnt * 100.0) if total_cnt > 0 else 0.0
-                bin_rows.append({
-                    "bin_index": idx + 1,
-                    "bin_start": round(b_start, 4),
-                    "bin_end": round(b_end, 4),
-                    "count": cnt,
-                    "percentage": round(pct, 2),
-                })
+                bin_rows.append(
+                    {
+                        "bin_index": idx + 1,
+                        "bin_start": round(b_start, 4),
+                        "bin_end": round(b_end, 4),
+                        "count": cnt,
+                        "percentage": round(pct, 2),
+                    }
+                )
         else:
-            bin_rows.append({
-                "bin_index": 1,
-                "bin_start": min_v,
-                "bin_end": max_v,
-                "count": total_cnt,
-                "percentage": 100.0,
-            })
+            bin_rows.append(
+                {
+                    "bin_index": 1,
+                    "bin_start": min_v,
+                    "bin_end": max_v,
+                    "count": total_cnt,
+                    "percentage": 100.0,
+                }
+            )
 
         output_cols = ["bin_index", "bin_start", "bin_end", "count", "percentage"]
         q1 = stats.get("q1")

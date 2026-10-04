@@ -16,6 +16,7 @@ import { StatisticsTab } from "@/components/profiling/statistics-tab";
 import { QualityTab } from "@/components/profiling/quality-tab";
 import { SemanticsTab } from "@/components/profiling/semantics-tab";
 import { AnalyticsTab } from "@/components/profiling/analytics-tab";
+import { AIAnalystView } from "@/components/analyst/ai-analyst-view";
 
 export default function DatasetDetailPage() {
   const params = useParams();
@@ -131,6 +132,7 @@ export default function DatasetDetailPage() {
     { id: "quality", label: "Data Quality" },
     { id: "semantics", label: "Semantics" },
     { id: "analytics", label: "Analytics" },
+    { id: "analyst", label: "AI Analyst" },
   ];
 
   return (
@@ -218,6 +220,12 @@ export default function DatasetDetailPage() {
                   datasetId={dataset.id}
                   versionId={selectedVersionId}
                   profile={profile}
+                />
+              </TabContent>
+              <TabContent value="analyst">
+                <AIAnalystView
+                  initialDatasetId={dataset.id}
+                  initialVersionId={selectedVersionId}
                 />
               </TabContent>
             </div>

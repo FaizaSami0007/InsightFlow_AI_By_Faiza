@@ -98,21 +98,23 @@ class DescribeDatasetTool(AnalysisTool):
                 q3 = res.get("q3")
                 iqr = (q3 - q1) if (q1 is not None and q3 is not None) else None
 
-                rows.append({
-                    "column": col,
-                    "data_type": col_type,
-                    "count": res.get("count", 0),
-                    "null_count": res.get("null_count", 0),
-                    "unique_count": res.get("unique_count", 0),
-                    "mean": res.get("mean"),
-                    "median": res.get("median"),
-                    "std_dev": res.get("std_dev"),
-                    "min": res.get("min"),
-                    "max": res.get("max"),
-                    "q1": q1,
-                    "q3": q3,
-                    "iqr": iqr,
-                })
+                rows.append(
+                    {
+                        "column": col,
+                        "data_type": col_type,
+                        "count": res.get("count", 0),
+                        "null_count": res.get("null_count", 0),
+                        "unique_count": res.get("unique_count", 0),
+                        "mean": res.get("mean"),
+                        "median": res.get("median"),
+                        "std_dev": res.get("std_dev"),
+                        "min": res.get("min"),
+                        "max": res.get("max"),
+                        "q1": q1,
+                        "q3": q3,
+                        "iqr": iqr,
+                    }
+                )
             else:
                 sql = f"""
                 SELECT
@@ -126,25 +128,38 @@ class DescribeDatasetTool(AnalysisTool):
                 """
                 _, res_rows = self._execute_sql(dataset, sql, params)
                 res = res_rows[0] if res_rows else {}
-                rows.append({
-                    "column": col,
-                    "data_type": col_type,
-                    "count": res.get("count", 0),
-                    "null_count": res.get("null_count", 0),
-                    "unique_count": res.get("unique_count", 0),
-                    "mean": None,
-                    "median": None,
-                    "std_dev": None,
-                    "min": res.get("min_value"),
-                    "max": res.get("max_value"),
-                    "q1": None,
-                    "q3": None,
-                    "iqr": None,
-                })
+                rows.append(
+                    {
+                        "column": col,
+                        "data_type": col_type,
+                        "count": res.get("count", 0),
+                        "null_count": res.get("null_count", 0),
+                        "unique_count": res.get("unique_count", 0),
+                        "mean": None,
+                        "median": None,
+                        "std_dev": None,
+                        "min": res.get("min_value"),
+                        "max": res.get("max_value"),
+                        "q1": None,
+                        "q3": None,
+                        "iqr": None,
+                    }
+                )
 
         output_cols = [
-            "column", "data_type", "count", "null_count", "unique_count",
-            "mean", "median", "std_dev", "min", "max", "q1", "q3", "iqr"
+            "column",
+            "data_type",
+            "count",
+            "null_count",
+            "unique_count",
+            "mean",
+            "median",
+            "std_dev",
+            "min",
+            "max",
+            "q1",
+            "q3",
+            "iqr",
         ]
         summary = {
             "total_columns_described": len(rows),

@@ -9,22 +9,91 @@ class SemanticClassifier:
 
     IDENTIFIER_KEYWORDS = {"id", "uuid", "key", "code", "guid", "pk", "fk", "num", "number"}
     MEASURE_KEYWORDS = {
-        "revenue", "sales", "profit", "cost", "price", "amount", "salary", "wage",
-        "qty", "quantity", "discount", "spend", "rate", "total", "margin", "score",
-        "balance", "fee", "tax", "budget", "target", "value", "unit_price", "units",
+        "revenue",
+        "sales",
+        "profit",
+        "cost",
+        "price",
+        "amount",
+        "salary",
+        "wage",
+        "qty",
+        "quantity",
+        "discount",
+        "spend",
+        "rate",
+        "total",
+        "margin",
+        "score",
+        "balance",
+        "fee",
+        "tax",
+        "budget",
+        "target",
+        "value",
+        "unit_price",
+        "units",
     }
     CURRENCY_KEYWORDS = {
-        "revenue", "sales", "profit", "cost", "price", "amount", "salary", "wage",
-        "balance", "fee", "tax", "budget", "spend", "unit_price", "dollar", "eur", "pkr", "usd",
+        "revenue",
+        "sales",
+        "profit",
+        "cost",
+        "price",
+        "amount",
+        "salary",
+        "wage",
+        "balance",
+        "fee",
+        "tax",
+        "budget",
+        "spend",
+        "unit_price",
+        "dollar",
+        "eur",
+        "pkr",
+        "usd",
     }
     DIMENSION_KEYWORDS = {
-        "region", "country", "city", "state", "category", "status", "department",
-        "gender", "segment", "type", "tier", "plan", "channel", "source", "medium",
-        "brand", "product", "role", "group", "class", "industry", "sector",
+        "region",
+        "country",
+        "city",
+        "state",
+        "category",
+        "status",
+        "department",
+        "gender",
+        "segment",
+        "type",
+        "tier",
+        "plan",
+        "channel",
+        "source",
+        "medium",
+        "brand",
+        "product",
+        "role",
+        "group",
+        "class",
+        "industry",
+        "sector",
     }
     TEMPORAL_KEYWORDS = {
-        "date", "time", "timestamp", "created_at", "updated_at", "year", "month",
-        "day", "hour", "period", "quarter", "week", "datetime", "dt", "dob",
+        "date",
+        "time",
+        "timestamp",
+        "created_at",
+        "updated_at",
+        "year",
+        "month",
+        "day",
+        "hour",
+        "period",
+        "quarter",
+        "week",
+        "datetime",
+        "dt",
+        "dob",
     }
     BOOLEAN_KEYWORDS = {"is_", "has_", "can_", "should_", "active", "enabled", "deleted", "flag"}
 
@@ -49,7 +118,12 @@ class SemanticClassifier:
         possible_currency = False
 
         # 1. Identifier Check (Heuristic: name contains identifier pattern & high uniqueness)
-        is_id_name = bool(tokens & self.IDENTIFIER_KEYWORDS or norm_name.endswith("_id") or norm_name.startswith("id_") or norm_name == "id")
+        is_id_name = bool(
+            tokens & self.IDENTIFIER_KEYWORDS
+            or norm_name.endswith("_id")
+            or norm_name.startswith("id_")
+            or norm_name == "id"
+        )
         if is_id_name:
             if unique_pct >= 90.0 or (total_rows > 0 and unique_cnt == total_rows):
                 inferred_role = SemanticRole.IDENTIFIER
@@ -64,7 +138,9 @@ class SemanticClassifier:
         if not is_identifier:
             is_temp_name = bool(tokens & self.TEMPORAL_KEYWORDS)
             if conceptual_type in (ConceptualType.DATE, ConceptualType.DATETIME, ConceptualType.TIME):
-                inferred_role = SemanticRole.DATETIME if conceptual_type == ConceptualType.DATETIME else SemanticRole.DATE
+                inferred_role = (
+                    SemanticRole.DATETIME if conceptual_type == ConceptualType.DATETIME else SemanticRole.DATE
+                )
                 confidence = 0.98 if is_temp_name else 0.90
                 is_temporal = True
             elif is_temp_name:

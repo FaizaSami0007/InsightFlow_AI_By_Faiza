@@ -6,6 +6,7 @@ import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.pool import StaticPool
 
 import app.database.models  # noqa: F401
 from app.core.config import Settings
@@ -14,9 +15,15 @@ from app.database.session import get_db
 from app.datasets.storage import LocalStorageProvider
 from app.main import app
 
-# Isolated in-memory async SQLite engine for tests
-TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
-test_engine = create_async_engine(TEST_DB_URL, echo=False)
+# Isolated in-memory async SQLite engine with shared memory cache for tests
+TEST_DB_URL = "sqlite+aiosqlite:///file:testdb?mode=memory&cache=shared&uri=true"
+test_engine = create_async_engine(
+    TEST_DB_URL,
+    echo=False,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
+
 TestingSessionLocal = async_sessionmaker(
     bind=test_engine,
     class_=AsyncSession,
@@ -35,12 +42,13 @@ def event_loop():
 
 @pytest_asyncio.fixture(scope="function", autouse=True)
 async def init_test_db():
-    """Create all tables before each test and drop them after."""
+    """Create all tables before each test and clear data after."""
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
     async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+        for table in reversed(Base.metadata.sorted_tables):
+            await conn.execute(table.delete())
 
 
 @pytest.fixture

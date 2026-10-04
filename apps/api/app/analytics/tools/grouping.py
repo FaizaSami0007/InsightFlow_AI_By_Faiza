@@ -43,8 +43,15 @@ class GroupByTool(AnalysisTool):
                                 "agg_type": {
                                     "type": "string",
                                     "enum": [
-                                        "COUNT", "COUNT DISTINCT", "SUM", "AVG",
-                                        "MIN", "MAX", "MEDIAN", "STDDEV", "VARIANCE"
+                                        "COUNT",
+                                        "COUNT DISTINCT",
+                                        "SUM",
+                                        "AVG",
+                                        "MIN",
+                                        "MAX",
+                                        "MEDIAN",
+                                        "STDDEV",
+                                        "VARIANCE",
                                     ],
                                 },
                                 "alias": {"type": "string"},
@@ -111,8 +118,12 @@ class GroupByTool(AnalysisTool):
                 # If numeric aggregation, check type
                 if agg_type_str in ("SUM", "AVG", "MEDIAN", "STDDEV", "VARIANCE"):
                     col_type = dataset.schema.get(col, "VARCHAR").upper()
-                    if not any(t in col_type for t in ["INT", "DOUBLE", "FLOAT", "DECIMAL", "NUMERIC", "REAL", "BIGINT"]):
-                        raise ValueError(f"Aggregation {agg_type_str} requires a numeric column, but '{col}' has type {col_type}")
+                    if not any(
+                        t in col_type for t in ["INT", "DOUBLE", "FLOAT", "DECIMAL", "NUMERIC", "REAL", "BIGINT"]
+                    ):
+                        raise ValueError(
+                            f"Aggregation {agg_type_str} requires a numeric column, but '{col}' has type {col_type}"
+                        )
 
     def execute(
         self,
@@ -157,7 +168,10 @@ class GroupByTool(AnalysisTool):
 
         where_sql, params = SafeSQLBuilder.build_filter_clause(filters, dataset.columns)
         where_clause = f"WHERE {where_sql}" if where_sql else ""
-        order_clause = SafeSQLBuilder.build_order_by(sort_by, dataset.columns)
+        agg_aliases = [spec.alias for spec in agg_specs if spec.alias]
+        default_agg_names = [f"{spec.column}_{spec.agg_type.value.lower()}" for spec in agg_specs if spec.column != "*"]
+        valid_order_columns = list(dims) + agg_aliases + default_agg_names + ["count"]
+        order_clause = SafeSQLBuilder.build_order_by(sort_by, valid_order_columns)
 
         sql = f"""
         SELECT
@@ -294,15 +308,21 @@ class CompareGroupsTool(AnalysisTool):
         for r in raw_rows:
             val = r.get("metric_value")
             delta = (val - benchmark_val) if val is not None else None
-            pct_diff = ((val - benchmark_val) / abs(benchmark_val) * 100.0) if (val is not None and benchmark_val != 0) else 0.0
+            pct_diff = (
+                ((val - benchmark_val) / abs(benchmark_val) * 100.0)
+                if (val is not None and benchmark_val != 0)
+                else 0.0
+            )
 
-            comparison_rows.append({
-                "group_name": r.get("group_name"),
-                "record_count": r.get("record_count"),
-                "metric_value": val,
-                "delta_from_top": delta,
-                "percent_difference_from_top": round(pct_diff, 2) if pct_diff is not None else None,
-            })
+            comparison_rows.append(
+                {
+                    "group_name": r.get("group_name"),
+                    "record_count": r.get("record_count"),
+                    "metric_value": val,
+                    "delta_from_top": delta,
+                    "percent_difference_from_top": round(pct_diff, 2) if pct_diff is not None else None,
+                }
+            )
 
         output_cols = ["group_name", "record_count", "metric_value", "delta_from_top", "percent_difference_from_top"]
         summary = {

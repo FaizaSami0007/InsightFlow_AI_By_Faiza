@@ -30,12 +30,15 @@ class Settings(BaseSettings):
     cors_origins: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
     # AI Provider Abstraction
-    llm_provider: str = "gemini"
+    llm_provider: str = "mock"
     llm_model: str = "gemini-1.5-pro"
     llm_api_key: str = ""
     llm_timeout_seconds: int = 45
     llm_max_tokens: int = 4000
     llm_temperature: float = 0.1
+    max_tool_calls_per_request: int = 5
+    max_tool_result_rows: int = 20
+    max_ai_requests_per_minute: int = 30
 
     # Object Storage & Uploads
     storage_backend: str = "local"

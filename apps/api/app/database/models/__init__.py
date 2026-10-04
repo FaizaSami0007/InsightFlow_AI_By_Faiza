@@ -1,3 +1,4 @@
+from app.database.models.ai import AIConversation, AIMessage, AIRequestLog, MessageRole
 from app.database.models.analytics import AnalysisJob, AnalysisJobStatus
 from app.database.models.dataset import Dataset, DatasetStatus, DatasetVersion, FileFormat
 from app.database.models.profiling import (
@@ -31,4 +32,8 @@ __all__ = [
     "SemanticRole",
     "AnalysisJob",
     "AnalysisJobStatus",
+    "AIConversation",
+    "AIMessage",
+    "MessageRole",
+    "AIRequestLog",
 ]

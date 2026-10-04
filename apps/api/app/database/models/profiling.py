@@ -90,9 +90,7 @@ class DatasetProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         lazy="selectin",
     )
 
-    __table_args__ = (
-        UniqueConstraint("dataset_version_id", name="uq_dataset_version_profile"),
-    )
+    __table_args__ = (UniqueConstraint("dataset_version_id", name="uq_dataset_version_profile"),)
 
 
 class ColumnProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -138,9 +136,7 @@ class ColumnProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         back_populates="column_profiles",
     )
 
-    __table_args__ = (
-        Index("ix_column_profile_lookup", "profile_id", "column_name"),
-    )
+    __table_args__ = (Index("ix_column_profile_lookup", "profile_id", "column_name"),)
 
 
 class DataQualityReport(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -210,6 +206,4 @@ class SemanticColumn(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         back_populates="semantic_columns",
     )
 
-    __table_args__ = (
-        UniqueConstraint("profile_id", "column_name", name="uq_profile_column_semantics"),
-    )
+    __table_args__ = (UniqueConstraint("profile_id", "column_name", name="uq_profile_column_semantics"),)

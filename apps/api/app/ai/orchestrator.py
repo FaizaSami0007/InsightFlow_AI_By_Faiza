@@ -1,9 +1,5 @@
-class AIOrchestrator:
-    """Single-orchestrator baseline.
+"""AI Orchestrator module re-export."""
 
-    Pipeline: intent -> plan -> validate -> execute -> validate -> explain.
-    Multi-agent behavior is intentionally deferred until evaluation proves it is needed.
-    """
+from app.ai.orchestrator.orchestrator import AIOrchestrator
 
-    async def answer(self, question: str, dataset_context: dict):
-        raise NotImplementedError
+__all__ = ["AIOrchestrator"]

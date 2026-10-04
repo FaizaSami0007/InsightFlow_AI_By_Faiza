@@ -86,14 +86,27 @@ class SafeSQLBuilder:
             return f"{col_quoted} BETWEEN ? AND ?", [cond.value, cond.value_to]
 
         if op in (FilterOperator.IN, FilterOperator.NOT_IN):
-            vals = cond.values if cond.values is not None else (cond.value if isinstance(cond.value, list) else [cond.value])
+            vals = (
+                cond.values
+                if cond.values is not None
+                else (cond.value if isinstance(cond.value, list) else [cond.value])
+            )
             if not vals:
                 return "1=0" if op == FilterOperator.IN else "1=1", []
             placeholders = ", ".join(["?"] * len(vals))
             op_sql = "IN" if op == FilterOperator.IN else "NOT IN"
             return f"{col_quoted} {op_sql} ({placeholders})", list(vals)
 
-        if op in (FilterOperator.EQ, FilterOperator.NEQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE, FilterOperator.LIKE, FilterOperator.ILIKE):
+        if op in (
+            FilterOperator.EQ,
+            FilterOperator.NEQ,
+            FilterOperator.GT,
+            FilterOperator.GTE,
+            FilterOperator.LT,
+            FilterOperator.LTE,
+            FilterOperator.LIKE,
+            FilterOperator.ILIKE,
+        ):
             if cond.value is None:
                 if op == FilterOperator.EQ:
                     return f"{col_quoted} IS NULL", []

@@ -296,3 +296,73 @@ export interface AnalysisHistoryItem {
   created_at: string;
   error_message?: string | null;
 }
+
+// Phase 5 AI Analyst Types
+export type MessageRole = "user" | "assistant" | "system" | "tool";
+
+export interface ChatToolCall {
+  id: string;
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+export interface ChatToolResult {
+  tool_call_id: string;
+  name: string;
+  result: Record<string, unknown>;
+  error?: string | null;
+}
+
+export interface AIMessageItem {
+  id: string;
+  role: MessageRole;
+  content: string;
+  tool_calls?: ChatToolCall[] | null;
+  tool_results?: ChatToolResult[] | null;
+  analysis_ids?: string[] | null;
+  created_at: string;
+}
+
+export interface AIConversationSummary {
+  id: string;
+  title: string;
+  dataset_id?: string | null;
+  dataset_version_id?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AIConversationDetail {
+  id: string;
+  title: string;
+  dataset_id?: string | null;
+  dataset_version_id?: string | null;
+  created_at: string;
+  updated_at: string;
+  messages: AIMessageItem[];
+}
+
+export interface AIChatRequest {
+  dataset_id?: string | null;
+  dataset_version_id?: string | null;
+  conversation_id?: string | null;
+  message: string;
+}
+
+export interface AIChatResponse {
+  conversation_id: string;
+  message: string;
+  tool_calls: ChatToolCall[];
+  tool_results: ChatToolResult[];
+  analysis_ids: string[];
+  execution_steps: string[];
+  citations: string[];
+  needs_clarification: boolean;
+  finish_reason: string;
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  } | null;
+}
+

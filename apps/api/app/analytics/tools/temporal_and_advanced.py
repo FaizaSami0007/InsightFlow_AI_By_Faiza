@@ -92,7 +92,9 @@ class TimeSeriesSummaryTool(AnalysisTool):
         table_name = dataset.view_name
 
         where_sql, params = SafeSQLBuilder.build_filter_clause(filters, dataset.columns)
-        where_clause = f"WHERE {where_sql} AND {quoted_date} IS NOT NULL" if where_sql else f"WHERE {quoted_date} IS NOT NULL"
+        where_clause = (
+            f"WHERE {where_sql} AND {quoted_date} IS NOT NULL" if where_sql else f"WHERE {quoted_date} IS NOT NULL"
+        )
 
         if metric_col:
             quoted_metric = SafeSQLBuilder.quote_identifier(metric_col)
@@ -141,8 +143,14 @@ class PercentChangeTool(AnalysisTool):
                 "type": "object",
                 "properties": {
                     "metric_column": {"type": "string", "description": "Numeric measure to calculate change for."},
-                    "order_by_column": {"type": "string", "description": "Column defining sequence order (e.g. date, period)."},
-                    "group_by_column": {"type": "string", "description": "Optional dimension to partition calculation."},
+                    "order_by_column": {
+                        "type": "string",
+                        "description": "Column defining sequence order (e.g. date, period).",
+                    },
+                    "group_by_column": {
+                        "type": "string",
+                        "description": "Optional dimension to partition calculation.",
+                    },
                 },
                 "required": ["metric_column", "order_by_column"],
             },
@@ -252,7 +260,11 @@ class OutlierAnalysisTool(AnalysisTool):
                 "type": "object",
                 "properties": {
                     "column": {"type": "string", "description": "Numeric column to evaluate for outliers."},
-                    "multiplier": {"type": "number", "default": 1.5, "description": "IQR multiplier (typically 1.5 for mild outliers, 3.0 for extreme)."},
+                    "multiplier": {
+                        "type": "number",
+                        "default": 1.5,
+                        "description": "IQR multiplier (typically 1.5 for mild outliers, 3.0 for extreme).",
+                    },
                 },
                 "required": ["column"],
             },

@@ -158,7 +158,9 @@ def test_analytical_query_endpoint(client: TestClient):
     # Run analytical SQL query
     res = client.post(
         f"/api/v1/datasets/{dataset_id}/versions/{version_id}/query",
-        json={"query": "SELECT department, AVG(salary) as avg_sal FROM dataset GROUP BY department ORDER BY avg_sal DESC"},
+        json={
+            "query": "SELECT department, AVG(salary) as avg_sal FROM dataset GROUP BY department ORDER BY avg_sal DESC"
+        },
         headers=headers,
     )
     assert res.status_code == 200

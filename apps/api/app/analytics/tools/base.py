@@ -62,8 +62,5 @@ class AnalysisTool(ABC):
         )
         columns = res["columns"]
         raw_rows = res["rows"]
-        dict_rows = [
-            r if isinstance(r, dict) else dict(zip(columns, r))
-            for r in raw_rows
-        ]
+        dict_rows = [r if isinstance(r, dict) else dict(zip(columns, r)) for r in raw_rows]
         return columns, dict_rows

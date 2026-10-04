@@ -52,9 +52,7 @@ async def list_analysis_history(
     """
     Lists past analysis executions for the authenticated user.
     """
-    return await analytics_service.list_history(
-        current_user=current_user, dataset_id=dataset_id, db=db, limit=limit
-    )
+    return await analytics_service.list_history(current_user=current_user, dataset_id=dataset_id, db=db, limit=limit)
 
 
 @router.get("/{analysis_id}", response_model=AnalysisResponse)
@@ -66,6 +64,4 @@ async def get_analysis(
     """
     Retrieves the execution status, structured results, and provenance of an analysis.
     """
-    return await analytics_service.get_analysis(
-        analysis_id=analysis_id, current_user=current_user, db=db
-    )
+    return await analytics_service.get_analysis(analysis_id=analysis_id, current_user=current_user, db=db)

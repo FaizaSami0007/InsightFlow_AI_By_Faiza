@@ -56,30 +56,36 @@ class DataQualityEngine:
             elif null_pct <= 50.0:
                 bucket = "high_20_to_50"
                 missing_buckets["high_20_to_50"] += 1
-                warnings.append({
-                    "rule": "MISSING_VALUES",
-                    "severity": "WARNING",
-                    "column": col_name,
-                    "message": f"Column '{col_name}' has high missingness ({null_pct}% nulls).",
-                    "details": {"null_count": null_cnt, "null_percentage": null_pct},
-                })
+                warnings.append(
+                    {
+                        "rule": "MISSING_VALUES",
+                        "severity": "WARNING",
+                        "column": col_name,
+                        "message": f"Column '{col_name}' has high missingness ({null_pct}% nulls).",
+                        "details": {"null_count": null_cnt, "null_percentage": null_pct},
+                    }
+                )
             else:
                 bucket = "critical_over_50"
                 missing_buckets["critical_over_50"] += 1
-                warnings.append({
-                    "rule": "MISSING_VALUES",
-                    "severity": "ERROR",
-                    "column": col_name,
-                    "message": f"Column '{col_name}' has critical missingness ({null_pct}% nulls).",
-                    "details": {"null_count": null_cnt, "null_percentage": null_pct},
-                })
+                warnings.append(
+                    {
+                        "rule": "MISSING_VALUES",
+                        "severity": "ERROR",
+                        "column": col_name,
+                        "message": f"Column '{col_name}' has critical missingness ({null_pct}% nulls).",
+                        "details": {"null_count": null_cnt, "null_percentage": null_pct},
+                    }
+                )
 
-            column_missing_breakdown.append({
-                "column_name": col_name,
-                "null_count": null_cnt,
-                "null_percentage": null_pct,
-                "bucket": bucket,
-            })
+            column_missing_breakdown.append(
+                {
+                    "column_name": col_name,
+                    "null_count": null_cnt,
+                    "null_percentage": null_pct,
+                    "bucket": bucket,
+                }
+            )
 
         avg_null_pct = (total_null_pct_sum / column_count) if column_count > 0 else 0.0
         missing_penalty = avg_null_pct * self.w_missing
@@ -94,12 +100,14 @@ class DataQualityEngine:
         duplicate_penalty = duplicate_percentage * self.w_dup
         if duplicate_percentage > 0.0:
             severity = "ERROR" if duplicate_percentage > 20.0 else "WARNING"
-            warnings.append({
-                "rule": "DUPLICATES",
-                "severity": severity,
-                "message": f"Dataset contains {duplicate_rows} duplicate rows ({duplicate_percentage}%).",
-                "details": {"duplicate_rows": duplicate_rows, "duplicate_percentage": duplicate_percentage},
-            })
+            warnings.append(
+                {
+                    "rule": "DUPLICATES",
+                    "severity": severity,
+                    "message": f"Dataset contains {duplicate_rows} duplicate rows ({duplicate_percentage}%).",
+                    "details": {"duplicate_rows": duplicate_rows, "duplicate_percentage": duplicate_percentage},
+                }
+            )
 
         duplicate_summary = {
             "duplicate_rows": duplicate_rows,
@@ -114,22 +122,26 @@ class DataQualityEngine:
             col_name = col.get("column_name", "")
             if col.get("is_constant", False):
                 constant_columns.append(col_name)
-                warnings.append({
-                    "rule": "CONSTANT_COLUMN",
-                    "severity": "INFO",
-                    "column": col_name,
-                    "message": f"Column '{col_name}' is constant (<=1 unique value) and offers no variance for analytics.",
-                    "details": {"unique_count": col.get("unique_count", 0)},
-                })
+                warnings.append(
+                    {
+                        "rule": "CONSTANT_COLUMN",
+                        "severity": "INFO",
+                        "column": col_name,
+                        "message": f"Column '{col_name}' is constant (<=1 unique value) and offers no variance for analytics.",
+                        "details": {"unique_count": col.get("unique_count", 0)},
+                    }
+                )
             elif col.get("is_near_constant", False):
                 near_constant_columns.append(col_name)
-                warnings.append({
-                    "rule": "NEAR_CONSTANT_COLUMN",
-                    "severity": "INFO",
-                    "column": col_name,
-                    "message": f"Column '{col_name}' is near-constant (dominated by >=99% single value).",
-                    "details": {},
-                })
+                warnings.append(
+                    {
+                        "rule": "NEAR_CONSTANT_COLUMN",
+                        "severity": "INFO",
+                        "column": col_name,
+                        "message": f"Column '{col_name}' is near-constant (dominated by >=99% single value).",
+                        "details": {},
+                    }
+                )
 
         constant_ratio = (len(constant_columns) / column_count) if column_count > 0 else 0.0
         constant_penalty = (constant_ratio * 100.0) * self.w_const
@@ -150,21 +162,25 @@ class DataQualityEngine:
                 if outlier_cnt > 0:
                     outlier_col_count += 1
                     total_outlier_pct_sum += outlier_pct
-                    outlier_breakdown.append({
-                        "column_name": col_name,
-                        "outlier_count": outlier_cnt,
-                        "outlier_percentage": outlier_pct,
-                        "lower_bound": col["numeric_stats"].get("lower_bound"),
-                        "upper_bound": col["numeric_stats"].get("upper_bound"),
-                    })
+                    outlier_breakdown.append(
+                        {
+                            "column_name": col_name,
+                            "outlier_count": outlier_cnt,
+                            "outlier_percentage": outlier_pct,
+                            "lower_bound": col["numeric_stats"].get("lower_bound"),
+                            "upper_bound": col["numeric_stats"].get("upper_bound"),
+                        }
+                    )
                     if outlier_pct > 10.0:
-                        warnings.append({
-                            "rule": "OUTLIERS",
-                            "severity": "WARNING",
-                            "column": col_name,
-                            "message": f"Column '{col_name}' contains {outlier_cnt} statistical outliers ({outlier_pct}%) outside 1.5x IQR.",
-                            "details": {"outlier_count": outlier_cnt, "outlier_percentage": outlier_pct},
-                        })
+                        warnings.append(
+                            {
+                                "rule": "OUTLIERS",
+                                "severity": "WARNING",
+                                "column": col_name,
+                                "message": f"Column '{col_name}' contains {outlier_cnt} statistical outliers ({outlier_pct}%) outside 1.5x IQR.",
+                                "details": {"outlier_count": outlier_cnt, "outlier_percentage": outlier_pct},
+                            }
+                        )
 
         avg_outlier_pct = (total_outlier_pct_sum / numeric_col_count) if numeric_col_count > 0 else 0.0
         outlier_penalty = avg_outlier_pct * self.w_outliers
