@@ -15,6 +15,7 @@ import { SchemaTab } from "@/components/profiling/schema-tab";
 import { StatisticsTab } from "@/components/profiling/statistics-tab";
 import { QualityTab } from "@/components/profiling/quality-tab";
 import { SemanticsTab } from "@/components/profiling/semantics-tab";
+import { AnalyticsTab } from "@/components/profiling/analytics-tab";
 
 export default function DatasetDetailPage() {
   const params = useParams();
@@ -129,6 +130,7 @@ export default function DatasetDetailPage() {
     { id: "statistics", label: "Statistics" },
     { id: "quality", label: "Data Quality" },
     { id: "semantics", label: "Semantics" },
+    { id: "analytics", label: "Analytics" },
   ];
 
   return (
@@ -209,6 +211,13 @@ export default function DatasetDetailPage() {
                   versionId={selectedVersionId}
                   profile={profile}
                   onRefresh={() => loadProfile(selectedVersionId, false)}
+                />
+              </TabContent>
+              <TabContent value="analytics">
+                <AnalyticsTab
+                  datasetId={dataset.id}
+                  versionId={selectedVersionId}
+                  profile={profile}
                 />
               </TabContent>
             </div>

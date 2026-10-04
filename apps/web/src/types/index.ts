@@ -244,3 +244,55 @@ export interface ApiErrorResponse {
     request_id: string;
   };
 }
+
+// Phase 4 Analytics Types
+export interface AnalysisProvenance {
+  dataset_id: string;
+  dataset_version_id: string;
+  operation: string;
+  parameters: Record<string, unknown>;
+  filters?: Record<string, unknown> | null;
+  execution_time_ms: number;
+  tool_version: string;
+  timestamp: string;
+}
+
+export interface AnalysisResponse {
+  analysis_id: string;
+  dataset_id: string;
+  dataset_version_id: string;
+  operation: string;
+  status: "PENDING" | "RUNNING" | "COMPLETED" | "FAILED";
+  columns: string[];
+  rows: Record<string, unknown>[];
+  summary?: Record<string, unknown> | null;
+  execution_time_ms: number;
+  row_count: number;
+  provenance?: AnalysisProvenance | null;
+  error_message?: string | null;
+  created_at?: string | null;
+}
+
+export interface AnalysisToolMetadata {
+  name: string;
+  display_name: string;
+  description: string;
+  category: "descriptive" | "aggregation" | "statistical" | "temporal" | "filtering";
+  required_params: string[];
+  optional_params: string[];
+  input_schema: Record<string, unknown>;
+  output_schema: Record<string, unknown>;
+  semantic_prerequisites: Record<string, unknown>;
+}
+
+export interface AnalysisHistoryItem {
+  id: string;
+  dataset_id: string;
+  dataset_version_id: string;
+  operation: string;
+  status: string;
+  execution_time_ms?: number | null;
+  row_count?: number | null;
+  created_at: string;
+  error_message?: string | null;
+}

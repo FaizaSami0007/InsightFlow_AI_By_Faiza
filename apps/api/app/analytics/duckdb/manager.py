@@ -167,6 +167,17 @@ class DuckDBManager:
             result = self._conn.execute(explain_sql).fetchall()
         return "\n".join([str(r[1]) for r in result if len(r) > 1])
 
+    def get_schema(self, dataset_version_id: str) -> Dict[str, str]:
+        """Retrieve schema dictionary (column_name -> dtype) for a registered dataset."""
+        table_name = self.get_table_name(dataset_version_id)
+        if not table_name:
+            raise ValueError(f"Dataset version '{dataset_version_id}' is not registered in DuckDB.")
+
+        with self._exec_lock:
+            res = self._conn.execute(f"DESCRIBE {table_name}").fetchall()
+            # DuckDB describe returns: column_name, column_type, null, key, default, extra
+            return {str(r[0]): str(r[1]) for r in res}
+
     def health_check(self) -> Dict[str, Any]:
         """Verify DuckDB analytical engine responsiveness."""
         with self._exec_lock:
@@ -175,3 +186,7 @@ class DuckDBManager:
                 "status": "healthy" if res and res[0] == 1 else "unhealthy",
                 "registered_datasets_count": len(self._registered_tables),
             }
+
+
+# Global Singleton instance
+duckdb_manager = DuckDBManager.get_instance()

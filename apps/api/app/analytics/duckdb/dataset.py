@@ -13,13 +13,19 @@ class AnalyticalDataset:
         file_path: str,
         file_format: str,
         duckdb_manager: Optional[DuckDBManager] = None,
+        schema: Optional[Dict[str, str]] = None,
+        columns: Optional[List[str]] = None,
+        view_name: Optional[str] = None,
     ):
         self.dataset_id = dataset_id
         self.version_id = version_id
         self.file_path = file_path
         self.file_format = file_format
         self.duckdb_manager = duckdb_manager or DuckDBManager.get_instance()
-        self.table_name = self.duckdb_manager.register_dataset(version_id, file_path, file_format)
+        self.table_name = view_name or self.duckdb_manager.register_dataset(version_id, file_path, file_format)
+        self.view_name = self.table_name
+        self.schema = schema if schema is not None else self.duckdb_manager.get_schema(version_id)
+        self.columns = columns if columns is not None else list(self.schema.keys())
 
     def query(
         self,

@@ -1,4 +1,4 @@
-from app.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+from app.database.models.analytics import AnalysisJob, AnalysisJobStatus
 from app.database.models.dataset import Dataset, DatasetStatus, DatasetVersion, FileFormat
 from app.database.models.profiling import (
     ColumnProfile,
@@ -29,4 +29,6 @@ __all__ = [
     "ProfileStatus",
     "ConceptualType",
     "SemanticRole",
+    "AnalysisJob",
+    "AnalysisJobStatus",
 ]
