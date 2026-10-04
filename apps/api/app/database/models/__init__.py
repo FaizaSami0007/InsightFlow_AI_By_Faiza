@@ -1,5 +1,14 @@
 from app.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.database.models.dataset import Dataset, DatasetStatus, DatasetVersion, FileFormat
+from app.database.models.profiling import (
+    ColumnProfile,
+    ConceptualType,
+    DataQualityReport,
+    DatasetProfile,
+    ProfileStatus,
+    SemanticColumn,
+    SemanticRole,
+)
 from app.database.models.system import SystemMetadata
 from app.database.models.user import User
 
@@ -13,4 +22,11 @@ __all__ = [
     "DatasetVersion",
     "DatasetStatus",
     "FileFormat",
+    "DatasetProfile",
+    "ColumnProfile",
+    "DataQualityReport",
+    "SemanticColumn",
+    "ProfileStatus",
+    "ConceptualType",
+    "SemanticRole",
 ]

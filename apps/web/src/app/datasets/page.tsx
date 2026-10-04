@@ -363,6 +363,16 @@ export default function DatasetsPage() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            <Link href={`/datasets/${dataset.id}`}>
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                title="Inspect and profile dataset"
+                                aria-label={`Inspect ${dataset.name}`}
+                              >
+                                Profile
+                              </Button>
+                            </Link>
                             <Button
                               variant="ghost"
                               size="sm"

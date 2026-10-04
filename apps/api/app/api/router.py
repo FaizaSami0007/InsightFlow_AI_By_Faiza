@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.api.routes.health import router as health_router
 from app.datasets.router import router as datasets_router
+from app.profiling.router import router as profiling_router
 from app.users.router import router as auth_router
 
 api_router = APIRouter()
@@ -14,3 +15,6 @@ api_router.include_router(auth_router, prefix="", tags=["auth"])
 
 # 3. Datasets & Ingestion endpoints
 api_router.include_router(datasets_router, prefix="", tags=["datasets"])
+
+# 4. Profiling, Semantics & Analytics endpoints
+api_router.include_router(profiling_router, prefix="", tags=["profiling"])

@@ -8,6 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 
 if TYPE_CHECKING:
+    from app.database.models.profiling import DatasetProfile
     from app.database.models.user import User
 
 
@@ -84,6 +85,13 @@ class DatasetVersion(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     # Relationships
     dataset: Mapped["Dataset"] = relationship("Dataset", back_populates="versions")
+    profile: Mapped[Optional["DatasetProfile"]] = relationship(
+        "DatasetProfile",
+        back_populates="version",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
 
     __table_args__ = (
         UniqueConstraint("dataset_id", "version_number", name="uq_dataset_version"),
