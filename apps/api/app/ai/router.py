@@ -171,6 +171,25 @@ async def delete_conversation(
     await db.commit()
 
 
+@router.get("/datasets/{dataset_id}/versions/{version_id}/starters", response_model=List[str])
+async def get_starter_questions(
+    dataset_id: str,
+    version_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> List[str]:
+    """Retrieve dynamic, schema-verified starter questions for the specified dataset version."""
+    from app.ai.context.builder import ContextBuilder
+
+    stmt = select(Dataset).where(Dataset.id == dataset_id, Dataset.owner_id == current_user.id)
+    res = await db.execute(stmt)
+    dataset = res.scalar_one_or_none()
+    if not dataset:
+        raise NotFoundError("Dataset not found.")
+
+    return await ContextBuilder.generate_starter_questions(db, version_id)
+
+
 @router.post("/chat", response_model=ChatResponse)
 async def chat(
     payload: ChatRequest,

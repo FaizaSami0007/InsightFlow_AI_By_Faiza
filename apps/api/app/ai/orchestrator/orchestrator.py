@@ -264,6 +264,24 @@ class AIOrchestrator:
         await db.commit()
         await db.refresh(assistant_db_msg)
 
+        # Generate dataset-aware suggested questions
+        suggested_questions = await ContextBuilder.generate_suggested_questions(
+            session=db,
+            version_id=version.id,
+            last_tool_calls=executed_tool_calls,
+            last_tool_results=executed_tool_results,
+        )
+
+        evidence = {
+            "dataset_id": dataset.id,
+            "dataset_name": dataset.name,
+            "dataset_version_id": version.id,
+            "version_number": version.version_number,
+            "analysis_ids": executed_analysis_ids,
+            "tool_operations": [tc["name"] for tc in executed_tool_calls],
+            "provenance": provenances,
+        }
+
         return ChatResponse(
             conversation_id=conversation.id,
             message_id=assistant_db_msg.id,
@@ -272,6 +290,8 @@ class AIOrchestrator:
             tool_results=executed_tool_results,
             analysis_ids=executed_analysis_ids,
             provenance=provenances,
+            suggested_questions=suggested_questions,
+            evidence=evidence,
             needs_clarification=needs_clarification,
             execution_time_ms=execution_time_ms,
             tokens_used=total_tokens,

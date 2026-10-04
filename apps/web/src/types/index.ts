@@ -351,18 +351,25 @@ export interface AIChatRequest {
 
 export interface AIChatResponse {
   conversation_id: string;
+  message_id: string;
   message: string;
   tool_calls: ChatToolCall[];
   tool_results: ChatToolResult[];
   analysis_ids: string[];
-  execution_steps: string[];
-  citations: string[];
-  needs_clarification: boolean;
-  finish_reason: string;
-  usage?: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
+  provenance: Record<string, unknown>[];
+  suggested_questions?: string[];
+  evidence?: {
+    dataset_id: string;
+    dataset_name: string;
+    dataset_version_id: string;
+    version_number: number;
+    analysis_ids: string[];
+    tool_operations: string[];
+    provenance: Record<string, unknown>[];
   } | null;
+  needs_clarification: boolean;
+  execution_time_ms: number;
+  tokens_used: number;
+  created_at: string;
 }
 

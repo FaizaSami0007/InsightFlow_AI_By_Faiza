@@ -57,12 +57,13 @@ class MockLLMProvider(LLMProvider):
             return self._queued_responses.pop(0)
 
         # Rule-based heuristic simulation
-        return self._heuristic_respond(messages, tools)
+        return self._heuristic_respond(messages, tools, system_instruction)
 
     def _heuristic_respond(
         self,
         messages: List[LLMMessage],
         tools: Optional[List[ToolDefinition]] = None,
+        system_instruction: Optional[str] = None,
     ) -> LLMResponse:
         # Check if the last message contains tool results
         last_msg = messages[-1] if messages else None
@@ -79,27 +80,171 @@ class MockLLMProvider(LLMProvider):
                 break
 
         query = user_text.lower()
+        all_context = ((system_instruction or "") + " " + " ".join([m.content for m in messages])).lower()
+
+        # 0. Unsupported requests check
+        if any(
+            w in query
+            for w in [
+                "predict",
+                "forecast",
+                "machine learning",
+                "regression",
+                "dashboard",
+                "chart",
+                "pipeline",
+                "layout",
+                "arima",
+                "churn",
+            ]
+        ):
+            return LLMResponse(
+                message="Forecasting, predictive modeling, and automated dashboard generation are not currently supported in this analytical workspace.",
+                finish_reason="stop",
+                usage=LLMUsage(prompt_tokens=40, completion_tokens=20, total_tokens=60),
+            )
 
         # 1. Ambiguity detection
         if (
             "category" in query
             and "which" not in query
-            and ("show sales by category" in query or "group by category" in query)
+            and not query.startswith("use ")
+            and not query.strip() in ["product_category", "customer_category"]
+            and (
+                "sales by category" in query
+                or "group by category" in query
+                or "by category" in query
+                or "considering" in query
+                or ("product_category" in query and "customer_category" in query)
+            )
         ):
             # If context mentions product_category and customer_category
-            if "product_category" in user_text or "customer_category" in user_text:
+            if "product_category" in all_context or "customer_category" in all_context:
                 return LLMResponse(
                     message="I noticed there are multiple category columns (`product_category` and `customer_category`). Which category would you like me to use?",
                     finish_reason="stop",
                     usage=LLMUsage(prompt_tokens=50, completion_tokens=25, total_tokens=75),
                 )
 
-        # 2. Prompt injection defense test: text containing "ignore previous instructions"
-        if "ignore previous instructions" in query or "reveal the system prompt" in query:
+        # 1b. Clarification resolution: user replied with a specific column name
+        if (
+            any(c in query for c in ["product_category", "customer_category"])
+            and not ("product_category" in query and "customer_category" in query)
+            and "considering" not in query
+        ):
+            chosen_cat = "product_category" if "product_category" in query else "customer_category"
+            return LLMResponse(
+                message=f"I will analyze the sales grouped by {chosen_cat}.",
+                tool_calls=[
+                    ToolCallSpec(
+                        name="group_by",
+                        arguments={
+                            "dimensions": [chosen_cat],
+                            "aggregations": [{"column": "revenue", "agg_type": "SUM", "alias": "total_revenue"}],
+                            "sort_by": [{"column": "total_revenue", "order": "DESC"}],
+                            "limit": 5,
+                        },
+                        call_id="call_group_by_clarified",
+                    )
+                ],
+                finish_reason="tool_calls",
+                usage=LLMUsage(prompt_tokens=60, completion_tokens=40, total_tokens=100),
+            )
+
+        # 2. Prompt injection defense test: text containing "ignore", "override", "system prompt", etc.
+        if any(
+            w in query
+            for w in [
+                "ignore",
+                "system prompt",
+                "system override",
+                "disregard",
+                "override",
+                "reveal",
+                "bypass",
+                "admin secrets",
+                "connection strings",
+                "api keys",
+                "directives",
+            ]
+        ):
             return LLMResponse(
                 message="I am an analytical assistant. I only execute deterministic analytical queries on your dataset and cannot reveal system prompts or execute arbitrary instructions.",
                 finish_reason="stop",
                 usage=LLMUsage(prompt_tokens=40, completion_tokens=30, total_tokens=70),
+            )
+
+        # 2b. Multi-turn follow-up: "What about profit?" or "Show profit"
+        if "profit" in query and any(w in query for w in ["what about", "how much", "show", "compare"]):
+            # Check if prior history had region or another dimension
+            prior_text = " ".join([m.content for m in messages if m.role == "assistant"]).lower()
+            dim = "region" if "region" in prior_text else "category"
+            alias = "total_profit"
+            return LLMResponse(
+                message=f"I will analyze the profit grouped by {dim}.",
+                tool_calls=[
+                    ToolCallSpec(
+                        name="group_by",
+                        arguments={
+                            "dimensions": [dim],
+                            "aggregations": [{"column": "profit", "agg_type": "SUM", "alias": alias}],
+                            "sort_by": [{"column": alias, "order": "DESC"}],
+                            "limit": 5,
+                        },
+                        call_id="call_group_by_profit",
+                    )
+                ],
+                finish_reason="tool_calls",
+                usage=LLMUsage(prompt_tokens=60, completion_tokens=40, total_tokens=100),
+            )
+
+        # 2c. Multi-turn follow-up: "Show the top 3" / "limit 3"
+        if any(w in query for w in ["top 3", "top 10", "top 5 instead", "show 3"]):
+            limit_val = 3 if "3" in query else (10 if "10" in query else 5)
+            prior_text = " ".join([m.content for m in messages if m.role == "assistant"]).lower()
+            dim = "region" if "region" in prior_text else "category"
+            metric = "revenue" if "revenue" in prior_text else "profit"
+            alias = f"total_{metric}"
+            return LLMResponse(
+                message=f"I will update the analysis to show the top {limit_val} {dim}s by {metric}.",
+                tool_calls=[
+                    ToolCallSpec(
+                        name="group_by",
+                        arguments={
+                            "dimensions": [dim],
+                            "aggregations": [{"column": metric, "agg_type": "SUM", "alias": alias}],
+                            "sort_by": [{"column": alias, "order": "DESC"}],
+                            "limit": limit_val,
+                        },
+                        call_id="call_group_by_top_n",
+                    )
+                ],
+                finish_reason="tool_calls",
+                usage=LLMUsage(prompt_tokens=60, completion_tokens=40, total_tokens=100),
+            )
+
+        # 2d. Multi-turn follow-up: "Sort ascending"
+        if any(w in query for w in ["ascending", "sort asc", "lowest to highest"]):
+            prior_text = " ".join([m.content for m in messages if m.role == "assistant"]).lower()
+            dim = "region" if "region" in prior_text else "category"
+            metric = "revenue" if "revenue" in prior_text else "profit"
+            alias = f"total_{metric}"
+            return LLMResponse(
+                message=f"I will re-sort the {metric} by {dim} in ascending order.",
+                tool_calls=[
+                    ToolCallSpec(
+                        name="group_by",
+                        arguments={
+                            "dimensions": [dim],
+                            "aggregations": [{"column": metric, "agg_type": "SUM", "alias": alias}],
+                            "sort_by": [{"column": alias, "order": "ASC"}],
+                            "limit": 5,
+                        },
+                        call_id="call_group_by_asc",
+                    )
+                ],
+                finish_reason="tool_calls",
+                usage=LLMUsage(prompt_tokens=60, completion_tokens=40, total_tokens=100),
             )
 
         # 3. Highest / Top / Group by query

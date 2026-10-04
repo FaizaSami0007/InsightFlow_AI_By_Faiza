@@ -72,6 +72,8 @@ class ChatResponse(BaseModel):
     tool_results: List[Dict[str, Any]] = Field(default_factory=list)
     analysis_ids: List[str] = Field(default_factory=list)
     provenance: List[Dict[str, Any]] = Field(default_factory=list)
+    suggested_questions: List[str] = Field(default_factory=list)
+    evidence: Optional[Dict[str, Any]] = None
     needs_clarification: bool = False
     execution_time_ms: float = 0.0
     tokens_used: int = 0
