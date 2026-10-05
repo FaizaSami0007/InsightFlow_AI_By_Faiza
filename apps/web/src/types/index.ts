@@ -648,5 +648,116 @@ export interface SharedFilterRefreshRequest {
   filter_values: Record<string, unknown>;
 }
 
+// ==========================================
+// Phase 10 — Multi-Dataset & Federation Types
+// ==========================================
+
+export type RelationshipType = "ONE_TO_ONE" | "ONE_TO_MANY" | "MANY_TO_ONE" | "MANY_TO_MANY";
+export type RelationshipStatus = "PROPOSED" | "VALIDATED" | "REJECTED" | "DISABLED";
+
+export interface DatasetCollectionItem {
+  id: string;
+  collection_id: string;
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  dataset?: Dataset | null;
+  created_at: string;
+}
+
+export interface DatasetRelationship {
+  id: string;
+  collection_id?: string | null;
+  user_id: string;
+  source_dataset_id: string;
+  source_version_id: string;
+  source_field: string;
+  target_dataset_id: string;
+  target_version_id: string;
+  target_field: string;
+  relationship_type: RelationshipType;
+  status: RelationshipStatus;
+  coverage_ratio: number;
+  source_unique_ratio: number;
+  target_unique_ratio: number;
+  null_rate: number;
+  quality_score: number;
+  evidence: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DatasetCollection {
+  id: string;
+  name: string;
+  description?: string | null;
+  user_id: string;
+  metadata_json: Record<string, unknown>;
+  items: DatasetCollectionItem[];
+  relationships: DatasetRelationship[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DiscoveredRelationshipCandidate {
+  source_dataset_id: string;
+  source_dataset_name: string;
+  source_field: string;
+  target_dataset_id: string;
+  target_dataset_name: string;
+  target_field: string;
+  inferred_type: RelationshipType;
+  confidence: number;
+  reason: string;
+}
+
+export interface DiscoveryResponse {
+  candidates: DiscoveredRelationshipCandidate[];
+  total: number;
+}
+
+export interface FederatedAggregationSpec {
+  field: string;
+  agg: "SUM" | "AVG" | "COUNT" | "COUNT_DISTINCT" | "MIN" | "MAX";
+  alias?: string | null;
+}
+
+export interface FederatedFilterSpec {
+  field: string;
+  operator: "=" | "!=" | ">" | "<" | ">=" | "<=" | "LIKE" | "IN";
+  value: unknown;
+}
+
+export interface FederatedAnalysisRequest {
+  dataset_version_ids: string[];
+  dimensions: string[];
+  measures: FederatedAggregationSpec[];
+  filters?: FederatedFilterSpec[];
+  sort_by?: string | null;
+  sort_order?: "ASC" | "DESC";
+  limit?: number;
+}
+
+export interface FederatedAnalysisResponse {
+  analysis_id: string;
+  columns: string[];
+  rows: Record<string, unknown>[];
+  row_count: number;
+  execution_time_ms: number;
+  datasets_involved: Array<{
+    dataset_id: string;
+    dataset_version_id: string;
+    version_num: number;
+  }>;
+  relationships_used: Array<{
+    id: string;
+    source: string;
+    target: string;
+    type: string;
+  }>;
+  join_path_description: string;
+  provenance: Record<string, unknown>;
+  warnings: string[];
+}
+
 
 

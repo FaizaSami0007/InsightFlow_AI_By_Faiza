@@ -9,6 +9,9 @@ from app.core.config import settings
 from app.core.error_handlers import register_error_handlers
 from app.core.logging import logger, setup_logging
 from app.core.security import setup_security_middleware
+from app.database.base import Base
+from app.database.models import *  # noqa: F403
+from app.database.session import engine
 
 
 @asynccontextmanager
@@ -17,8 +20,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Setup structured logging
     setup_logging(level=settings.log_level, log_format=settings.log_format)
     logger.info(f"Starting {settings.app_name} API in [{settings.app_env}] environment (port={settings.api_port})")
+
+    # Initialize tables if not present (e.g. in SQLite)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
     yield
     logger.info(f"Shutting down {settings.app_name} API")
+
 
 
 def create_application() -> FastAPI:

@@ -107,13 +107,26 @@ class DuckDBManager:
 
     def execute_query(
         self,
-        dataset_version_id: str,
-        sql_query: str,
+        dataset_version_id: Optional[str] = None,
+        sql_query: str = "",
         parameters: Optional[List[Any]] = None,
         max_rows: Optional[int] = None,
+        timeout_seconds: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Execute a validated read-only SQL query against the registered dataset version."""
+        # Handle case where single SQL string was passed as first argument
+        if dataset_version_id and not sql_query and any(dataset_version_id.strip().upper().startswith(k) for k in ["SELECT", "WITH", "EXPLAIN"]):
+            return self.execute_federated_query(
+                sql_query=dataset_version_id,
+                parameters=parameters,
+                max_rows=max_rows,
+                timeout_seconds=timeout_seconds,
+            )
+
         self.validate_query_safety(sql_query)
+
+        if not dataset_version_id:
+            raise ValueError("dataset_version_id is required for single dataset query execution.")
 
         table_name = self.get_table_name(dataset_version_id)
         if not table_name:
@@ -150,6 +163,45 @@ class DuckDBManager:
             "metadata": {
                 "dataset_version_id": dataset_version_id,
                 "table_name": table_name,
+                "executed_query": safe_sql,
+            },
+        }
+
+    def execute_federated_query(
+        self,
+        sql_query: str,
+        parameters: Optional[List[Any]] = None,
+        max_rows: Optional[int] = None,
+        timeout_seconds: Optional[float] = None,
+    ) -> Dict[str, Any]:
+        """Execute a validated read-only federated SQL query across multiple registered views."""
+        self.validate_query_safety(sql_query)
+
+        limit_to_apply = max_rows or self.max_result_rows
+        safe_sql = sql_query
+        if not re.search(r"\bLIMIT\s+\d+", safe_sql, re.IGNORECASE):
+            safe_sql = f"{safe_sql} LIMIT {limit_to_apply}"
+
+        start_time = time.perf_counter()
+        with self._exec_lock:
+            try:
+                rel = self._conn.execute(safe_sql, parameters or [])
+                columns = [desc[0] for desc in rel.description] if rel.description else []
+                rows = rel.fetchall()
+            except duckdb.Error as e:
+                raise ValueError(f"DuckDB execution error: {str(e)}")
+
+        execution_time_ms = round((time.perf_counter() - start_time) * 1000.0, 2)
+
+        if len(rows) > limit_to_apply:
+            rows = rows[:limit_to_apply]
+
+        return {
+            "columns": columns,
+            "rows": rows,
+            "row_count": len(rows),
+            "execution_time_ms": execution_time_ms,
+            "metadata": {
                 "executed_query": safe_sql,
             },
         }

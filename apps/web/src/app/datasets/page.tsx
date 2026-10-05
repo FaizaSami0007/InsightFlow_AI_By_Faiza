@@ -7,6 +7,7 @@ import {
   Download,
   FileSpreadsheet,
   History,
+  Layers,
   Lock,
   Plus,
   RefreshCw,
@@ -255,6 +256,15 @@ export default function DatasetsPage() {
             </p>
           </div>
           <div className="flex items-center gap-2.5">
+            <Link href="/collections">
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<Layers className="h-3.5 w-3.5" />}
+              >
+                Collections & Federation
+              </Button>
+            </Link>
             <Button
               variant="outline"
               size="sm"

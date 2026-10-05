@@ -1,3 +1,4 @@
+from app.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.database.models.ai import AIConversation, AIMessage, AIRequestLog, MessageRole
 from app.database.models.analytics import AnalysisJob, AnalysisJobStatus
 from app.database.models.dashboards import (
@@ -12,6 +13,13 @@ from app.database.models.exports import (
     DashboardShare,
     ExportFormat,
     ExportStatus,
+)
+from app.database.models.federation import (
+    DatasetCollection,
+    DatasetCollectionItem,
+    DatasetRelationship,
+    RelationshipStatus,
+    RelationshipType,
 )
 from app.database.models.profiling import (
     ColumnProfile,
@@ -56,6 +64,12 @@ __all__ = [
     "DashboardShare",
     "ExportFormat",
     "ExportStatus",
+    "DatasetCollection",
+    "DatasetCollectionItem",
+    "DatasetRelationship",
+    "RelationshipType",
+    "RelationshipStatus",
 ]
+
 
 
