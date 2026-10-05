@@ -759,5 +759,94 @@ export interface FederatedAnalysisResponse {
   warnings: string[];
 }
 
+// Phase 11 Predictive Analytics & Forecasting Types
+export type ForecastModelType =
+  | "AUTO"
+  | "NAIVE"
+  | "SEASONAL_NAIVE"
+  | "MOVING_AVERAGE"
+  | "EXPONENTIAL_SMOOTHING"
+  | "ARIMA"
+  | "SARIMA";
 
+export type ForecastStatus =
+  | "PENDING"
+  | "TRAINING"
+  | "VALIDATING"
+  | "FORECASTING"
+  | "COMPLETED"
+  | "FAILED"
+  | "STALE";
 
+export interface ForecastPoint {
+  date: string;
+  forecast: number;
+  lower: number;
+  upper: number;
+}
+
+export interface HistoricalPoint {
+  date: string;
+  actual: number;
+}
+
+export interface ForecastMetrics {
+  mae: number;
+  rmse: number;
+  mape: number;
+  smape: number;
+  baseline_mae: number;
+  relative_improvement_pct: number;
+}
+
+export interface ForecastDiagnostics {
+  frequency_detected: string;
+  observations_count: number;
+  missing_periods_imputed: number;
+  outliers_detected: number;
+  seasonality_detected: boolean;
+  seasonality_period?: number | null;
+  stationarity_is_stationary: boolean;
+  parameters: Record<string, unknown>;
+  transformations: string[];
+}
+
+export interface ForecastResponse {
+  id: string;
+  dataset_id: string;
+  dataset_version_id: string;
+  target_field: string;
+  time_field: string;
+  frequency: string;
+  forecast_horizon: number;
+  confidence_level: number;
+  requested_model_type: ForecastModelType;
+  selected_model_name: string;
+  status: ForecastStatus;
+  metrics: ForecastMetrics;
+  predictions: ForecastPoint[];
+  historical_points: HistoricalPoint[];
+  diagnostics: ForecastDiagnostics;
+  provenance: Record<string, unknown>;
+  error_message?: string | null;
+  execution_time_ms: number;
+  created_at: string;
+}
+
+export interface ForecastRunRequest {
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  target_field: string;
+  time_field: string;
+  frequency?: string | null;
+  forecast_horizon?: number;
+  confidence_level?: number;
+  model_type?: ForecastModelType;
+  allow_negative?: boolean;
+  filters?: Array<{ field: string; operator: string; value: unknown }>;
+}
+
+export interface ForecastListResponse {
+  items: ForecastResponse[];
+  total: number;
+}

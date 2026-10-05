@@ -21,6 +21,11 @@ from app.database.models.federation import (
     RelationshipStatus,
     RelationshipType,
 )
+from app.database.models.forecasting import (
+    ForecastExecution,
+    ForecastModelType,
+    ForecastStatus,
+)
 from app.database.models.profiling import (
     ColumnProfile,
     ConceptualType,
@@ -69,6 +74,9 @@ __all__ = [
     "DatasetRelationship",
     "RelationshipType",
     "RelationshipStatus",
+    "ForecastExecution",
+    "ForecastModelType",
+    "ForecastStatus",
 ]
 
 

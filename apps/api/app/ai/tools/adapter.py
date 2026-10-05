@@ -82,16 +82,34 @@ class AIToolAdapter:
             )
         )
 
+        tool_defs.append(
+            ToolDefinition(
+                name="run_time_series_forecast",
+                description="Performs validated time-series forecasting to predict future values of a numeric target variable over a specified horizon.",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "target_field": {"type": "string", "description": "Numeric column name to forecast (e.g. 'revenue', 'orders')"},
+                        "time_field": {"type": "string", "description": "Date or timestamp column name (e.g. 'order_date')"},
+                        "forecast_horizon": {"type": "integer", "description": "Number of future periods to predict (e.g. 6)"},
+                        "frequency": {"type": "string", "enum": ["D", "W", "M", "Q", "Y"], "description": "Optional frequency"},
+                        "confidence_level": {"type": "number", "description": "Confidence level for prediction interval (default 0.95)"},
+                    },
+                    "required": ["target_field", "time_field"],
+                },
+            )
+        )
+
         return tool_defs
 
     @classmethod
     def validate_tool_call(cls, tool_call: ToolCallSpec) -> None:
         """Ensure tool exists in allowlist and arguments are well-formed."""
-        if tool_call.name == "execute_federated_query":
+        if tool_call.name in ["execute_federated_query", "run_time_series_forecast"]:
             return
         tool = analysis_registry.get(tool_call.name)
         if not tool:
-            allowed = [m.name for m in analysis_registry.list_tools()] + ["execute_federated_query"]
+            allowed = [m.name for m in analysis_registry.list_tools()] + ["execute_federated_query", "run_time_series_forecast"]
             raise ValueError(f"Tool '{tool_call.name}' is not an authorized analytical tool. Allowed: {allowed}")
 
     @classmethod
@@ -108,6 +126,38 @@ class AIToolAdapter:
         Returns execution result dict including analysis_id, columns, rows, summary, and provenance.
         """
         cls.validate_tool_call(tool_call)
+
+        if tool_call.name == "run_time_series_forecast":
+            from app.forecasting.schemas import ForecastRunRequest
+            from app.forecasting.service import ForecastService
+
+            args = dict(tool_call.arguments)
+            fc_req = ForecastRunRequest(
+                dataset_id=dataset_id,
+                dataset_version_id=dataset_version_id,
+                target_field=args.get("target_field", ""),
+                time_field=args.get("time_field", ""),
+                frequency=args.get("frequency"),
+                forecast_horizon=int(args.get("forecast_horizon", 6)),
+                confidence_level=float(args.get("confidence_level", 0.95)),
+            )
+            fc_service = ForecastService(db)
+            fc_res = await fc_service.run_forecast(user.id, fc_req)
+
+            return {
+                "forecast_id": fc_res.id,
+                "operation": "run_time_series_forecast",
+                "status": "COMPLETED",
+                "model_selected": fc_res.selected_model_name,
+                "frequency": fc_res.frequency,
+                "forecast_horizon": fc_res.forecast_horizon,
+                "metrics": fc_res.metrics.model_dump(),
+                "predictions": [p.model_dump() for p in fc_res.predictions],
+                "historical_points_count": len(fc_res.historical_points),
+                "summary": f"Fitted {fc_res.selected_model_name} on {len(fc_res.historical_points)} periods with validation MAE of {fc_res.metrics.mae:.2f}. Forecasted next {fc_res.forecast_horizon} periods ({fc_res.frequency}).",
+                "provenance": fc_res.provenance,
+                "warnings": fc_res.warnings,
+            }
 
         if tool_call.name == "execute_federated_query":
             from app.federation.schemas import FederatedAggregationSpec, FederatedAnalysisRequest
