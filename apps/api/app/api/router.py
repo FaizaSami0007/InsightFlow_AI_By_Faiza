@@ -10,6 +10,7 @@ from app.exports.router import router as exports_router
 from app.federation.router import router as federation_router
 from app.forecasting.router import router as forecasting_router
 from app.profiling.router import router as profiling_router
+from app.scenarios.router import router as scenarios_router
 from app.shares.router import router as shares_router
 from app.users.router import router as auth_router
 from app.visualization.router import router as visualization_router
@@ -54,3 +55,6 @@ api_router.include_router(forecasting_router, prefix="", tags=["forecasting"])
 
 # 13. Anomaly Detection & Proactive Insight Intelligence endpoints
 api_router.include_router(anomalies_router, prefix="", tags=["anomalies"])
+
+# 14. Decision Intelligence & Scenario Simulation endpoints
+api_router.include_router(scenarios_router, prefix="", tags=["scenarios"])

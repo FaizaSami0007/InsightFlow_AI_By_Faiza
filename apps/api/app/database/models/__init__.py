@@ -44,6 +44,12 @@ from app.database.models.profiling import (
     SemanticColumn,
     SemanticRole,
 )
+from app.database.models.scenarios import (
+    AssumptionOperation,
+    ScenarioRecord,
+    ScenarioStatus,
+    ScenarioType,
+)
 from app.database.models.system import SystemMetadata
 from app.database.models.user import User
 
@@ -93,7 +99,8 @@ __all__ = [
     "DetectionMethod",
     "InsightRecord",
     "InsightType",
+    "ScenarioRecord",
+    "ScenarioStatus",
+    "ScenarioType",
+    "AssumptionOperation",
 ]
-
-
-

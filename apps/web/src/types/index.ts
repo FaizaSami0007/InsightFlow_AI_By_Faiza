@@ -953,3 +953,135 @@ export interface InsightListResponse {
   items: InsightResponse[];
   total: number;
 }
+
+// ==========================================
+// Phase 13 — Decision Intelligence & Scenario Simulation Types
+// ==========================================
+
+export type ScenarioStatus =
+  | "DRAFT"
+  | "VALIDATED"
+  | "RUNNING"
+  | "COMPLETED"
+  | "FAILED"
+  | "EXPIRED";
+
+export type ScenarioType =
+  | "SINGLE_VARIABLE"
+  | "MULTI_VARIABLE"
+  | "SENSITIVITY"
+  | "COMPARISON";
+
+export type AssumptionOperation =
+  | "PERCENTAGE_CHANGE"
+  | "ABSOLUTE_CHANGE"
+  | "MULTIPLICATIVE_FACTOR"
+  | "SET_VALUE";
+
+export interface AssumptionSpec {
+  variable: string;
+  operation: AssumptionOperation;
+  value: number;
+  unit?: string | null;
+  description?: string | null;
+}
+
+export interface ScenarioProvenance {
+  scenario_id: string;
+  dataset_id: string;
+  dataset_version_id: string;
+  dataset_version_num?: number | null;
+  baseline_source: string;
+  engine_version: string;
+  calculated_at: string;
+  is_simulation: boolean;
+  isolation_context: string;
+}
+
+export interface ScenarioResultResponse {
+  id: string;
+  name: string;
+  description?: string | null;
+  scenario_type: ScenarioType;
+  status: ScenarioStatus;
+  dataset_id: string;
+  dataset_version_id: string;
+  target_metric: string;
+  baseline_source?: string;
+  baseline_value: number;
+  scenario_value: number;
+  absolute_change: number;
+  percentage_change?: number | null;
+  assumptions: AssumptionSpec[];
+  steps?: SensitivityStep[];
+  comparisons?: ScenarioComparisonItem[];
+  engine_version?: string;
+  provenance: ScenarioProvenance | Record<string, unknown>;
+  narrative?: string | null;
+  reliability_notes?: string[];
+  execution_time_ms?: number;
+  created_at: string;
+}
+
+export interface SensitivityStep {
+  step_index: number;
+  variable: string;
+  delta_pct?: number | null;
+  delta_abs?: number | null;
+  simulated_driver_value: number;
+  outcome_value: number;
+  absolute_change: number;
+  percentage_change?: number | null;
+}
+
+export interface ScenarioComparisonItem {
+  branch_name: string;
+  is_baseline: boolean;
+  assumptions: AssumptionSpec[];
+  outcome_value: number;
+  absolute_change: number;
+  percentage_change?: number | null;
+  narrative?: string | null;
+}
+
+export interface WhatIfScenarioRequest {
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  name?: string;
+  description?: string | null;
+  target_metric: string;
+  assumptions: AssumptionSpec[];
+  allow_negative?: boolean;
+}
+
+export interface SensitivityAnalysisRequest {
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  name?: string;
+  target_metric: string;
+  sweep_variable: string;
+  min_pct?: number;
+  max_pct?: number;
+  step_pct?: number;
+  allow_negative?: boolean;
+}
+
+export interface ScenarioBranchSpec {
+  branch_name: string;
+  assumptions: AssumptionSpec[];
+}
+
+export interface ScenarioComparisonRequest {
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  name?: string;
+  target_metric: string;
+  branches: ScenarioBranchSpec[];
+  allow_negative?: boolean;
+}
+
+export interface ScenarioListResponse {
+  items: ScenarioResultResponse[];
+  total: number;
+}
+

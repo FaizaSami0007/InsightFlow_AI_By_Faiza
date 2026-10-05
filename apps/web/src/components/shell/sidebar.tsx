@@ -36,6 +36,7 @@ const NAV_ITEMS: NavItemConfig[] = [
   { id: "dashboards", label: "Dashboards", href: "/dashboards", icon: LayoutDashboard, badge: "Phase 8" },
   { id: "forecast", label: "Forecasting", href: "/forecast", icon: TrendingUp, badge: "Phase 11" },
   { id: "insights", label: "Insights & Anomalies", href: "/insights", icon: Zap, badge: "Phase 12" },
+  { id: "scenarios", label: "Scenarios & What-If", href: "/scenarios", icon: SlidersHorizontal, badge: "Phase 13" },
   { id: "settings", label: "Settings", href: "/#settings", icon: SlidersHorizontal },
 ];
 

@@ -86,7 +86,11 @@ class AnomalyService:
             if not ver:
                 raise AnomalyServiceError(f"Version {version_id} not found.")
 
-            file_path = storage.get_absolute_path(ver.file_name)
+            ref = ver.storage_reference or ver.file_name
+            try:
+                file_path = str(storage.get_file_path(ref))
+            except Exception:
+                file_path = str(getattr(storage, "base_dir", "")) + "/" + str(ref)
             table_name = self.duckdb_manager.register_dataset(
                 dataset_version_id=version_id,
                 file_path=str(file_path),

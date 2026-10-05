@@ -130,12 +130,50 @@ class AIToolAdapter:
             )
         )
 
+        tool_defs.append(
+            ToolDefinition(
+                name="run_what_if_scenario",
+                description="Simulates a decision intelligence what-if scenario by applying structured assumptions (e.g. price +5%, orders -10%) to analytical baselines without modifying historical data.",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "target_metric": {"type": "string", "description": "Primary output metric to evaluate (e.g. 'revenue', 'profit')"},
+                        "assumptions": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "variable": {"type": "string", "description": "Variable to modify (e.g. 'price', 'quantity')"},
+                                    "operation": {
+                                        "type": "string",
+                                        "enum": ["PERCENTAGE_CHANGE", "ABSOLUTE_CHANGE", "DIRECT_SET", "MULTIPLIER"],
+                                        "description": "Operation type (default: PERCENTAGE_CHANGE)",
+                                    },
+                                    "value": {"type": "number", "description": "Numeric modification value (e.g. 10 for +10%)"},
+                                    "unit": {"type": "string", "description": "Unit (e.g. '%', '$')"},
+                                },
+                                "required": ["variable", "value"],
+                            },
+                            "description": "List of assumptions applied to baseline drivers",
+                        },
+                        "name": {"type": "string", "description": "Optional name for scenario run"},
+                    },
+                    "required": ["target_metric", "assumptions"],
+                },
+            )
+        )
+
         return tool_defs
 
     @classmethod
     def validate_tool_call(cls, tool_call: ToolCallSpec) -> None:
         """Ensure tool exists in allowlist and arguments are well-formed."""
-        allowed_extras = ["execute_federated_query", "run_time_series_forecast", "detect_anomalies_and_insights"]
+        allowed_extras = [
+            "execute_federated_query",
+            "run_time_series_forecast",
+            "detect_anomalies_and_insights",
+            "run_what_if_scenario",
+        ]
         if tool_call.name in allowed_extras:
             return
         tool = analysis_registry.get(tool_call.name)
@@ -288,6 +326,45 @@ class AIToolAdapter:
                 "insights": [i.model_dump() for i in anom_res.insights],
                 "summary": f"Detected {anom_res.total_anomalies_count} anomalies ({anom_res.critical_count} critical, {anom_res.high_count} high) using {method_enum.value}.",
                 "execution_time_ms": anom_res.execution_time_ms,
+            }
+
+        if tool_call.name == "run_what_if_scenario":
+            from app.scenarios.schemas import AssumptionSpec, WhatIfScenarioRequest
+            from app.scenarios.service import ScenarioService
+
+            args = dict(tool_call.arguments)
+            raw_target = args.get("target_metric", "revenue")
+            raw_assumptions = args.get("assumptions") or []
+            parsed_assumptions = [
+                AssumptionSpec(**a) if isinstance(a, dict) else AssumptionSpec(variable=str(a), value=10.0)
+                for a in raw_assumptions
+            ]
+
+            sc_req = WhatIfScenarioRequest(
+                dataset_id=dataset_id,
+                dataset_version_id=dataset_version_id,
+                name=args.get("name"),
+                target_metric=raw_target,
+                assumptions=parsed_assumptions,
+            )
+
+            sc_service = ScenarioService(db)
+            sc_res = await sc_service.run_what_if_scenario(user.id, sc_req)
+
+            return {
+                "operation": "run_what_if_scenario",
+                "status": "COMPLETED",
+                "scenario_id": sc_res.id,
+                "name": sc_res.name,
+                "target_metric": sc_res.target_metric,
+                "baseline_value": sc_res.baseline_value,
+                "scenario_value": sc_res.scenario_value,
+                "absolute_change": sc_res.absolute_change,
+                "percentage_change": sc_res.percentage_change,
+                "assumptions": [a.model_dump() for a in sc_res.assumptions],
+                "narrative": sc_res.narrative,
+                "summary": sc_res.narrative,
+                "provenance": sc_res.provenance,
             }
 
         args = dict(tool_call.arguments)
