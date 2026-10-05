@@ -13,7 +13,9 @@ import {
   LineChart,
   SlidersHorizontal,
   Sparkles,
+  TrendingUp,
   X,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useShellStore } from "@/stores/use-shell-store";
@@ -32,6 +34,8 @@ const NAV_ITEMS: NavItemConfig[] = [
   { id: "analytics", label: "Analytics Engine", href: "/#analytics", icon: LineChart, badge: "Phase 4" },
   { id: "ai", label: "AI Analyst", href: "/analyst", icon: Bot, badge: "Phase 5" },
   { id: "dashboards", label: "Dashboards", href: "/dashboards", icon: LayoutDashboard, badge: "Phase 8" },
+  { id: "forecast", label: "Forecasting", href: "/forecast", icon: TrendingUp, badge: "Phase 11" },
+  { id: "insights", label: "Insights & Anomalies", href: "/insights", icon: Zap, badge: "Phase 12" },
   { id: "settings", label: "Settings", href: "/#settings", icon: SlidersHorizontal },
 ];
 

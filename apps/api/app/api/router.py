@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.ai.router import router as ai_router
 from app.analytics.router import router as analytics_router
+from app.anomalies.router import router as anomalies_router
 from app.api.routes.health import router as health_router
 from app.dashboards.router import router as dashboards_router
 from app.datasets.router import router as datasets_router
@@ -51,6 +52,5 @@ api_router.include_router(federation_router, prefix="", tags=["federation"])
 # 12. Predictive Analytics & Forecasting endpoints
 api_router.include_router(forecasting_router, prefix="", tags=["forecasting"])
 
-
-
-
+# 13. Anomaly Detection & Proactive Insight Intelligence endpoints
+api_router.include_router(anomalies_router, prefix="", tags=["anomalies"])

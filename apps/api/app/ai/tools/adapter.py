@@ -100,16 +100,47 @@ class AIToolAdapter:
             )
         )
 
+        tool_defs.append(
+            ToolDefinition(
+                name="detect_anomalies_and_insights",
+                description="Performs statistical anomaly detection across numeric metrics and dimensions to identify point anomalies, trends, seasonal outliers, group deviations, and root-cause contributions.",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "metric_fields": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "Numeric column names to analyze for anomalies (e.g. ['revenue', 'orders'])",
+                        },
+                        "time_field": {"type": "string", "description": "Optional date/timestamp column for temporal series analysis"},
+                        "dimension_fields": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "Optional categorical attributes for group-level and root-cause decomposition (e.g. ['region', 'category'])",
+                        },
+                        "method": {
+                            "type": "string",
+                            "enum": ["Z_SCORE", "ROBUST_Z_SCORE", "IQR", "ROLLING_BASELINE", "SEASONAL_BASELINE", "FORECAST_DEVIATION"],
+                            "description": "Statistical detection methodology (default: ROBUST_Z_SCORE)",
+                        },
+                        "sensitivity": {"type": "number", "description": "Threshold multiplier (default: 3.0)"},
+                    },
+                    "required": ["metric_fields"],
+                },
+            )
+        )
+
         return tool_defs
 
     @classmethod
     def validate_tool_call(cls, tool_call: ToolCallSpec) -> None:
         """Ensure tool exists in allowlist and arguments are well-formed."""
-        if tool_call.name in ["execute_federated_query", "run_time_series_forecast"]:
+        allowed_extras = ["execute_federated_query", "run_time_series_forecast", "detect_anomalies_and_insights"]
+        if tool_call.name in allowed_extras:
             return
         tool = analysis_registry.get(tool_call.name)
         if not tool:
-            allowed = [m.name for m in analysis_registry.list_tools()] + ["execute_federated_query", "run_time_series_forecast"]
+            allowed = [m.name for m in analysis_registry.list_tools()] + allowed_extras
             raise ValueError(f"Tool '{tool_call.name}' is not an authorized analytical tool. Allowed: {allowed}")
 
     @classmethod
@@ -203,6 +234,60 @@ class AIToolAdapter:
                 "execution_time_ms": fed_res.execution_time_ms,
                 "provenance": fed_res.provenance,
                 "warnings": fed_res.warnings,
+            }
+
+        if tool_call.name == "detect_anomalies_and_insights":
+            from app.anomalies.schemas import AnomalyDetectionRequest
+            from app.anomalies.service import AnomalyService
+            from app.database.models.anomalies import DetectionMethod
+
+            args = dict(tool_call.arguments)
+            raw_metrics = args.get("metric_fields") or []
+            if isinstance(raw_metrics, str):
+                raw_metrics = [raw_metrics]
+            if not raw_metrics and args.get("metric_field"):
+                raw_metrics = [args.get("metric_field")]
+            if not raw_metrics and args.get("target_field"):
+                raw_metrics = [args.get("target_field")]
+
+            raw_dims = args.get("dimension_fields") or []
+            if isinstance(raw_dims, str):
+                raw_dims = [raw_dims]
+            if not raw_dims and args.get("dimension_field"):
+                raw_dims = [args.get("dimension_field")]
+
+            method_str = str(args.get("method") or "ROBUST_Z_SCORE").upper()
+            try:
+                method_enum = DetectionMethod(method_str)
+            except ValueError:
+                method_enum = DetectionMethod.ROBUST_Z_SCORE
+
+            anomaly_req = AnomalyDetectionRequest(
+                dataset_id=dataset_id,
+                dataset_version_id=dataset_version_id,
+                metric_fields=raw_metrics,
+                time_field=args.get("time_field"),
+                dimension_fields=raw_dims,
+                method=method_enum,
+                sensitivity=float(args.get("sensitivity", 3.0)),
+            )
+            anomaly_service = AnomalyService(db)
+            anom_res = await anomaly_service.detect_anomalies(user.id, anomaly_req)
+
+            return {
+                "operation": "detect_anomalies_and_insights",
+                "status": "COMPLETED",
+                "dataset_id": anom_res.dataset_id,
+                "dataset_version_id": anom_res.dataset_version_id,
+                "total_anomalies_count": anom_res.total_anomalies_count,
+                "critical_count": anom_res.critical_count,
+                "high_count": anom_res.high_count,
+                "medium_count": anom_res.medium_count,
+                "low_count": anom_res.low_count,
+                "anomalies": [a.model_dump() for a in anom_res.anomalies],
+                "insights": [i.model_dump() for i in anom_res.insights],
+                "summary": f"Detected {anom_res.total_anomalies_count} anomalies ({anom_res.critical_count} critical, {anom_res.high_count} high) using {method_enum.value}.",
+                "execution_time_ms": anom_res.execution_time_ms,
             }
 
         args = dict(tool_call.arguments)

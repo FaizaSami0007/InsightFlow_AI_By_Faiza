@@ -850,3 +850,106 @@ export interface ForecastListResponse {
   items: ForecastResponse[];
   total: number;
 }
+
+// Phase 12 Anomaly Detection & Proactive Insight Intelligence Types
+export type AnomalySeverity = "INFO" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+export type AnomalyType = "POINT" | "TREND" | "SEASONAL" | "MAGNITUDE" | "DISTRIBUTION" | "GROUP";
+export type AnomalyStatus = "DETECTED" | "ACKNOWLEDGED" | "DISMISSED" | "RESOLVED";
+export type DetectionMethod =
+  | "Z_SCORE"
+  | "ROBUST_Z_SCORE"
+  | "IQR"
+  | "ROLLING_BASELINE"
+  | "SEASONAL_BASELINE"
+  | "FORECAST_DEVIATION";
+export type InsightType =
+  | "ANOMALY"
+  | "TREND_CHANGE"
+  | "FORECAST_DEVIATION"
+  | "CONTRIBUTION"
+  | "DATA_QUALITY";
+
+export interface RootCauseContributor {
+  dimension_field: string;
+  dimension_value: string;
+  observed_value: number;
+  baseline_value: number;
+  delta: number;
+  contribution_pct: number;
+  narrative: string;
+}
+
+export interface AnomalyPoint {
+  id: string;
+  dataset_id: string;
+  dataset_version_id: string;
+  metric_field: string;
+  dimension_field?: string | null;
+  dimension_value?: string | null;
+  period: string;
+  observed_value: number;
+  expected_value: number;
+  deviation: number;
+  deviation_pct: number;
+  anomaly_score: number;
+  severity: AnomalySeverity;
+  anomaly_type: AnomalyType;
+  detection_method: DetectionMethod;
+  status: AnomalyStatus;
+  root_causes: RootCauseContributor[];
+  evidence: Record<string, unknown>;
+  dedup_key: string;
+  provenance: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface InsightResponse {
+  id: string;
+  dataset_id: string;
+  anomaly_id?: string | null;
+  insight_type: InsightType;
+  title: string;
+  summary: string;
+  severity: AnomalySeverity;
+  status: AnomalyStatus;
+  evidence: Record<string, unknown>;
+  dedup_key: string;
+  feedback?: string | null;
+  created_at: string;
+}
+
+export interface AnomalyDetectionRequest {
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  metric_fields?: string[];
+  time_field?: string | null;
+  dimension_fields?: string[];
+  method?: DetectionMethod;
+  sensitivity?: number;
+  min_severity?: AnomalySeverity;
+  allow_negative?: boolean;
+}
+
+export interface AnomalyDetectionResponse {
+  dataset_id: string;
+  dataset_version_id: string;
+  anomalies: AnomalyPoint[];
+  insights: InsightResponse[];
+  total_anomalies_count: number;
+  critical_count: number;
+  high_count: number;
+  medium_count: number;
+  low_count: number;
+  execution_time_ms: number;
+  created_at: string;
+}
+
+export interface AnomalyListResponse {
+  items: AnomalyPoint[];
+  total: number;
+}
+
+export interface InsightListResponse {
+  items: InsightResponse[];
+  total: number;
+}

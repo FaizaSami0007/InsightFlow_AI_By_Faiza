@@ -1,6 +1,15 @@
 from app.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.database.models.ai import AIConversation, AIMessage, AIRequestLog, MessageRole
 from app.database.models.analytics import AnalysisJob, AnalysisJobStatus
+from app.database.models.anomalies import (
+    AnomalyRecord,
+    AnomalySeverity,
+    AnomalyStatus,
+    AnomalyType,
+    DetectionMethod,
+    InsightRecord,
+    InsightType,
+)
 from app.database.models.dashboards import (
     Dashboard,
     DashboardFilter,
@@ -77,6 +86,13 @@ __all__ = [
     "ForecastExecution",
     "ForecastModelType",
     "ForecastStatus",
+    "AnomalyRecord",
+    "AnomalySeverity",
+    "AnomalyType",
+    "AnomalyStatus",
+    "DetectionMethod",
+    "InsightRecord",
+    "InsightType",
 ]
 
 
