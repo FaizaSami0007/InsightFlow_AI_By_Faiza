@@ -559,4 +559,94 @@ export interface DashboardGenerateRequest {
   max_widgets?: number;
 }
 
+// Phase 9 Export & Sharing Types
+export type ExportFormat = "pdf" | "png" | "csv" | "json";
+export type ExportStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED" | "EXPIRED";
+
+export interface ExportRequest {
+  format?: ExportFormat;
+  page_size?: "A4" | "Letter";
+  orientation?: "landscape" | "portrait";
+  include_provenance?: boolean;
+  include_filters?: boolean;
+  title_override?: string | null;
+  filter_values?: Record<string, unknown> | null;
+  widget_id?: string | null;
+}
+
+export interface ExportResponse {
+  id: string;
+  dashboard_id: string;
+  user_id: string;
+  format: ExportFormat;
+  status: ExportStatus;
+  title: string;
+  file_size_bytes?: number | null;
+  content_type: string;
+  filter_snapshot: Record<string, unknown>;
+  metadata_snapshot: Record<string, unknown>;
+  error_message?: string | null;
+  download_url: string;
+  expires_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ExportListResponse {
+  items: ExportResponse[];
+  total: number;
+}
+
+export interface ShareCreateRequest {
+  expires_in_days?: number | null;
+  is_snapshot?: boolean;
+  allowed_filters?: string[];
+}
+
+export interface ShareResponse {
+  id: string;
+  dashboard_id: string;
+  owner_id: string;
+  share_token: string;
+  share_url: string;
+  access_type: string;
+  is_active: boolean;
+  is_snapshot: boolean;
+  allowed_filters: string[];
+  view_count: number;
+  last_accessed_at?: string | null;
+  expires_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ShareListResponse {
+  items: ShareResponse[];
+  total: number;
+}
+
+export interface SharedDashboardViewResponse {
+  share_token: string;
+  dashboard_id: string;
+  title: string;
+  description?: string | null;
+  dataset_id: string;
+  dataset_version_id: string;
+  is_snapshot: boolean;
+  status: string;
+  theme: string;
+  layout_type: string;
+  layout_config: Record<string, unknown>;
+  widgets: DashboardWidget[];
+  filters: DashboardFilter[];
+  allowed_filters: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SharedFilterRefreshRequest {
+  filter_values: Record<string, unknown>;
+}
+
+
 

@@ -34,10 +34,12 @@ yarn-error.log*
 # Database & Runtime files
 data/runtime/*
 !data/runtime/.gitkeep
+apps/api/data/
 *.db
 *.sqlite
 *.sqlite3
 *.duckdb
+
 
 # IDE & OS specific files
 .vscode/

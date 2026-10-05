@@ -58,3 +58,49 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Phase 9 Print Stylesheet */
+@media print {
+  @page {
+    margin: 1.5cm;
+    size: auto;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide interactive controls, sidebars, headers, dialogs and toasts */
+  nav,
+  aside,
+  button,
+  form,
+  input,
+  select,
+  [role="dialog"],
+  [role="status"],
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure dashboard cards don't awkwardly split across pages */
+  article,
+  section,
+  .dashboard-widget-card,
+  [data-widget-card] {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Expand grid for crisp multi-column rendering on printed sheets */
+  .grid {
+    display: grid !important;
+  }
+}
+

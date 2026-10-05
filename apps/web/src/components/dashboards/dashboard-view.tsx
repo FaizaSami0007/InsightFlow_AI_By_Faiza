@@ -10,6 +10,8 @@ import {
   Calendar,
   Layers,
   Send,
+  Download,
+  Share2,
 } from "lucide-react";
 import {
   Dashboard,
@@ -20,6 +22,8 @@ import {
 } from "@/types";
 import { DashboardWidgetCard } from "./dashboard-widget";
 import { DashboardFilterBar } from "./dashboard-filter-bar";
+import { DashboardExportModal } from "./dashboard-export-modal";
+import { DashboardShareModal } from "./dashboard-share-modal";
 import { Dialog } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +48,8 @@ export function DashboardView({
   const [refinePrompt, setRefinePrompt] = React.useState("");
   const [activeFilters, setActiveFilters] = React.useState<Record<string, unknown>>({});
   const [qualityModalOpen, setQualityModalOpen] = React.useState(false);
+  const [exportModalOpen, setExportModalOpen] = React.useState(false);
+  const [shareModalOpen, setShareModalOpen] = React.useState(false);
   const [qualityReport, setQualityReport] = React.useState<DashboardQualityReport | null>(null);
   const [isLoadingQuality, setIsLoadingQuality] = React.useState(false);
   const [inspectWidget, setInspectWidget] = React.useState<DashboardWidget | null>(null);
@@ -317,6 +323,24 @@ export function DashboardView({
           {/* Action Buttons Bar */}
           <div className="flex flex-wrap items-center gap-2 pt-2 md:pt-0">
             <button
+              onClick={() => setShareModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
+              title="Share dashboard securely with external viewers"
+            >
+              <Share2 className="h-3.5 w-3.5 text-teal" />
+              <span>Share</span>
+            </button>
+
+            <button
+              onClick={() => setExportModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
+              title="Export as PDF, PNG, CSV, JSON or Print"
+            >
+              <Download className="h-3.5 w-3.5 text-teal" />
+              <span>Export</span>
+            </button>
+
+            <button
               onClick={fetchQualityScore}
               className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
               title="Inspect Explainable Quality Score"
@@ -520,6 +544,22 @@ export function DashboardView({
           </div>
         )}
       </Dialog>
+
+      {/* Phase 9 Export Modal */}
+      <DashboardExportModal
+        isOpen={exportModalOpen}
+        onClose={() => setExportModalOpen(false)}
+        dashboard={dashboard}
+        activeFilters={activeFilters}
+      />
+
+      {/* Phase 9 Share Modal */}
+      <DashboardShareModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        dashboard={dashboard}
+      />
     </div>
   );
 }
+

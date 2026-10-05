@@ -5,7 +5,9 @@ from app.analytics.router import router as analytics_router
 from app.api.routes.health import router as health_router
 from app.dashboards.router import router as dashboards_router
 from app.datasets.router import router as datasets_router
+from app.exports.router import router as exports_router
 from app.profiling.router import router as profiling_router
+from app.shares.router import router as shares_router
 from app.users.router import router as auth_router
 from app.visualization.router import router as visualization_router
 
@@ -34,4 +36,11 @@ api_router.include_router(visualization_router, prefix="", tags=["visualizations
 
 # 8. Dashboard Intelligence & Generation endpoints
 api_router.include_router(dashboards_router, prefix="", tags=["dashboards"])
+
+# 9. Dashboard Exports & Reporting endpoints
+api_router.include_router(exports_router, prefix="", tags=["exports"])
+
+# 10. Dashboard Sharing & Public Links endpoints
+api_router.include_router(shares_router, prefix="", tags=["shares"])
+
 

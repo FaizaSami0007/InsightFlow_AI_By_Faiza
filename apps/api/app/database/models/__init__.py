@@ -7,6 +7,12 @@ from app.database.models.dashboards import (
     DashboardWidget,
 )
 from app.database.models.dataset import Dataset, DatasetStatus, DatasetVersion, FileFormat
+from app.database.models.exports import (
+    DashboardExport,
+    DashboardShare,
+    ExportFormat,
+    ExportStatus,
+)
 from app.database.models.profiling import (
     ColumnProfile,
     ConceptualType,
@@ -46,5 +52,10 @@ __all__ = [
     "DashboardWidget",
     "DashboardFilter",
     "DashboardStatus",
+    "DashboardExport",
+    "DashboardShare",
+    "ExportFormat",
+    "ExportStatus",
 ]
+
 
