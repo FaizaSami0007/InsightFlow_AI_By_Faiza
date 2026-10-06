@@ -141,19 +141,7 @@ export function Sidebar() {
       </div>
 
       {/* Sidebar Footer & Collapse Toggle */}
-      <div className="shrink-0 space-y-2 border-t border-border pt-3 mt-auto">
-        {isSidebarExpanded && (
-          <div className="rounded-xl bg-cloud p-3 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-teal animate-pulse" />
-              <span className="font-semibold text-ink text-[11px]">System Status</span>
-            </div>
-            <p className="mt-1 text-[11px] text-slate leading-tight">
-              AI Analytics Engine Active
-            </p>
-          </div>
-        )}
-
+      <div className="shrink-0 border-t border-border pt-2 mt-auto">
         {/* Desktop Collapse Button */}
         <button
           onClick={toggleSidebar}
