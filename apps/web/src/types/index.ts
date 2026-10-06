@@ -1256,4 +1256,121 @@ export interface DatasetKnowledgeLinkResponse {
   created_at: string;
 }
 
+// Phase 15 Multi-Agent Intelligence Types
+export type AgentID =
+  | "supervisor"
+  | "data_analyst"
+  | "knowledge_agent"
+  | "forecasting_agent"
+  | "anomaly_agent"
+  | "scenario_agent"
+  | "visualization_agent"
+  | "reporting_agent"
+  | "critic_agent";
+
+export type AITaskStatus =
+  | "PENDING"
+  | "RUNNING"
+  | "COMPLETED"
+  | "FAILED"
+  | "CANCELLED"
+  | "SKIPPED";
+
+export type TaskType =
+  | "PLANNING"
+  | "DATA_ANALYSIS"
+  | "KNOWLEDGE_RETRIEVAL"
+  | "FORECAST"
+  | "ANOMALY_DETECTION"
+  | "SCENARIO_SIMULATION"
+  | "VISUALIZATION_GENERATION"
+  | "REPORT_GENERATION"
+  | "VALIDATION"
+  | "SYNTHESIS";
+
+export type EvidenceType =
+  | "DATA_FACT"
+  | "KNOWLEDGE_FACT"
+  | "CALCULATION"
+  | "INTERPRETATION"
+  | "ASSUMPTION";
+
+export type ClaimType =
+  | "METRIC_VALUE"
+  | "BUSINESS_RULE"
+  | "TREND_ASSERTION"
+  | "ANOMALY_ASSERTION"
+  | "SCENARIO_PROJECTION"
+  | "CORRELATION";
+
+export type ValidationStatus = "VERIFIED" | "CONTRADICTED" | "UNVERIFIED" | "INSUFFICIENT_EVIDENCE";
+
+export interface EvidenceItem {
+  id: string;
+  evidence_type: EvidenceType;
+  source_type: "DATASET" | "KNOWLEDGE_DOC" | "ENGINE_RESULT" | "CALCULATION" | "USER_INPUT";
+  source_id: string;
+  statement: string;
+  confidence_score: number;
+  data_payload?: Record<string, unknown>;
+  citation_label?: string;
+  created_at: string;
+}
+
+export interface ClaimItem {
+  claim_id: string;
+  claim_type: ClaimType;
+  text: string;
+  supporting_evidence_ids: string[];
+  confidence: number;
+}
+
+export interface ValidationFinding {
+  claim_id: string;
+  status: ValidationStatus;
+  evidence_id?: string;
+  reason: string;
+}
+
+export interface ValidationReport {
+  is_valid: boolean;
+  overall_status: ValidationStatus;
+  findings: ValidationFinding[];
+  summary: string;
+  verified_claims_count: number;
+  unverified_claims_count: number;
+  contradicted_claims_count: number;
+}
+
+export interface AgentMetadataResponse {
+  agent_id: AgentID;
+  name: string;
+  description: string;
+  system_role: string;
+  capabilities: string[];
+  allowed_tools: string[];
+  max_token_budget: number;
+  timeout_seconds: number;
+}
+
+export interface AITaskResponse {
+  id: string;
+  conversation_id: string;
+  message_id?: string | null;
+  agent_id: AgentID;
+  task_type: TaskType;
+  status: AITaskStatus;
+  task_name: string;
+  objective?: string | null;
+  depends_on_task_ids: string[];
+  execution_order: number;
+  duration_ms?: number | null;
+  tokens_used?: number | null;
+  error_message?: string | null;
+  validation_report?: ValidationReport | null;
+  created_at: string;
+  updated_at: string;
+}
+
+
 

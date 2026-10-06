@@ -1,5 +1,12 @@
 from app.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
-from app.database.models.ai import AIConversation, AIMessage, AIRequestLog, MessageRole
+from app.database.models.ai import (
+    AIConversation,
+    AIMessage,
+    AIRequestLog,
+    AITask,
+    AITaskStatus,
+    MessageRole,
+)
 from app.database.models.analytics import AnalysisJob, AnalysisJobStatus
 from app.database.models.anomalies import (
     AnomalyRecord,
@@ -86,6 +93,8 @@ __all__ = [
     "AIMessage",
     "MessageRole",
     "AIRequestLog",
+    "AITask",
+    "AITaskStatus",
     "Dashboard",
     "DashboardWidget",
     "DashboardFilter",

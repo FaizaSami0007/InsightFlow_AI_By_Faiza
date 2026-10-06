@@ -208,3 +208,52 @@ async def chat(
         user=current_user,
         db=db,
     )
+
+
+@router.get("/agents")
+async def list_registered_agents(
+    current_user: User = Depends(get_current_user),
+) -> List[dict]:
+    """List all registered specialized agents, descriptions, capabilities, and tool allowlists."""
+    from app.ai.agents.registry import agent_registry
+
+    return [agent.model_dump() for agent in agent_registry.list_agents()]
+
+
+@router.get("/conversations/{conversation_id}/tasks")
+async def get_conversation_tasks(
+    conversation_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> List[dict]:
+    """Retrieve multi-agent task execution records and dependency graph nodes for a conversation."""
+    from app.database.models.ai import AITask
+
+    stmt = select(AITask).where(
+        AITask.conversation_id == conversation_id,
+        AITask.user_id == current_user.id,
+    ).order_by(AITask.created_at.asc())
+    res = await db.execute(stmt)
+    tasks = res.scalars().all()
+
+    return [
+        {
+            "id": t.id,
+            "conversation_id": t.conversation_id,
+            "parent_task_id": t.parent_task_id,
+            "agent_id": t.agent_id,
+            "task_type": t.task_type,
+            "status": t.status,
+            "priority": t.priority,
+            "dependencies": t.dependencies_json,
+            "input": t.input_json,
+            "output": t.output_json,
+            "evidence": t.evidence_json,
+            "error_message": t.error_message,
+            "execution_time_ms": t.execution_time_ms,
+            "created_at": t.created_at.isoformat() if t.created_at else None,
+            "completed_at": t.completed_at.isoformat() if t.completed_at else None,
+        }
+        for t in tasks
+    ]
+

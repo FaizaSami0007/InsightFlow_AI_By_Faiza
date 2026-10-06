@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+
 import {
   Bot,
   Send,
@@ -19,6 +20,10 @@ import {
   Layers,
   HelpCircle,
   FileText,
+  Network,
+  ShieldCheck,
+  X,
+  Activity,
 } from "lucide-react";
 import { api } from "@/lib/api-client";
 import {
@@ -29,11 +34,14 @@ import {
   AIMessageItem,
   VisualizationSpec,
   AnalysisResponse,
+  AITaskResponse,
+  AgentMetadataResponse,
 } from "@/types";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { VisualizationRenderer } from "@/components/visualization/visualization-renderer";
+
 
 interface AIAnalystViewProps {
   initialDatasetId?: string;
@@ -117,8 +125,43 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
   const [starterQuestions, setStarterQuestions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [expandedTools, setExpandedTools] = useState<Record<string, boolean>>({});
+  const [tasks, setTasks] = useState<AITaskResponse[]>([]);
+  const [registeredAgents, setRegisteredAgents] = useState<AgentMetadataResponse[]>([]);
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [loadingTasks, setLoadingTasks] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load registered agents metadata
+  useEffect(() => {
+    async function loadAgents() {
+      try {
+        const res = await api.get<AgentMetadataResponse[]>("/api/v1/ai/agents");
+        setRegisteredAgents(res || []);
+      } catch (e) {
+        console.warn("Could not load agent registry metadata:", e);
+      }
+    }
+    loadAgents();
+  }, []);
+
+  // Load tasks for active conversation
+  const loadConversationTasks = useCallback(async (convId: string) => {
+    if (!convId) {
+      setTasks([]);
+      return;
+    }
+    setLoadingTasks(true);
+    try {
+      const res = await api.get<AITaskResponse[]>(`/api/v1/ai/conversations/${convId}/tasks`);
+      setTasks(res || []);
+    } catch (e) {
+      console.warn("Could not load conversation tasks:", e);
+    } finally {
+      setLoadingTasks(false);
+    }
+  }, []);
+
 
   // 1. Load User Datasets
   useEffect(() => {
@@ -183,6 +226,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
     setActiveConversationId(convId);
     setError(null);
     setIsLoading(true);
+    loadConversationTasks(convId);
     try {
       const detail = await api.get<AIConversationDetail>(`/api/v1/ai/conversations/${convId}`);
       const mappedMessages: MessageBubble[] = (detail.messages || []).map((m: AIMessageItem) => ({
@@ -207,6 +251,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
   const handleNewConversation = () => {
     setActiveConversationId(null);
     setMessages([]);
+    setTasks([]);
     setError(null);
     setInputValue("");
   };
@@ -287,6 +332,8 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
           loadConversations(selectedDatasetId);
         }
       }
+
+      loadConversationTasks(res.conversation_id);
 
       const assistantMsg: MessageBubble = {
         id: res.message_id || `asst-${Date.now()}`,
@@ -396,17 +443,32 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-ink">Conversational Data Analyst</h2>
-                <Badge variant="teal">Phase 6 Workspace</Badge>
+                <h2 className="text-sm font-bold text-ink">Conversational AI Analyst</h2>
+                <Badge variant="teal">Phase 15 Multi-Agent</Badge>
               </div>
               <p className="text-[11px] text-slate">
-                Natural-language inquiries backed by deterministic DuckDB tools
+                Governed 9-agent DAG orchestrator with deterministic tools &amp; Critic validation
               </p>
             </div>
           </div>
 
-          {/* Dataset & Version Selectors */}
+          {/* Dataset & Version Selectors + Task Graph Trigger */}
           <div className="flex items-center gap-2">
+            {activeConversationId && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  loadConversationTasks(activeConversationId);
+                  setShowTaskModal(true);
+                }}
+                className="text-xs h-8 px-2.5 flex items-center gap-1.5 border-teal-border text-teal-dark bg-teal-soft/40 hover:bg-teal-soft"
+                title="View Multi-Agent Task Execution Graph"
+              >
+                <Network className="h-3.5 w-3.5 text-teal" />
+                <span>Agent Graph ({tasks.length})</span>
+              </Button>
+            )}
+
             <div className="w-44">
               <Select
                 options={datasets.map((d) => ({ value: d.id, label: d.name }))}
@@ -583,15 +645,33 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
             ))
           )}
 
-          {/* Real-Time Processing Status Pill */}
+          {/* Real-Time Multi-Agent Processing Status Pill */}
           {isLoading && (
             <div className="flex items-start gap-2" aria-live="polite">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-soft text-teal">
                 <Bot className="h-4 w-4" />
               </div>
-              <div className="rounded-2xl rounded-bl-none border border-border bg-cloud p-3.5 text-xs text-slate flex items-center gap-2">
-                <RefreshCw className="h-3.5 w-3.5 animate-spin text-teal" />
-                <span>Executing analytical plan and grounding response via DuckDB engine...</span>
+              <div className="rounded-2xl rounded-bl-none border border-border bg-cloud p-3.5 text-xs text-slate space-y-2">
+                <div className="flex items-center gap-2 font-medium text-ink">
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin text-teal" />
+                  <span>Multi-Agent Orchestrator Executing Task DAG...</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 text-[10px] text-slate font-mono">
+                  <span className="flex items-center gap-1 bg-surface px-2 py-0.5 rounded border border-border">
+                    <Activity className="h-2.5 w-2.5 text-teal" />
+                    Supervisor Planning
+                  </span>
+                  <span className="text-slate">→</span>
+                  <span className="flex items-center gap-1 bg-surface px-2 py-0.5 rounded border border-border">
+                    <Cpu className="h-2.5 w-2.5 text-blue-500" />
+                    Data Analyst / Engine
+                  </span>
+                  <span className="text-slate">→</span>
+                  <span className="flex items-center gap-1 bg-surface px-2 py-0.5 rounded border border-border">
+                    <ShieldCheck className="h-2.5 w-2.5 text-emerald-500" />
+                    Critic Validation
+                  </span>
+                </div>
               </div>
             </div>
           )}
@@ -657,6 +737,131 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
         </footer>
       </div>
 
+      {/* ─── MULTI-AGENT EXECUTION GRAPH MODAL ─── */}
+      {showTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-surface rounded-2xl border border-border p-6 max-w-3xl w-full max-h-[85vh] flex flex-col shadow-soft-lg space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="flex items-center gap-2">
+                <Network className="h-5 w-5 text-teal" />
+                <div>
+                  <h3 className="text-sm font-bold text-ink">Multi-Agent Task Execution Graph</h3>
+                  <p className="text-[11px] text-slate">
+                    Topologically sorted execution DAG and validation audit trace
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowTaskModal(false)}
+                className="p-1.5 rounded-lg text-slate hover:text-ink hover:bg-cloud"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Task List / DAG view */}
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {loadingTasks ? (
+                <div className="flex items-center justify-center py-12 gap-2 text-xs text-slate">
+                  <RefreshCw className="h-4 w-4 animate-spin text-teal" />
+                  <span>Loading task execution graph...</span>
+                </div>
+              ) : tasks.length === 0 ? (
+                <div className="text-center py-12 text-xs text-slate">
+                  No multi-agent tasks recorded for this session yet. Ask a question to trigger the orchestrator.
+                </div>
+              ) : (
+                tasks.map((t, idx) => {
+                  const agentDef = registeredAgents.find((a) => a.agent_id === t.agent_id);
+                  return (
+                    <div
+                      key={t.id || idx}
+                      className="rounded-xl border border-border bg-cloud/30 p-3.5 space-y-2 text-xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-teal text-white text-[10px] font-bold">
+                            {t.execution_order + 1}
+                          </span>
+                          <span className="font-semibold text-ink">
+                            {agentDef?.name || t.agent_id}
+                          </span>
+                          <Badge
+                            variant={
+                              t.status === "COMPLETED"
+                                ? "teal"
+                                : t.status === "FAILED"
+                                ? "danger"
+                                : "blue"
+                            }
+                          >
+                            {t.status}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] text-slate font-mono">
+                          {t.duration_ms !== null && t.duration_ms !== undefined && (
+                            <span>{t.duration_ms.toFixed(1)}ms</span>
+                          )}
+                          {t.tokens_used !== null && t.tokens_used !== undefined && (
+                            <span>• {t.tokens_used} tokens</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {t.objective && (
+                        <p className="text-[11px] text-slate">
+                          <span className="font-medium text-ink">Objective:</span> {t.objective}
+                        </p>
+                      )}
+
+                      {t.depends_on_task_ids && t.depends_on_task_ids.length > 0 && (
+                        <div className="flex items-center gap-1 text-[10px] text-slate">
+                          <span>Depends on:</span>
+                          {t.depends_on_task_ids.map((depId, dIdx) => (
+                            <span key={dIdx} className="bg-surface px-1.5 py-0.5 rounded border border-border font-mono">
+                              {depId}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {t.validation_report && (
+                        <div className="mt-2 p-2 rounded-lg bg-surface border border-border/80 text-[11px] space-y-1">
+                          <div className="flex items-center justify-between font-semibold">
+                            <span className="text-emerald-600 flex items-center gap-1">
+                              <ShieldCheck className="h-3 w-3" />
+                              Critic Validation: {t.validation_report.overall_status}
+                            </span>
+                            <span className="text-[10px] text-slate">
+                              {t.validation_report.verified_claims_count} Verified /{" "}
+                              {t.validation_report.contradicted_claims_count} Contradicted
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate">{t.validation_report.summary}</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="flex items-center justify-between border-t border-border pt-3">
+              <div className="flex items-center gap-1 text-[10px] text-slate">
+                <span>Total Active Agents: {registeredAgents.length || 9}</span>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setShowTaskModal(false)}
+                className="text-xs"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ─── CONFIRM DELETE MODAL ─── */}
       {conversationToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
@@ -691,3 +896,4 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
     </div>
   );
 }
+

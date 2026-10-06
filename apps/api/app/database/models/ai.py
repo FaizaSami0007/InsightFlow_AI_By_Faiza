@@ -108,3 +108,55 @@ class AIRequestLog(Base):
     error_message: Mapped[Optional[str]] = mapped_column(String(1024), nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class AITaskStatus(str, enum.Enum):
+    PENDING = "PENDING"
+    PLANNING = "PLANNING"
+    RUNNING = "RUNNING"
+    WAITING = "WAITING"
+    VALIDATING = "VALIDATING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+
+
+class AITask(Base):
+    """
+    Structured execution task managed by the multi-agent supervisor.
+    Forms nodes in the task dependency DAG.
+    """
+
+    __tablename__ = "ai_tasks"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    conversation_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("ai_conversations.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    parent_task_id: Mapped[Optional[str]] = mapped_column(
+        String(36), ForeignKey("ai_tasks.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    user_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+
+    agent_id: Mapped[str] = mapped_column(String(64), nullable=False)  # supervisor, data_analyst, knowledge_agent, etc.
+    task_type: Mapped[str] = mapped_column(String(64), nullable=False)  # analysis, retrieval, forecast, etc.
+    status: Mapped[str] = mapped_column(String(32), default=AITaskStatus.PENDING.value, nullable=False)
+    priority: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+
+    dependencies_json: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)  # List of prerequisite task IDs
+    input_json: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    output_json: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    evidence_json: Mapped[Optional[List[dict[str, Any]]]] = mapped_column(JSON, nullable=True)
+
+    error_message: Mapped[Optional[str]] = mapped_column(String(1024), nullable=True)
+    execution_time_ms: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    conversation = relationship("AIConversation", backref="tasks")
+    user = relationship("User", backref="ai_tasks")
+
