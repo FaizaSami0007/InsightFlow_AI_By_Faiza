@@ -3,7 +3,7 @@
   "services": {
     "api": {
       "root": "apps/api",
-      "entrypoint": "index.py"
+      "entrypoint": "app.main:app"
     },
     "web": {
       "root": "apps/web",
