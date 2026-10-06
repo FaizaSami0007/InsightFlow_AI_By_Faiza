@@ -28,7 +28,10 @@ interface RequestOptions extends RequestInit {
 }
 
 const DEFAULT_TIMEOUT_MS = 30000;
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const BASE_URL =
+  process.env.API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== "undefined" ? "" : "http://127.0.0.1:8000");
 
 function getAuthToken(): string | null {
   if (typeof window === "undefined") return null;

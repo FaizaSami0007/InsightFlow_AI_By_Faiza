@@ -81,7 +81,10 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
   const [linkDatasetId, setLinkDatasetId] = useState<string>("");
   const [linkDocumentId, setLinkDocumentId] = useState<string>("");
 
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const apiBase =
+    process.env.API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    (typeof window !== "undefined" ? "" : "http://127.0.0.1:8000");
 
   // Fetch initial data
   const fetchData = React.useCallback(async () => {
