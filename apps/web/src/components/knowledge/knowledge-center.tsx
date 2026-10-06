@@ -1,6 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useAuthStore } from "@/stores/use-auth-store";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { LoadingState } from "@/components/states/loading-state";
 import {
   KnowledgeCollectionResponse,
   KnowledgeDocumentResponse,
@@ -43,9 +48,15 @@ interface KnowledgeCenterProps {
 }
 
 export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
-  token,
+  token: propToken,
   initialDatasets = [],
 }) => {
+  const { token: storeToken, isAuthenticated, isInitializing } = useAuthStore();
+  const token =
+    propToken ||
+    storeToken ||
+    (typeof window !== "undefined" ? localStorage.getItem("insightflow_auth_token") || "" : "");
+
   // State
   const [activeTab, setActiveTab] = useState<"documents" | "collections" | "links" | "search">("documents");
   const [collections, setCollections] = useState<KnowledgeCollectionResponse[]>([]);
@@ -327,6 +338,39 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
         );
     }
   };
+
+  if (isInitializing) {
+    return (
+      <LoadingState
+        title="Loading Knowledge Center"
+        description="Connecting to vector store and knowledge index..."
+      />
+    );
+  }
+
+  if (!isAuthenticated && !token) {
+    return (
+      <Card className="max-w-xl mx-auto my-12 border-border shadow-soft">
+        <CardHeader className="text-center pb-2">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-soft text-teal mb-2">
+            <BookOpen className="h-6 w-6" />
+          </div>
+          <CardTitle>Authentication Required</CardTitle>
+          <p className="text-xs text-slate mt-1">
+            Please sign in to upload business documents, manage domain knowledge collections, and execute grounded RAG retrieval.
+          </p>
+        </CardHeader>
+        <div className="flex justify-center gap-3 p-6 pt-2">
+          <Link href="/login">
+            <Button variant="primary">Sign In</Button>
+          </Link>
+          <Link href="/register">
+            <Button variant="outline">Create Account</Button>
+          </Link>
+        </div>
+      </Card>
+    );
+  }
 
   const filteredDocuments = selectedCollectionId === "all"
     ? documents
