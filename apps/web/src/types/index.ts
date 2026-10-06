@@ -1690,5 +1690,78 @@ export interface ConnectionHealthResponse {
   recommendations: string[];
 }
 
+// ==========================================
+// Phase 18 — Production Security & Compliance Types
+// ==========================================
+
+export type SecurityRole = "owner" | "admin" | "analyst" | "member" | "viewer";
+export type SecurityEvaluationStatus = "PASS" | "WARNING" | "FAIL" | "UNKNOWN";
+
+export interface ScorecardDimension {
+  id: string;
+  name: string;
+  status: SecurityEvaluationStatus;
+  score: number;
+  controls_enforced: string[];
+  summary: string;
+}
+
+export interface SecurityScorecardResponse {
+  overall_status: SecurityEvaluationStatus;
+  overall_score: number;
+  environment: string;
+  config_audit: {
+    environment: string;
+    is_production_ready: boolean;
+    issues: Array<{ category: string; severity: string; message: string }>;
+    passed_checks: string[];
+    total_checks: number;
+  };
+  dimensions: ScorecardDimension[];
+  total_dimensions: number;
+  passed_dimensions: number;
+}
+
+export interface ThreatVectorItem {
+  id: string;
+  profile: string;
+  threat_description: string;
+  entry_point: string;
+  trust_boundary: string;
+  mitigation_controls: string[];
+  residual_risk: string;
+}
+
+export interface ThreatModelResponse {
+  platform_name: string;
+  updated_at: string;
+  total_threat_vectors: number;
+  trust_boundaries: string[];
+  threat_vectors: ThreatVectorItem[];
+}
+
+export interface SecurityAuditLogResponse {
+  id: string;
+  timestamp: string;
+  actor_id?: string | null;
+  actor_email?: string | null;
+  actor_role?: string | null;
+  action: string;
+  resource_type: string;
+  resource_id?: string | null;
+  workspace_id?: string | null;
+  status: "success" | "denied" | "failed" | string;
+  ip_address?: string | null;
+  user_agent?: string | null;
+  correlation_id?: string | null;
+  details?: Record<string, any> | null;
+}
+
+export interface PasswordValidationResponse {
+  is_valid: boolean;
+  strength_score: number;
+  violations: string[];
+}
+
 
 

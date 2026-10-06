@@ -14,6 +14,7 @@ from app.knowledge.router import router as knowledge_router
 from app.mlops.router import router as mlops_router
 from app.profiling.router import router as profiling_router
 from app.scenarios.router import router as scenarios_router
+from app.security.router import router as security_router
 from app.shares.router import router as shares_router
 from app.users.router import router as auth_router
 from app.visualization.router import router as visualization_router
@@ -70,3 +71,6 @@ api_router.include_router(mlops_router, prefix="", tags=["mlops"])
 
 # 17. Enterprise Data Connectors & Real-World Ingestion endpoints
 api_router.include_router(connector_router, prefix="", tags=["connectors"])
+
+# 18. Production Security, Compliance & Enterprise Hardening endpoints
+api_router.include_router(security_router, prefix="", tags=["security"])

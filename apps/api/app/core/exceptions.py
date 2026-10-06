@@ -50,6 +50,9 @@ class PermissionDeniedError(AppError):
         super().__init__(message=message, code="PERMISSION_DENIED", status_code=403, details=details)
 
 
+ForbiddenError = PermissionDeniedError
+
+
 class ConflictError(AppError):
     def __init__(self, message: str = "Resource conflict", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, code="CONFLICT", status_code=409, details=details)

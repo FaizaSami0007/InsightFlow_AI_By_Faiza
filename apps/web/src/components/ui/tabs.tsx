@@ -110,3 +110,8 @@ export function TabContent({
     </div>
   );
 }
+
+export const TabsList = TabList;
+export const TabsTrigger = TabTrigger;
+export const TabsContent = TabContent;
+

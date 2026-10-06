@@ -8,6 +8,7 @@ from app.database.models.ai import (
     MessageRole,
 )
 from app.database.models.analytics import AnalysisJob, AnalysisJobStatus
+from app.database.models.audit import SecurityAuditLog
 from app.database.models.anomalies import (
     AnomalyRecord,
     AnomalySeverity,
@@ -176,4 +177,5 @@ __all__ = [
     "DataConnectionSyncJob",
     "DataConnectionSchemaSnapshot",
     "DataConnectionAuditLog",
+    "SecurityAuditLog",
 ]
