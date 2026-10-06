@@ -53,36 +53,155 @@ class SupervisorAgent(BaseAgent):
         steps: List[TaskPlanStep] = []
 
         # Intent Classification Indicators
-        is_forecast = any(k in q_lower for k in ["forecast", "predict", "trajectory", "outlook", "projection", "future", "project"])
-        is_anomaly = any(k in q_lower for k in ["anomaly", "anomalies", "outlier", "outliers", "spike", "spikes", "drop", "drops", "dips", "unusual", "unexpected", "investigate"])
-        is_scenario = any(k in q_lower for k in ["what if", "what-if", "simulate", "sensitivity", "assume", "increase by", "decrease by", "drop by", "drops by", "rise by", "drop in", "spend decreases", "surge in"])
+        is_forecast = any(
+            k in q_lower for k in ["forecast", "predict", "trajectory", "outlook", "projection", "future", "project"]
+        )
+        is_anomaly = any(
+            k in q_lower
+            for k in [
+                "anomaly",
+                "anomalies",
+                "outlier",
+                "outliers",
+                "spike",
+                "spikes",
+                "drop",
+                "drops",
+                "dips",
+                "unusual",
+                "unexpected",
+                "investigate",
+            ]
+        )
+        is_scenario = any(
+            k in q_lower
+            for k in [
+                "what if",
+                "what-if",
+                "simulate",
+                "sensitivity",
+                "assume",
+                "increase by",
+                "decrease by",
+                "drop by",
+                "drops by",
+                "rise by",
+                "drop in",
+                "spend decreases",
+                "surge in",
+            ]
+        )
 
         q_knowledge_check = q_lower.replace("standard deviation", "")
-        is_knowledge = any(k in q_knowledge_check for k in [
-            "policy", "definition", "defined", "sla", "sop", "glossary", "rule", "rules", "terms",
-            "criteria", "reimbursement", "per diem", "standard", "standards", "protocol", "timeline",
-            "guideline", "guidelines", "stipend", "recognized", "categorized", "benchmark", "benchmarks",
-            "approval", "discount without", "vp signoff", "warranty", "review evaluation", "asc 606",
-            "explain", "nps", "mql", "deprecations", "grievance", "redressal"
-        ])
-        is_federated = any(k in q_lower for k in ["across datasets", "federated", "join", "multi-dataset", "collection"])
-        is_report = any(k in q_lower for k in ["executive report", "summary report", "briefing", "report on", "executive briefing"])
+        is_knowledge = any(
+            k in q_knowledge_check
+            for k in [
+                "policy",
+                "definition",
+                "defined",
+                "sla",
+                "sop",
+                "glossary",
+                "rule",
+                "rules",
+                "terms",
+                "criteria",
+                "reimbursement",
+                "per diem",
+                "standard",
+                "standards",
+                "protocol",
+                "timeline",
+                "guideline",
+                "guidelines",
+                "stipend",
+                "recognized",
+                "categorized",
+                "benchmark",
+                "benchmarks",
+                "approval",
+                "discount without",
+                "vp signoff",
+                "warranty",
+                "review evaluation",
+                "asc 606",
+                "explain",
+                "nps",
+                "mql",
+                "deprecations",
+                "grievance",
+                "redressal",
+            ]
+        )
+        is_federated = any(
+            k in q_lower for k in ["across datasets", "federated", "join", "multi-dataset", "collection"]
+        )
+        is_report = any(
+            k in q_lower for k in ["executive report", "summary report", "briefing", "report on", "executive briefing"]
+        )
 
         # Analytical / computation triggers that require the Data Analyst
-        is_data_calc = any(k in q_lower for k in [
-            "average", "median", "sum", "total", "count", "standard deviation", "breakdown", "by region",
-            "attainment", "distribution", "correlation", "minimum", "maximum", "distinct", "gross sales",
-            "units returned", "tax collected", "gross margin", "unit costs", "freight charges",
-            "payment method", "sales reps", "skus sold", "by warehouse", "by shipping", "by customer segment",
-            "revenue", "sales", "profit", "order", "orders", "customer", "customers", "discount"
-        ])
-        is_comparison = any(k in q_lower for k in [
-            "why did", "compare", "evaluate", "check whether", "analyze", "review", "assess",
-            "against", "exceed", "comply", "under asc 606", "versus"
-        ])
+        is_data_calc = any(
+            k in q_lower
+            for k in [
+                "average",
+                "median",
+                "sum",
+                "total",
+                "count",
+                "standard deviation",
+                "breakdown",
+                "by region",
+                "attainment",
+                "distribution",
+                "correlation",
+                "minimum",
+                "maximum",
+                "distinct",
+                "gross sales",
+                "units returned",
+                "tax collected",
+                "gross margin",
+                "unit costs",
+                "freight charges",
+                "payment method",
+                "sales reps",
+                "skus sold",
+                "by warehouse",
+                "by shipping",
+                "by customer segment",
+                "revenue",
+                "sales",
+                "profit",
+                "order",
+                "orders",
+                "customer",
+                "customers",
+                "discount",
+            ]
+        )
+        is_comparison = any(
+            k in q_lower
+            for k in [
+                "why did",
+                "compare",
+                "evaluate",
+                "check whether",
+                "analyze",
+                "review",
+                "assess",
+                "against",
+                "exceed",
+                "comply",
+                "under asc 606",
+                "versus",
+            ]
+        )
 
         # Determine if this is a Pure Knowledge query (no dataset calculation or comparison requested)
-        is_pure_knowledge = is_knowledge and not (is_data_calc or is_comparison or is_forecast or is_anomaly or is_scenario or is_federated or is_report)
+        is_pure_knowledge = is_knowledge and not (
+            is_data_calc or is_comparison or is_forecast or is_anomaly or is_scenario or is_federated or is_report
+        )
 
         if is_pure_knowledge:
             steps.append(
@@ -108,7 +227,13 @@ class SupervisorAgent(BaseAgent):
                         agent_id=AgentID.FORECASTING_AGENT,
                         task_type=TaskType.FORECAST,
                         objective=f"Generate statistical forecast for {query}",
-                        input_parameters={"parameters": {"target_field": "revenue", "time_field": "order_date", "forecast_horizon": horizon}},
+                        input_parameters={
+                            "parameters": {
+                                "target_field": "revenue",
+                                "time_field": "order_date",
+                                "forecast_horizon": horizon,
+                            }
+                        },
                     )
                 )
 
@@ -135,13 +260,27 @@ class SupervisorAgent(BaseAgent):
                         agent_id=AgentID.SCENARIO_AGENT,
                         task_type=TaskType.SCENARIO_SIMULATION,
                         objective=f"Simulate what-if parameter modification of {val}%",
-                        input_parameters={"parameters": {"target_metric": "revenue", "assumptions": [{"variable": "price", "operation": "PERCENTAGE_CHANGE", "value": val}]}},
+                        input_parameters={
+                            "parameters": {
+                                "target_metric": "revenue",
+                                "assumptions": [{"variable": "price", "operation": "PERCENTAGE_CHANGE", "value": val}],
+                            }
+                        },
                     )
                 )
 
             # Data Analyst Task (for any data query, hybrid comparison, or federated query)
-            if is_data_calc or is_comparison or is_federated or (not is_forecast and not is_anomaly and not is_scenario and not is_knowledge):
-                op = "group_by" if any(k in q_lower for k in ["by", "group", "breakdown", "top", "segment"]) else "describe_dataset"
+            if (
+                is_data_calc
+                or is_comparison
+                or is_federated
+                or (not is_forecast and not is_anomaly and not is_scenario and not is_knowledge)
+            ):
+                op = (
+                    "group_by"
+                    if any(k in q_lower for k in ["by", "group", "breakdown", "top", "segment"])
+                    else "describe_dataset"
+                )
                 params: Dict[str, Any] = {}
                 if op == "group_by":
                     params = {"dimensions": ["region"], "measures": [{"field": "revenue", "agg": "SUM"}]}

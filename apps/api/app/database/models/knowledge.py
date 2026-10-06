@@ -65,7 +65,9 @@ class KnowledgeDocument(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "knowledge_documents"
 
-    collection_id = Column(String(36), ForeignKey("knowledge_collections.id", ondelete="SET NULL"), nullable=True, index=True)
+    collection_id = Column(
+        String(36), ForeignKey("knowledge_collections.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     title = Column(String(255), nullable=False, index=True)
     filename = Column(String(255), nullable=False)
@@ -74,7 +76,9 @@ class KnowledgeDocument(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     storage_reference = Column(String(512), nullable=False)
     checksum = Column(String(64), nullable=False, index=True)
     knowledge_type = Column(Enum(KnowledgeType), default=KnowledgeType.GENERAL_POLICY, nullable=False)
-    status = Column(Enum(DocumentProcessingStatus), default=DocumentProcessingStatus.UPLOADED, nullable=False, index=True)
+    status = Column(
+        Enum(DocumentProcessingStatus), default=DocumentProcessingStatus.UPLOADED, nullable=False, index=True
+    )
     current_version_num = Column(Integer, default=1, nullable=False)
     error_message = Column(Text, nullable=True)
     metadata_json = Column(JSON().with_variant(SQLITE_JSON, "sqlite"), default=dict, nullable=False)
@@ -89,7 +93,9 @@ class KnowledgeDocumentVersion(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "knowledge_document_versions"
 
-    document_id = Column(String(36), ForeignKey("knowledge_documents.id", ondelete="CASCADE"), nullable=False, index=True)
+    document_id = Column(
+        String(36), ForeignKey("knowledge_documents.id", ondelete="CASCADE"), nullable=False, index=True
+    )
     version_number = Column(Integer, nullable=False)
     storage_reference = Column(String(512), nullable=False)
     checksum = Column(String(64), nullable=False)
@@ -108,8 +114,12 @@ class KnowledgeChunk(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "knowledge_chunks"
 
-    document_id = Column(String(36), ForeignKey("knowledge_documents.id", ondelete="CASCADE"), nullable=False, index=True)
-    document_version_id = Column(String(36), ForeignKey("knowledge_document_versions.id", ondelete="CASCADE"), nullable=False, index=True)
+    document_id = Column(
+        String(36), ForeignKey("knowledge_documents.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    document_version_id = Column(
+        String(36), ForeignKey("knowledge_document_versions.id", ondelete="CASCADE"), nullable=False, index=True
+    )
     chunk_index = Column(Integer, nullable=False)
     content = Column(Text, nullable=False)
     token_count = Column(Integer, default=0, nullable=False)
@@ -129,8 +139,14 @@ class DatasetKnowledgeLink(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     dataset_id = Column(String(36), ForeignKey("datasets.id", ondelete="CASCADE"), nullable=False, index=True)
     dataset_version_id = Column(String(36), nullable=True)
-    document_id = Column(String(36), ForeignKey("knowledge_documents.id", ondelete="CASCADE"), nullable=True, index=True)
-    collection_id = Column(String(36), ForeignKey("knowledge_collections.id", ondelete="CASCADE"), nullable=True, index=True)
+    document_id = Column(
+        String(36), ForeignKey("knowledge_documents.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    collection_id = Column(
+        String(36), ForeignKey("knowledge_collections.id", ondelete="CASCADE"), nullable=True, index=True
+    )
     user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    relationship_nature = Column(String(64), default="governed_by", nullable=False)  # e.g. defined_by, governed_by, contextual_reference
+    relationship_nature = Column(
+        String(64), default="governed_by", nullable=False
+    )  # e.g. defined_by, governed_by, contextual_reference
     metadata_json = Column(JSON().with_variant(SQLITE_JSON, "sqlite"), default=dict, nullable=False)

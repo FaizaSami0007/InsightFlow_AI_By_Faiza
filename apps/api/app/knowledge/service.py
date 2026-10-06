@@ -507,8 +507,7 @@ class KnowledgeService:
 
             if linked_doc_ids or linked_col_ids:
                 stmt = stmt.where(
-                    (KnowledgeDocument.id.in_(linked_doc_ids))
-                    | (KnowledgeDocument.collection_id.in_(linked_col_ids))
+                    (KnowledgeDocument.id.in_(linked_doc_ids)) | (KnowledgeDocument.collection_id.in_(linked_col_ids))
                 )
 
         res = await self.db.execute(stmt)
@@ -525,7 +524,9 @@ class KnowledgeService:
 
         notice = None
         if not has_sufficient:
-            notice = "The available business knowledge base does not contain sufficient grounded evidence for this query."
+            notice = (
+                "The available business knowledge base does not contain sufficient grounded evidence for this query."
+            )
 
         return KnowledgeSearchResponse(
             query=request.query,

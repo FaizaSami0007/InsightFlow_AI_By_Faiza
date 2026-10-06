@@ -46,7 +46,6 @@ class DashboardPlanner:
         raw_cols = getattr(profile, "column_profiles", None) or getattr(profile, "columns", [])
         col_profiles = {cp.column_name: cp for cp in raw_cols}
 
-
         for col_name, sem in semantic_columns.items():
             cp = col_profiles.get(col_name)
             null_pct = cp.null_percentage if cp and cp.null_percentage is not None else 0.0
@@ -56,8 +55,16 @@ class DashboardPlanner:
                 continue
 
             role = getattr(sem, "user_role", None) or getattr(sem, "inferred_role", None) or getattr(sem, "role", None)
-            is_meas = getattr(sem, "is_measure", False) or role == SemanticRole.MEASURE or getattr(sem, "conceptual_type", "") in ["numeric", "currency", "integer", "float"]
-            is_temp = getattr(sem, "is_temporal", False) or role in [SemanticRole.DATE, SemanticRole.DATETIME] or getattr(sem, "conceptual_type", "") in ["datetime", "date", "timestamp"]
+            is_meas = (
+                getattr(sem, "is_measure", False)
+                or role == SemanticRole.MEASURE
+                or getattr(sem, "conceptual_type", "") in ["numeric", "currency", "integer", "float"]
+            )
+            is_temp = (
+                getattr(sem, "is_temporal", False)
+                or role in [SemanticRole.DATE, SemanticRole.DATETIME]
+                or getattr(sem, "conceptual_type", "") in ["datetime", "date", "timestamp"]
+            )
             is_ident = getattr(sem, "is_identifier", False) or role == SemanticRole.IDENTIFIER
 
             if is_meas:
@@ -68,8 +75,6 @@ class DashboardPlanner:
                 identifiers.append(col_name)
             else:
                 dimensions.append(col_name)
-
-
 
         # 2. Select primary metrics and dimensions
         primary_measure = measures[0] if measures else None
@@ -83,7 +88,9 @@ class DashboardPlanner:
         resolved_title = f"{resolved_purpose.title()} Dashboard"
         if intent:
             clean_intent = intent.strip().rstrip(".")
-            if len(clean_intent) > 3 and not any(k in clean_intent.lower() for k in ["ignore", "drop", "hack", "script"]):
+            if len(clean_intent) > 3 and not any(
+                k in clean_intent.lower() for k in ["ignore", "drop", "hack", "script"]
+            ):
                 resolved_title = clean_intent.title()
                 resolved_purpose = clean_intent
 
@@ -285,9 +292,7 @@ class DashboardPlanner:
         )
 
         # Validate candidate plan
-        is_valid, errors, warnings = DashboardPlanValidator.validate_plan(
-            candidate_plan, profile, semantic_columns
-        )
+        is_valid, errors, warnings = DashboardPlanValidator.validate_plan(candidate_plan, profile, semantic_columns)
 
         if not is_valid:
             logger.warning(f"Initial plan had validation errors: {errors}. Attempting fallback clean plan.")

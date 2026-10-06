@@ -117,11 +117,14 @@ class AnomalyService:
         )
 
         # Determine dimensions for subgroup breakdown
-        dimensions = request.dimension_fields or [
-            c["name"]
-            for c in schema_info
-            if any(t in c["type"].lower() for t in ["varchar", "string", "text"]) and c["name"] != time_col
-        ][:3]
+        dimensions = (
+            request.dimension_fields
+            or [
+                c["name"]
+                for c in schema_info
+                if any(t in c["type"].lower() for t in ["varchar", "string", "text"]) and c["name"] != time_col
+            ][:3]
+        )
 
         detector = AnomalyDetectorRegistry.get_detector(
             method=request.method,
@@ -247,10 +250,10 @@ class AnomalyService:
 
                 # Generate proactive insight summary
                 direction_word = "dropped" if hit.deviation < 0 else "surged"
-                insight_title = f"{metric.capitalize()} {direction_word} by {abs(hit.deviation_pct):.1f}% in {period_name}"
-                top_contributor_text = (
-                    f" Top contributor: {root_cause_items[0].narrative}" if root_cause_items else ""
+                insight_title = (
+                    f"{metric.capitalize()} {direction_word} by {abs(hit.deviation_pct):.1f}% in {period_name}"
                 )
+                top_contributor_text = f" Top contributor: {root_cause_items[0].narrative}" if root_cause_items else ""
                 insight_summary = (
                     f"Observed {hit.observed:.2f} compared to expected baseline {hit.expected:.2f} "
                     f"(deviation of {hit.deviation:.2f}).{top_contributor_text}"

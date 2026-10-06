@@ -115,7 +115,11 @@ class DuckDBManager:
     ) -> Dict[str, Any]:
         """Execute a validated read-only SQL query against the registered dataset version."""
         # Handle case where single SQL string was passed as first argument
-        if dataset_version_id and not sql_query and any(dataset_version_id.strip().upper().startswith(k) for k in ["SELECT", "WITH", "EXPLAIN"]):
+        if (
+            dataset_version_id
+            and not sql_query
+            and any(dataset_version_id.strip().upper().startswith(k) for k in ["SELECT", "WITH", "EXPLAIN"])
+        ):
             return self.execute_federated_query(
                 sql_query=dataset_version_id,
                 parameters=parameters,

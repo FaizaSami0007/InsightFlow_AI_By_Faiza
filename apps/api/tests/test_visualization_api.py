@@ -96,7 +96,10 @@ def test_recommend_and_validate_visualization():
 def test_visualization_unauthorized_cross_tenant_access():
     """Verify that User B cannot access or recommend visualizations for User A's analysis."""
     # User A creates analysis
-    client.post("/api/v1/auth/register", json={"email": "usera_viz@example.com", "password": "Password123!", "full_name": "User A"})
+    client.post(
+        "/api/v1/auth/register",
+        json={"email": "usera_viz@example.com", "password": "Password123!", "full_name": "User A"},
+    )
     login_a = client.post("/api/v1/auth/login", json={"email": "usera_viz@example.com", "password": "Password123!"})
     token_a = login_a.json()["access_token"]
     headers_a = {"Authorization": f"Bearer {token_a}"}
@@ -127,7 +130,10 @@ def test_visualization_unauthorized_cross_tenant_access():
     analysis_id = an_resp.json()["analysis_id"]
 
     # User B tries to recommend on User A's analysis
-    client.post("/api/v1/auth/register", json={"email": "userb_viz@example.com", "password": "Password123!", "full_name": "User B"})
+    client.post(
+        "/api/v1/auth/register",
+        json={"email": "userb_viz@example.com", "password": "Password123!", "full_name": "User B"},
+    )
     login_b = client.post("/api/v1/auth/login", json={"email": "userb_viz@example.com", "password": "Password123!"})
     token_b = login_b.json()["access_token"]
     headers_b = {"Authorization": f"Bearer {token_b}"}

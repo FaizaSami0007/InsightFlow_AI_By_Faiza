@@ -278,9 +278,7 @@ class MLModelVersion(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         lazy="selectin",
     )
 
-    __table_args__ = (
-        Index("ix_ml_model_versions_unique", "model_id", "version", unique=True),
-    )
+    __table_args__ = (Index("ix_ml_model_versions_unique", "model_id", "version", unique=True),)
 
 
 class MLExperiment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -397,7 +395,9 @@ class MLModelEvaluation(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
 
     # Relationships
-    model_version: Mapped["MLModelVersion"] = relationship("MLModelVersion", back_populates="evaluations", lazy="selectin")
+    model_version: Mapped["MLModelVersion"] = relationship(
+        "MLModelVersion", back_populates="evaluations", lazy="selectin"
+    )
 
 
 class MLModelDeployment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -444,7 +444,9 @@ class MLModelDeployment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
 
     # Relationships
-    model_version: Mapped["MLModelVersion"] = relationship("MLModelVersion", back_populates="deployments", lazy="selectin")
+    model_version: Mapped["MLModelVersion"] = relationship(
+        "MLModelVersion", back_populates="deployments", lazy="selectin"
+    )
 
 
 class MLModelDriftReport(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -511,7 +513,9 @@ class MLModelDriftReport(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
 
     # Relationships
-    model_version: Mapped["MLModelVersion"] = relationship("MLModelVersion", back_populates="drift_reports", lazy="selectin")
+    model_version: Mapped["MLModelVersion"] = relationship(
+        "MLModelVersion", back_populates="drift_reports", lazy="selectin"
+    )
 
 
 class MLModelAlert(Base, UUIDPrimaryKeyMixin, TimestampMixin):

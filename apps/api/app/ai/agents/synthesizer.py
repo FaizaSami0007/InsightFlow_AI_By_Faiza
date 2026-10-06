@@ -52,13 +52,15 @@ class ResultSynthesizer:
                     calculations.append(f"[FORECAST] {claim.statement}")
 
             for ev in resp.evidence:
-                evidence_summary.append({
-                    "id": ev.id,
-                    "type": ev.evidence_type.value,
-                    "source": ev.source,
-                    "operation": ev.operation,
-                    "provenance": ev.provenance,
-                })
+                evidence_summary.append(
+                    {
+                        "id": ev.id,
+                        "type": ev.evidence_type.value,
+                        "source": ev.source,
+                        "operation": ev.operation,
+                        "provenance": ev.provenance,
+                    }
+                )
 
         # Build clean narrative sections
         narrative_parts: List[str] = []

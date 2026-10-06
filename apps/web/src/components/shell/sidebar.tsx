@@ -33,6 +33,7 @@ interface NavItemConfig {
 const NAV_ITEMS: NavItemConfig[] = [
   { id: "overview", label: "Overview", href: "/", icon: Layers },
   { id: "datasets", label: "Datasets", href: "/datasets", icon: Database },
+  { id: "connections", label: "Data Connections", href: "/connections", icon: Zap, badge: "Phase 17" },
   { id: "knowledge", label: "Knowledge Center", href: "/knowledge", icon: BookOpen, badge: "Phase 14" },
   { id: "analytics", label: "Analytics Engine", href: "/#analytics", icon: LineChart, badge: "Phase 4" },
   { id: "ai", label: "AI Analyst", href: "/analyst", icon: Bot, badge: "Phase 5" },

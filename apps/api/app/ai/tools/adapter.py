@@ -67,7 +67,10 @@ class AIToolAdapter:
                                 "type": "object",
                                 "properties": {
                                     "field": {"type": "string", "description": "Column name e.g. 'Orders.revenue'"},
-                                    "agg": {"type": "string", "enum": ["SUM", "AVG", "COUNT", "MIN", "MAX", "COUNT_DISTINCT"]},
+                                    "agg": {
+                                        "type": "string",
+                                        "enum": ["SUM", "AVG", "COUNT", "MIN", "MAX", "COUNT_DISTINCT"],
+                                    },
                                     "alias": {"type": "string", "description": "Optional output column alias"},
                                 },
                                 "required": ["field", "agg"],
@@ -89,11 +92,27 @@ class AIToolAdapter:
                 parameters={
                     "type": "object",
                     "properties": {
-                        "target_field": {"type": "string", "description": "Numeric column name to forecast (e.g. 'revenue', 'orders')"},
-                        "time_field": {"type": "string", "description": "Date or timestamp column name (e.g. 'order_date')"},
-                        "forecast_horizon": {"type": "integer", "description": "Number of future periods to predict (e.g. 6)"},
-                        "frequency": {"type": "string", "enum": ["D", "W", "M", "Q", "Y"], "description": "Optional frequency"},
-                        "confidence_level": {"type": "number", "description": "Confidence level for prediction interval (default 0.95)"},
+                        "target_field": {
+                            "type": "string",
+                            "description": "Numeric column name to forecast (e.g. 'revenue', 'orders')",
+                        },
+                        "time_field": {
+                            "type": "string",
+                            "description": "Date or timestamp column name (e.g. 'order_date')",
+                        },
+                        "forecast_horizon": {
+                            "type": "integer",
+                            "description": "Number of future periods to predict (e.g. 6)",
+                        },
+                        "frequency": {
+                            "type": "string",
+                            "enum": ["D", "W", "M", "Q", "Y"],
+                            "description": "Optional frequency",
+                        },
+                        "confidence_level": {
+                            "type": "number",
+                            "description": "Confidence level for prediction interval (default 0.95)",
+                        },
                     },
                     "required": ["target_field", "time_field"],
                 },
@@ -112,7 +131,10 @@ class AIToolAdapter:
                             "items": {"type": "string"},
                             "description": "Numeric column names to analyze for anomalies (e.g. ['revenue', 'orders'])",
                         },
-                        "time_field": {"type": "string", "description": "Optional date/timestamp column for temporal series analysis"},
+                        "time_field": {
+                            "type": "string",
+                            "description": "Optional date/timestamp column for temporal series analysis",
+                        },
                         "dimension_fields": {
                             "type": "array",
                             "items": {"type": "string"},
@@ -120,7 +142,14 @@ class AIToolAdapter:
                         },
                         "method": {
                             "type": "string",
-                            "enum": ["Z_SCORE", "ROBUST_Z_SCORE", "IQR", "ROLLING_BASELINE", "SEASONAL_BASELINE", "FORECAST_DEVIATION"],
+                            "enum": [
+                                "Z_SCORE",
+                                "ROBUST_Z_SCORE",
+                                "IQR",
+                                "ROLLING_BASELINE",
+                                "SEASONAL_BASELINE",
+                                "FORECAST_DEVIATION",
+                            ],
                             "description": "Statistical detection methodology (default: ROBUST_Z_SCORE)",
                         },
                         "sensitivity": {"type": "number", "description": "Threshold multiplier (default: 3.0)"},
@@ -137,19 +166,28 @@ class AIToolAdapter:
                 parameters={
                     "type": "object",
                     "properties": {
-                        "target_metric": {"type": "string", "description": "Primary output metric to evaluate (e.g. 'revenue', 'profit')"},
+                        "target_metric": {
+                            "type": "string",
+                            "description": "Primary output metric to evaluate (e.g. 'revenue', 'profit')",
+                        },
                         "assumptions": {
                             "type": "array",
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "variable": {"type": "string", "description": "Variable to modify (e.g. 'price', 'quantity')"},
+                                    "variable": {
+                                        "type": "string",
+                                        "description": "Variable to modify (e.g. 'price', 'quantity')",
+                                    },
                                     "operation": {
                                         "type": "string",
                                         "enum": ["PERCENTAGE_CHANGE", "ABSOLUTE_CHANGE", "DIRECT_SET", "MULTIPLIER"],
                                         "description": "Operation type (default: PERCENTAGE_CHANGE)",
                                     },
-                                    "value": {"type": "number", "description": "Numeric modification value (e.g. 10 for +10%)"},
+                                    "value": {
+                                        "type": "number",
+                                        "description": "Numeric modification value (e.g. 10 for +10%)",
+                                    },
                                     "unit": {"type": "string", "description": "Unit (e.g. '%', '$')"},
                                 },
                                 "required": ["variable", "value"],
@@ -170,9 +208,15 @@ class AIToolAdapter:
                 parameters={
                     "type": "object",
                     "properties": {
-                        "query": {"type": "string", "description": "Natural language question or concept to search for in the knowledge base"},
+                        "query": {
+                            "type": "string",
+                            "description": "Natural language question or concept to search for in the knowledge base",
+                        },
                         "collection_id": {"type": "string", "description": "Optional specific knowledge collection ID"},
-                        "top_k": {"type": "integer", "description": "Number of relevant chunks to retrieve (default: 5)"},
+                        "top_k": {
+                            "type": "integer",
+                            "description": "Number of relevant chunks to retrieve (default: 5)",
+                        },
                     },
                     "required": ["query"],
                 },
@@ -397,7 +441,9 @@ class AIToolAdapter:
             )
             k_res = await k_service.search(user.id, search_req)
 
-            citations_text = "\n".join([f"[{c.citation_index}] {c.document_title}: {c.source_snippet}" for c in k_res.citations])
+            citations_text = "\n".join(
+                [f"[{c.citation_index}] {c.document_title}: {c.source_snippet}" for c in k_res.citations]
+            )
             summary_text = (
                 f"Retrieved {len(k_res.results)} grounded knowledge snippets for '{search_req.query}'.\n"
                 f"Citations:\n{citations_text}"
@@ -451,4 +497,3 @@ class AIToolAdapter:
             "execution_time_ms": response.execution_time_ms,
             "provenance": response.provenance.model_dump() if response.provenance else None,
         }
-

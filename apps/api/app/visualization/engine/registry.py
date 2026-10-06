@@ -214,8 +214,18 @@ class ChartRegistry:
                 chart_type=ChartType.TABLE,
                 label="Data Table",
                 description="Tabular presentation fallback for high-cardinality or multidimensional data",
-                allowed_x_types={AxisDataType.CATEGORICAL, AxisDataType.TEMPORAL, AxisDataType.NUMERIC, AxisDataType.BOOLEAN},
-                allowed_y_types={AxisDataType.CATEGORICAL, AxisDataType.TEMPORAL, AxisDataType.NUMERIC, AxisDataType.BOOLEAN},
+                allowed_x_types={
+                    AxisDataType.CATEGORICAL,
+                    AxisDataType.TEMPORAL,
+                    AxisDataType.NUMERIC,
+                    AxisDataType.BOOLEAN,
+                },
+                allowed_y_types={
+                    AxisDataType.CATEGORICAL,
+                    AxisDataType.TEMPORAL,
+                    AxisDataType.NUMERIC,
+                    AxisDataType.BOOLEAN,
+                },
                 required_axes=[],
             )
         )

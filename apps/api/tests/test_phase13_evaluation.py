@@ -28,23 +28,88 @@ WHAT_IF_INTENT_CASES = [
     {"query": "What happens if revenue increases by 10%?", "target": "revenue", "op": "PERCENTAGE_CHANGE", "val": 10.0},
     {"query": "What if prices drop by 5% next quarter?", "target": "price", "op": "PERCENTAGE_CHANGE", "val": -5.0},
     {"query": "Simulate a 15% surge in order volume", "target": "orders", "op": "PERCENTAGE_CHANGE", "val": 15.0},
-    {"query": "What happens if shipping costs increase by $500?", "target": "shipping_costs", "op": "ABSOLUTE_CHANGE", "val": 500.0},
-    {"query": "Estimate revenue if conversion rate improves by 2.5%", "target": "revenue", "op": "PERCENTAGE_CHANGE", "val": 2.5},
+    {
+        "query": "What happens if shipping costs increase by $500?",
+        "target": "shipping_costs",
+        "op": "ABSOLUTE_CHANGE",
+        "val": 500.0,
+    },
+    {
+        "query": "Estimate revenue if conversion rate improves by 2.5%",
+        "target": "revenue",
+        "op": "PERCENTAGE_CHANGE",
+        "val": 2.5,
+    },
     {"query": "What if product discount is set to 20%?", "target": "discount", "op": "DIRECT_SET", "val": 20.0},
-    {"query": "Simulate the impact of a 30% cut in marketing budget", "target": "marketing_budget", "op": "PERCENTAGE_CHANGE", "val": -30.0},
+    {
+        "query": "Simulate the impact of a 30% cut in marketing budget",
+        "target": "marketing_budget",
+        "op": "PERCENTAGE_CHANGE",
+        "val": -30.0,
+    },
     {"query": "What if unit sales double next year?", "target": "unit_sales", "op": "MULTIPLIER", "val": 2.0},
-    {"query": "What happens to profit if COGS increases by 8%?", "target": "profit", "op": "PERCENTAGE_CHANGE", "val": 8.0},
-    {"query": "Simulate customer churn reduction of 4%", "target": "churn_rate", "op": "PERCENTAGE_CHANGE", "val": -4.0},
+    {
+        "query": "What happens to profit if COGS increases by 8%?",
+        "target": "profit",
+        "op": "PERCENTAGE_CHANGE",
+        "val": 8.0,
+    },
+    {
+        "query": "Simulate customer churn reduction of 4%",
+        "target": "churn_rate",
+        "op": "PERCENTAGE_CHANGE",
+        "val": -4.0,
+    },
     {"query": "What if average order value grows by $15?", "target": "aov", "op": "ABSOLUTE_CHANGE", "val": 15.0},
-    {"query": "Estimate annual turnover if return rate drops by 10%", "target": "turnover", "op": "PERCENTAGE_CHANGE", "val": -10.0},
-    {"query": "What happens if subscription price goes up by 12%?", "target": "price", "op": "PERCENTAGE_CHANGE", "val": 12.0},
-    {"query": "Simulate an extra 10,000 monthly active users", "target": "mau", "op": "ABSOLUTE_CHANGE", "val": 10000.0},
+    {
+        "query": "Estimate annual turnover if return rate drops by 10%",
+        "target": "turnover",
+        "op": "PERCENTAGE_CHANGE",
+        "val": -10.0,
+    },
+    {
+        "query": "What happens if subscription price goes up by 12%?",
+        "target": "price",
+        "op": "PERCENTAGE_CHANGE",
+        "val": 12.0,
+    },
+    {
+        "query": "Simulate an extra 10,000 monthly active users",
+        "target": "mau",
+        "op": "ABSOLUTE_CHANGE",
+        "val": 10000.0,
+    },
     {"query": "What if sales tax increases by 1.5%?", "target": "sales_tax", "op": "PERCENTAGE_CHANGE", "val": 1.5},
-    {"query": "Evaluate scenario where refund volume falls by 25%", "target": "refunds", "op": "PERCENTAGE_CHANGE", "val": -25.0},
-    {"query": "What if employee headcount increases by 50?", "target": "headcount", "op": "ABSOLUTE_CHANGE", "val": 50.0},
-    {"query": "Simulate 5% higher customer retention rate", "target": "retention_rate", "op": "PERCENTAGE_CHANGE", "val": 5.0},
-    {"query": "What if operational expenses grow by $25,000?", "target": "opex", "op": "ABSOLUTE_CHANGE", "val": 25000.0},
-    {"query": "Predict outcome if website traffic increases by 40%", "target": "traffic", "op": "PERCENTAGE_CHANGE", "val": 40.0},
+    {
+        "query": "Evaluate scenario where refund volume falls by 25%",
+        "target": "refunds",
+        "op": "PERCENTAGE_CHANGE",
+        "val": -25.0,
+    },
+    {
+        "query": "What if employee headcount increases by 50?",
+        "target": "headcount",
+        "op": "ABSOLUTE_CHANGE",
+        "val": 50.0,
+    },
+    {
+        "query": "Simulate 5% higher customer retention rate",
+        "target": "retention_rate",
+        "op": "PERCENTAGE_CHANGE",
+        "val": 5.0,
+    },
+    {
+        "query": "What if operational expenses grow by $25,000?",
+        "target": "opex",
+        "op": "ABSOLUTE_CHANGE",
+        "val": 25000.0,
+    },
+    {
+        "query": "Predict outcome if website traffic increases by 40%",
+        "target": "traffic",
+        "op": "PERCENTAGE_CHANGE",
+        "val": 40.0,
+    },
 ]
 
 
@@ -187,8 +252,7 @@ COMPARISON_CASES = [
 def test_scenario_comparison_cases(cmp_case: Dict[str, Any]) -> None:
     """Verify multi-branch scenario comparison calculation and side-by-side consistency."""
     scenarios_dict = {
-        name: [AssumptionSpec(variable=cmp_case["target"], value=val)]
-        for name, val in cmp_case["branches"].items()
+        name: [AssumptionSpec(variable=cmp_case["target"], value=val)] for name, val in cmp_case["branches"].items()
     }
     items = ScenarioEngine.simulate_comparison(
         baseline_value=1000.0,
@@ -236,16 +300,31 @@ def test_sensitivity_cases(sens: Dict[str, Any]) -> None:
 # ==============================================================================
 
 UNSUPPORTED_CASES = [
-    {"query": "Automatically change product prices on Amazon right now", "reason": "unsupported_autonomous_business_action"},
+    {
+        "query": "Automatically change product prices on Amazon right now",
+        "reason": "unsupported_autonomous_business_action",
+    },
     {"query": "Deploy a deep reinforcement learning agent to maximize profit", "reason": "unsupported_rl_optimizer"},
     {"query": "Causally prove competitor pricing caused customer churn", "reason": "unsupported_causal_econometrics"},
-    {"query": "Send automated email blast to users offering 20% discount", "reason": "unsupported_external_email_execution"},
+    {
+        "query": "Send automated email blast to users offering 20% discount",
+        "reason": "unsupported_external_email_execution",
+    },
     {"query": "Train a 100-layer neural network on my CSV scenario", "reason": "unsupported_deep_learning"},
     {"query": "Execute automatic Bitcoin purchase if revenue spikes", "reason": "unsupported_automated_trading"},
-    {"query": "Modify the production PostgreSQL table with new simulated values", "reason": "unsupported_source_data_mutation"},
+    {
+        "query": "Modify the production PostgreSQL table with new simulated values",
+        "reason": "unsupported_source_data_mutation",
+    },
     {"query": "Scrape competitor scenario data from live web", "reason": "unsupported_web_scraping"},
-    {"query": "Run genetic algorithm optimization over 1,000,000 parameter combinations", "reason": "unsupported_massive_search_space"},
-    {"query": "Approve this Q4 budget automatically in our ERP system", "reason": "unsupported_autonomous_financial_approval"},
+    {
+        "query": "Run genetic algorithm optimization over 1,000,000 parameter combinations",
+        "reason": "unsupported_massive_search_space",
+    },
+    {
+        "query": "Approve this Q4 budget automatically in our ERP system",
+        "reason": "unsupported_autonomous_financial_approval",
+    },
 ]
 
 
@@ -311,8 +390,8 @@ def test_security_cases(sec: Dict[str, Any]) -> None:
     """Verify security isolation, parameter boundaries, and schema integrity constraints."""
     if sec["test"] == "rate_metric_overflow_rejected":
         with pytest.raises(Exception):
-            ScenarioEngine.validate_assumptions([
-                AssumptionSpec(variable="discount_rate", operation=AssumptionOperation.DIRECT_SET, value=150.0)
-            ])
+            ScenarioEngine.validate_assumptions(
+                [AssumptionSpec(variable="discount_rate", operation=AssumptionOperation.DIRECT_SET, value=150.0)]
+            )
     else:
         assert len(sec["expected"]) > 0

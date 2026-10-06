@@ -17,6 +17,7 @@ from app.database.models.mlops import (
 # 1. MODEL REGISTRY SCHEMAS
 # ==============================================================================
 
+
 class MLModelCreateRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=120)
     description: Optional[str] = None
@@ -68,6 +69,7 @@ class MLModelListResponse(BaseModel):
 # ==============================================================================
 # 2. MODEL VERSION SCHEMAS
 # ==============================================================================
+
 
 class FeatureContractDefinition(BaseModel):
     name: str
@@ -125,6 +127,7 @@ class MLModelVersionListResponse(BaseModel):
 # 3. EXPERIMENT TRACKING SCHEMAS
 # ==============================================================================
 
+
 class MLExperimentCreateRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=120)
     dataset_id: Optional[str] = None
@@ -155,6 +158,7 @@ class MLExperimentResponse(BaseModel):
 # 4. EVALUATION & BASELINE COMPARISON SCHEMAS
 # ==============================================================================
 
+
 class MLModelEvaluationRequest(BaseModel):
     dataset_id: Optional[str] = None
     dataset_version_id: Optional[str] = None
@@ -181,6 +185,7 @@ class MLModelEvaluationResponse(BaseModel):
 # ==============================================================================
 # 5. LIFECYCLE, PROMOTION, DEPLOYMENT & ROLLBACK SCHEMAS
 # ==============================================================================
+
 
 class MLModelPromotionRequest(BaseModel):
     target_status: MLModelVersionStatus
@@ -215,6 +220,7 @@ class MLModelDeploymentResponse(BaseModel):
 # ==============================================================================
 # 6. DRIFT DETECTION & MONITORING SCHEMAS
 # ==============================================================================
+
 
 class MLModelDriftCheckRequest(BaseModel):
     inference_dataset_id: Optional[str] = None
@@ -269,6 +275,7 @@ class MLAlertAcknowledgeRequest(BaseModel):
 # ==============================================================================
 # 7. HEALTH, LINEAGE & COMPARISON SCHEMAS
 # ==============================================================================
+
 
 class MLModelHealthDimension(BaseModel):
     score: float

@@ -12,7 +12,9 @@ client = TestClient(app)
 def test_conversational_visualization_and_presentation_follow_ups():
     """Verify natural-language analytical question receives visualization, and visual follow-ups update presentation."""
     email = "chat_viz_user@example.com"
-    client.post("/api/v1/auth/register", json={"email": email, "password": "Password123!", "full_name": "Chat Viz User"})
+    client.post(
+        "/api/v1/auth/register", json={"email": email, "password": "Password123!", "full_name": "Chat Viz User"}
+    )
     login_resp = client.post("/api/v1/auth/login", json={"email": email, "password": "Password123!"})
     token = login_resp.json()["access_token"]
     headers = {"Authorization": f"Bearer {token}"}

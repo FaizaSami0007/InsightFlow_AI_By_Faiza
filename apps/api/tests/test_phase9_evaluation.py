@@ -54,12 +54,15 @@ def setup_golden_dashboard(email_prefix: str):
     return headers, dashboard_id
 
 
-@pytest.mark.parametrize("page_size,orientation", [
-    ("A4", "landscape"),
-    ("A4", "portrait"),
-    ("Letter", "landscape"),
-    ("Letter", "portrait"),
-])
+@pytest.mark.parametrize(
+    "page_size,orientation",
+    [
+        ("A4", "landscape"),
+        ("A4", "portrait"),
+        ("Letter", "landscape"),
+        ("Letter", "portrait"),
+    ],
+)
 def test_evaluation_pdf_matrix(page_size: str, orientation: str):
     headers, dashboard_id = setup_golden_dashboard(f"pdf_eval_{page_size}_{orientation}")
     req = {

@@ -29,7 +29,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info(f"Shutting down {settings.app_name} API")
 
 
-
 def create_application() -> FastAPI:
     """Application factory for InsightFlow AI FastAPI backend."""
     app = FastAPI(

@@ -46,8 +46,14 @@ class RelationshipEngine:
                 # Basic type compatibility
                 type_compatible = (
                     s_type == t_type
-                    or (any(x in s_type for x in ["INT", "FLOAT", "NUM", "DEC"]) and any(x in t_type for x in ["INT", "FLOAT", "NUM", "DEC"]))
-                    or (any(x in s_type for x in ["VARCHAR", "TEXT", "STR", "CHAR"]) and any(x in t_type for x in ["VARCHAR", "TEXT", "STR", "CHAR"]))
+                    or (
+                        any(x in s_type for x in ["INT", "FLOAT", "NUM", "DEC"])
+                        and any(x in t_type for x in ["INT", "FLOAT", "NUM", "DEC"])
+                    )
+                    or (
+                        any(x in s_type for x in ["VARCHAR", "TEXT", "STR", "CHAR"])
+                        and any(x in t_type for x in ["VARCHAR", "TEXT", "STR", "CHAR"])
+                    )
                 )
 
                 if not type_compatible:
@@ -62,9 +68,8 @@ class RelationshipEngine:
                     reasons.append(f"Matching column name '{s_name}'")
                 # ID prefix/suffix match (e.g. customer.id <-> orders.customer_id)
                 elif (
-                    (s_norm == "id" and t_norm.endswith("id") and cls._normalize_name(source_dataset_name) in t_norm)
-                    or (t_norm == "id" and s_norm.endswith("id") and cls._normalize_name(target_dataset_name) in s_norm)
-                ):
+                    s_norm == "id" and t_norm.endswith("id") and cls._normalize_name(source_dataset_name) in t_norm
+                ) or (t_norm == "id" and s_norm.endswith("id") and cls._normalize_name(target_dataset_name) in s_norm):
                     confidence += 0.55
                     reasons.append(f"Primary-to-Foreign key name pattern ('{s_name}' <-> '{t_name}')")
                 elif s_norm.endswith("id") and t_norm.endswith("id") and (s_norm in t_norm or t_norm in s_norm):

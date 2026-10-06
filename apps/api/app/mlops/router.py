@@ -42,6 +42,7 @@ router = APIRouter(prefix="/mlops", tags=["MLOps & Model Lifecycle"])
 # 1. MODEL REGISTRY ENDPOINTS
 # ==============================================================================
 
+
 @router.post(
     "/models",
     response_model=MLModelResponse,
@@ -203,6 +204,7 @@ async def update_model(
 # 2. MODEL VERSIONING ENDPOINTS
 # ==============================================================================
 
+
 @router.post(
     "/models/{model_id}/versions",
     response_model=MLModelVersionResponse,
@@ -289,6 +291,7 @@ async def get_model_version(
 # 3. EXPERIMENT TRACKING ENDPOINTS
 # ==============================================================================
 
+
 @router.post(
     "/models/{model_id}/experiments",
     response_model=MLExperimentResponse,
@@ -325,6 +328,7 @@ async def create_experiment(
 # ==============================================================================
 # 4. EVALUATION & PROMOTION ENDPOINTS
 # ==============================================================================
+
 
 @router.post(
     "/versions/{version_id}/evaluate",
@@ -441,6 +445,7 @@ async def rollback_model_version(
 # ==============================================================================
 # 5. DRIFT, HEALTH, LINEAGE & ALERTS ENDPOINTS
 # ==============================================================================
+
 
 @router.post(
     "/versions/{version_id}/drift",

@@ -44,28 +44,40 @@ class DashboardPlanValidator:
         col_names: Set[str] = {col.column_name for col in raw_cols}
 
         measures: Set[str] = {
-            col_name for col_name, sem in semantic_columns.items()
-            if getattr(sem, "is_measure", False) or (getattr(sem, "inferred_role", None) == SemanticRole.MEASURE) or (getattr(sem, "role", None) == SemanticRole.MEASURE) or getattr(sem, "conceptual_type", "") in ["numeric", "currency", "integer", "float"]
+            col_name
+            for col_name, sem in semantic_columns.items()
+            if getattr(sem, "is_measure", False)
+            or (getattr(sem, "inferred_role", None) == SemanticRole.MEASURE)
+            or (getattr(sem, "role", None) == SemanticRole.MEASURE)
+            or getattr(sem, "conceptual_type", "") in ["numeric", "currency", "integer", "float"]
         }
         dimensions: Set[str] = {
-            col_name for col_name, sem in semantic_columns.items()
-            if getattr(sem, "is_dimension", False) or (getattr(sem, "inferred_role", None) in [SemanticRole.DIMENSION, SemanticRole.CATEGORY, SemanticRole.IDENTIFIER]) or (getattr(sem, "role", None) in [SemanticRole.DIMENSION, SemanticRole.IDENTIFIER]) or getattr(sem, "conceptual_type", "") in ["categorical", "boolean", "text"]
+            col_name
+            for col_name, sem in semantic_columns.items()
+            if getattr(sem, "is_dimension", False)
+            or (
+                getattr(sem, "inferred_role", None)
+                in [SemanticRole.DIMENSION, SemanticRole.CATEGORY, SemanticRole.IDENTIFIER]
+            )
+            or (getattr(sem, "role", None) in [SemanticRole.DIMENSION, SemanticRole.IDENTIFIER])
+            or getattr(sem, "conceptual_type", "") in ["categorical", "boolean", "text"]
         }
         temporals: Set[str] = {
-            col_name for col_name, sem in semantic_columns.items()
-            if getattr(sem, "is_temporal", False) or (getattr(sem, "inferred_role", None) in [SemanticRole.DATE, SemanticRole.DATETIME]) or (getattr(sem, "role", None) in [SemanticRole.DATE, SemanticRole.DATETIME]) or getattr(sem, "conceptual_type", "") in ["datetime", "date", "timestamp"]
+            col_name
+            for col_name, sem in semantic_columns.items()
+            if getattr(sem, "is_temporal", False)
+            or (getattr(sem, "inferred_role", None) in [SemanticRole.DATE, SemanticRole.DATETIME])
+            or (getattr(sem, "role", None) in [SemanticRole.DATE, SemanticRole.DATETIME])
+            or getattr(sem, "conceptual_type", "") in ["datetime", "date", "timestamp"]
         }
-
-
 
         # 3. Tool registry validation
         available_ops = set(analysis_registry._tools.keys())
 
-
         # 4. Validate each widget
         signatures_seen: Set[str] = set()
         for idx, widget in enumerate(plan.widgets):
-            w_prefix = f"Widget #{idx+1} ('{widget.title}')"
+            w_prefix = f"Widget #{idx + 1} ('{widget.title}')"
 
             # Check operation
             if widget.operation not in available_ops:
@@ -75,7 +87,14 @@ class DashboardPlanValidator:
             params = widget.params or {}
 
             # Check referenced columns in params
-            for param_key in ["group_column", "aggregate_column", "time_column", "date_column", "metric_column", "column"]:
+            for param_key in [
+                "group_column",
+                "aggregate_column",
+                "time_column",
+                "date_column",
+                "metric_column",
+                "column",
+            ]:
                 if param_key in params and params[param_key]:
                     val = params[param_key]
                     if isinstance(val, str) and val not in col_names and val != "*":
@@ -99,7 +118,11 @@ class DashboardPlanValidator:
 
             # Validate widget type & operation semantics
             if widget.widget_type == WidgetType.KPI:
-                agg_col = params.get("aggregate_column") or params.get("column") or (params.get("columns")[0] if params.get("columns") else None)
+                agg_col = (
+                    params.get("aggregate_column")
+                    or params.get("column")
+                    or (params.get("columns")[0] if params.get("columns") else None)
+                )
                 if agg_col and agg_col not in measures and agg_col not in col_names:
                     warnings.append(f"{w_prefix}: KPI metric '{agg_col}' is not classified as a numeric measure")
 
@@ -111,7 +134,9 @@ class DashboardPlanValidator:
                     errors.append(f"{w_prefix}: date_column '{time_col}' is not a temporal column")
 
             elif widget.operation == "group_by":
-                group_col = params.get("group_column") or (params.get("dimensions")[0] if params.get("dimensions") else None)
+                group_col = params.get("group_column") or (
+                    params.get("dimensions")[0] if params.get("dimensions") else None
+                )
                 if not group_col:
                     errors.append(f"{w_prefix}: group_by requires 'dimensions'")
                 elif group_col not in col_names:
@@ -122,7 +147,9 @@ class DashboardPlanValidator:
             # Check for redundancy (duplicate analytical signature)
             sig = f"{widget.operation}:{widget.title}:{widget.preferred_chart_type}"
             if sig in signatures_seen:
-                warnings.append(f"{w_prefix}: Duplicate analytical computation detected; consider combining or differentiating")
+                warnings.append(
+                    f"{w_prefix}: Duplicate analytical computation detected; consider combining or differentiating"
+                )
             signatures_seen.add(sig)
 
         # 5. Validate suggested filters
@@ -150,8 +177,6 @@ class DashboardPatchValidator:
         col_names = {col.column_name for col in raw_cols}
         existing_widget_ids = {w.id for w in dashboard.widgets}
 
-
-
         if patch.op == PatchOp.ADD_WIDGET:
             w_dict = patch.params.get("widget", {})
             title = w_dict.get("title")
@@ -163,9 +188,10 @@ class DashboardPatchValidator:
             elif op_name not in analysis_registry._tools:
                 errors.append(f"ADD_WIDGET operation '{op_name}' is not supported")
 
-
             if len(dashboard.widgets) >= DashboardPlanValidator.MAX_WIDGETS:
-                errors.append(f"Cannot add widget: Dashboard already has maximum of {DashboardPlanValidator.MAX_WIDGETS} widgets")
+                errors.append(
+                    f"Cannot add widget: Dashboard already has maximum of {DashboardPlanValidator.MAX_WIDGETS} widgets"
+                )
 
         elif patch.op == PatchOp.REMOVE_WIDGET:
             if not patch.widget_id or patch.widget_id not in existing_widget_ids:

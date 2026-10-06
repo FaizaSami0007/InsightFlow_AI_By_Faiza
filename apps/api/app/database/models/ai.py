@@ -159,4 +159,3 @@ class AITask(Base):
     # Relationships
     conversation = relationship("AIConversation", backref="tasks")
     user = relationship("User", backref="ai_tasks")
-

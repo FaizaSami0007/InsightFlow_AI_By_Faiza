@@ -83,7 +83,9 @@ class ScenarioService:
             table_name = self.duckdb_manager.register_dataset(
                 dataset_version_id=version.id,
                 file_path=str(file_path),
-                file_format=version.file_format.value if hasattr(version.file_format, "value") else str(version.file_format),
+                file_format=version.file_format.value
+                if hasattr(version.file_format, "value")
+                else str(version.file_format),
             )
 
         return dataset, version, table_name
@@ -330,9 +332,7 @@ class ScenarioService:
         await self.db.commit()
         await self.db.refresh(record)
 
-        narrative = (
-            f"Compared {len(comparison_items)} scenario branches against baseline {req.target_metric} of {baseline_val:,.2f}."
-        )
+        narrative = f"Compared {len(comparison_items)} scenario branches against baseline {req.target_metric} of {baseline_val:,.2f}."
 
         return ScenarioResultResponse(
             id=record.id,
@@ -381,7 +381,9 @@ class ScenarioService:
                 for a in (r.assumptions or [])
             ]
             sens_steps = [SensitivityStep(**s) for s in r.sensitivity_results] if r.sensitivity_results else None
-            comp_items = [ScenarioComparisonItem(**c) for c in r.comparison_scenarios] if r.comparison_scenarios else None
+            comp_items = (
+                [ScenarioComparisonItem(**c) for c in r.comparison_scenarios] if r.comparison_scenarios else None
+            )
 
             results.append(
                 ScenarioResultResponse(

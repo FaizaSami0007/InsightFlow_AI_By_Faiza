@@ -80,4 +80,3 @@ class ChatResponse(BaseModel):
     execution_time_ms: float = 0.0
     tokens_used: int = 0
     created_at: datetime
-

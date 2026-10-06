@@ -154,7 +154,9 @@ class ExportEngine:
         elements.append(Spacer(1, 4))
         elements.append(Paragraph(meta_text, subtitle_style))
         elements.append(Spacer(1, 8))
-        elements.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#E3E8EF"), spaceBefore=2, spaceAfter=8))
+        elements.append(
+            HRFlowable(width="100%", thickness=1, color=colors.HexColor("#E3E8EF"), spaceBefore=2, spaceAfter=8)
+        )
 
         # 2. Active Filters Banner
         if include_filters and filter_snapshot:
@@ -166,12 +168,14 @@ class ExportEngine:
                     colWidths=[chosen_page_size[0] - 72],
                 )
                 filter_box.setStyle(
-                    TableStyle([
-                        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#E6F4F1")),
-                        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#0F766E")),
-                        ("PADDING", (0, 0), (-1, -1), 6),
-                        ("ROUNDEDCORNERS", [4, 4, 4, 4]),
-                    ])
+                    TableStyle(
+                        [
+                            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#E6F4F1")),
+                            ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#0F766E")),
+                            ("PADDING", (0, 0), (-1, -1), 6),
+                            ("ROUNDEDCORNERS", [4, 4, 4, 4]),
+                        ]
+                    )
                 )
                 elements.append(filter_box)
                 elements.append(Spacer(1, 10))
@@ -207,20 +211,22 @@ class ExportEngine:
             # Build KPI Table Row
             kpi_table = Table([kpi_cells], colWidths=[col_w] * len(kpi_cells))
             kpi_table.setStyle(
-                TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F7F9FC")),
-                    ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
-                    ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
-                    ("PADDING", (0, 0), (-1, -1), 8),
-                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ])
+                TableStyle(
+                    [
+                        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F7F9FC")),
+                        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
+                        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
+                        ("PADDING", (0, 0), (-1, -1), 8),
+                        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                    ]
+                )
             )
             elements.append(kpi_table)
             elements.append(Spacer(1, 14))
 
         # 4. Analytical Components & Charts
         for idx, widget in enumerate(other_widgets[:MAX_EXPORT_WIDGETS]):
-            w_title = widget.get("title", f"Widget #{idx+1}")
+            w_title = widget.get("title", f"Widget #{idx + 1}")
             w_desc = widget.get("description", "")
             chart_spec = widget.get("chart_spec") or widget.get("chart_spec_json") or {}
             chart_type = chart_spec.get("chart_type", widget.get("widget_type", "chart")).upper()
@@ -251,20 +257,20 @@ class ExportEngine:
                 cell_w = total_w / len(table_cols)
                 data_table = Table(t_data, colWidths=[cell_w] * len(table_cols))
                 data_table.setStyle(
-                    TableStyle([
-                        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F7F9FC")),
-                        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
-                        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#E3E8EF")),
-                        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#FAFBFC")]),
-                        ("PADDING", (0, 0), (-1, -1), 4),
-                    ])
+                    TableStyle(
+                        [
+                            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F7F9FC")),
+                            ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
+                            ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#E3E8EF")),
+                            ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#FAFBFC")]),
+                            ("PADDING", (0, 0), (-1, -1), 4),
+                        ]
+                    )
                 )
                 widget_elements.append(data_table)
                 if len(rows) > 8:
                     widget_elements.append(Spacer(1, 2))
-                    widget_elements.append(
-                        Paragraph(f"<i>Showing 8 of {len(rows)} result rows</i>", card_text_style)
-                    )
+                    widget_elements.append(Paragraph(f"<i>Showing 8 of {len(rows)} result rows</i>", card_text_style))
             else:
                 widget_elements.append(Paragraph("<i>No data records returned for this widget.</i>", card_text_style))
 
@@ -274,7 +280,9 @@ class ExportEngine:
         # 5. Provenance Audit Section
         if include_provenance:
             elements.append(Spacer(1, 8))
-            elements.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#E3E8EF"), spaceBefore=4, spaceAfter=8))
+            elements.append(
+                HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#E3E8EF"), spaceBefore=4, spaceAfter=8)
+            )
             elements.append(Paragraph("Analytical Provenance & Audit Trail", section_style))
             elements.append(Spacer(1, 4))
 
@@ -287,21 +295,27 @@ class ExportEngine:
                 ]
             ]
             for w in widgets_data:
-                prov_rows.append([
-                    Paragraph(w.get("title", "Widget"), card_text_style),
-                    Paragraph(w.get("analysis_id", "Direct Aggregation") or "Direct Aggregation", card_text_style),
-                    Paragraph((w.get("chart_spec") or {}).get("chart_type", w.get("widget_type", "N/A")), card_text_style),
-                    Paragraph(f"{dataset_id} ({version_id})", card_text_style),
-                ])
+                prov_rows.append(
+                    [
+                        Paragraph(w.get("title", "Widget"), card_text_style),
+                        Paragraph(w.get("analysis_id", "Direct Aggregation") or "Direct Aggregation", card_text_style),
+                        Paragraph(
+                            (w.get("chart_spec") or {}).get("chart_type", w.get("widget_type", "N/A")), card_text_style
+                        ),
+                        Paragraph(f"{dataset_id} ({version_id})", card_text_style),
+                    ]
+                )
 
             prov_table = Table(prov_rows, colWidths=[(chosen_page_size[0] - 72) / 4] * 4)
             prov_table.setStyle(
-                TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F7F9FC")),
-                    ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
-                    ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#E3E8EF")),
-                    ("PADDING", (0, 0), (-1, -1), 4),
-                ])
+                TableStyle(
+                    [
+                        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F7F9FC")),
+                        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#E3E8EF")),
+                        ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#E3E8EF")),
+                        ("PADDING", (0, 0), (-1, -1), 4),
+                    ]
+                )
             )
             elements.append(KeepTogether([prov_table]))
 
@@ -335,7 +349,9 @@ class ExportEngine:
 
         # Text Drawing (using default font with fallback)
         doc_title = title_override or dashboard_spec.get("name") or dashboard_spec.get("title") or "Analytics Dashboard"
-        dataset_info = f"Dataset: {dashboard_spec.get('dataset_id', 'N/A')} ({dashboard_spec.get('dataset_version_id', 'v1')})"
+        dataset_info = (
+            f"Dataset: {dashboard_spec.get('dataset_id', 'N/A')} ({dashboard_spec.get('dataset_version_id', 'v1')})"
+        )
         gen_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
         draw.text((30, 20), doc_title, fill=(23, 32, 51))
@@ -346,7 +362,12 @@ class ExportEngine:
         # Filter Pills
         if filter_snapshot:
             filter_text = "Filters: " + " | ".join([f"{k}={v}" for k, v in filter_snapshot.items() if v])
-            draw.rounded_rectangle([(30, current_y), (img_width - 30, current_y + 32)], radius=6, fill=(230, 244, 241), outline=(15, 118, 110))
+            draw.rounded_rectangle(
+                [(30, current_y), (img_width - 30, current_y + 32)],
+                radius=6,
+                fill=(230, 244, 241),
+                outline=(15, 118, 110),
+            )
             draw.text((45, current_y + 8), filter_text, fill=(15, 118, 110))
             current_y += 48
 
@@ -356,7 +377,12 @@ class ExportEngine:
             card_w = (img_width - 60 - (len(kpi_widgets) - 1) * 16) / len(kpi_widgets)
             for idx, kw in enumerate(kpi_widgets):
                 card_x = 30 + idx * (card_w + 16)
-                draw.rounded_rectangle([(card_x, current_y), (card_x + card_w, current_y + 80)], radius=8, fill=(255, 255, 255), outline=(227, 232, 239))
+                draw.rounded_rectangle(
+                    [(card_x, current_y), (card_x + card_w, current_y + 80)],
+                    radius=8,
+                    fill=(255, 255, 255),
+                    outline=(227, 232, 239),
+                )
                 draw.text((card_x + 14, current_y + 12), kw.get("title", "KPI"), fill=(83, 97, 118))
 
                 rows = kw.get("result_data", {}).get("rows", [])
@@ -419,7 +445,9 @@ class ExportEngine:
             # Metadata header comments
             writer.writerow(["# InsightFlow AI Dashboard Export"])
             writer.writerow([f"# Dashboard: {dashboard_spec.get('name', 'Dashboard')}"])
-            writer.writerow([f"# Dataset: {dashboard_spec.get('dataset_id')} (v{dashboard_spec.get('dataset_version_id')})"])
+            writer.writerow(
+                [f"# Dataset: {dashboard_spec.get('dataset_id')} (v{dashboard_spec.get('dataset_version_id')})"]
+            )
             writer.writerow([f"# Exported At: {datetime.now(timezone.utc).isoformat()}"])
             if filter_snapshot:
                 writer.writerow([f"# Active Filters: {filter_snapshot}"])

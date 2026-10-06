@@ -81,7 +81,9 @@ class DocumentExtractor:
         current_buffer: List[str] = []
         detected_title: Optional[str] = None
 
-        heading_pattern = re.compile(r"^(#{1,6}\s+|===+|\b(?:Section|Article|Chapter|Policy|KPI)\s+\d+[:\.\s])(.*)$", re.IGNORECASE)
+        heading_pattern = re.compile(
+            r"^(#{1,6}\s+|===+|\b(?:Section|Article|Chapter|Policy|KPI)\s+\d+[:\.\s])(.*)$", re.IGNORECASE
+        )
 
         for line in lines:
             line_str = line.strip()
@@ -250,4 +252,6 @@ class DocumentExtractor:
                 metadata={"extractor": "binary_heuristics"},
             )
 
-        raise DocumentExtractionError("Could not extract readable text from PDF. Document may be password protected or empty.")
+        raise DocumentExtractionError(
+            "Could not extract readable text from PDF. Document may be password protected or empty."
+        )

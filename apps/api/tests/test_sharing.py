@@ -94,9 +94,7 @@ def test_create_snapshot_share_link():
 def test_revoke_share_link():
     headers, dashboard_id = setup_user_and_dashboard("share_user_rev")
     # 1. Create Share
-    create_resp = client.post(
-        f"/api/v1/dashboards/{dashboard_id}/shares", json={"expires_in_days": 7}, headers=headers
-    )
+    create_resp = client.post(f"/api/v1/dashboards/{dashboard_id}/shares", json={"expires_in_days": 7}, headers=headers)
     assert create_resp.status_code == 201
     share_id = create_resp.json()["id"]
     token = create_resp.json()["share_token"]
@@ -117,15 +115,11 @@ def test_revoke_share_link():
 
 def test_shared_viewer_isolated_filter_refresh():
     headers, dashboard_id = setup_user_and_dashboard("share_user_filter")
-    create_resp = client.post(
-        f"/api/v1/dashboards/{dashboard_id}/shares", json={"is_snapshot": False}, headers=headers
-    )
+    create_resp = client.post(f"/api/v1/dashboards/{dashboard_id}/shares", json={"is_snapshot": False}, headers=headers)
     token = create_resp.json()["share_token"]
 
     # Viewer applies temporary filter
-    refresh_payload = {
-        "filter_values": {"facility": "Facility A"}
-    }
+    refresh_payload = {"filter_values": {"facility": "Facility A"}}
     filter_resp = client.post(f"/api/v1/shared/dashboards/{token}/refresh", json=refresh_payload)
     assert filter_resp.status_code == 200
     refreshed_data = filter_resp.json()
@@ -137,9 +131,7 @@ def test_sharing_security_idor_isolation():
     headers_u2, _ = setup_user_and_dashboard("share_user_idor2")
 
     # User 1 creates share
-    create_resp = client.post(
-        f"/api/v1/dashboards/{dashboard_id}/shares", json={}, headers=headers_u1
-    )
+    create_resp = client.post(f"/api/v1/dashboards/{dashboard_id}/shares", json={}, headers=headers_u1)
     share_id = create_resp.json()["id"]
 
     # User 2 cannot list or delete User 1's share

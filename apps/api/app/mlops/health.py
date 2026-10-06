@@ -54,7 +54,9 @@ class ModelHealthEngine:
 
         drift_status = "HEALTHY" if drift_score >= 80 else ("WARNING" if drift_score >= 50 else "CRITICAL")
         if drift_status == "CRITICAL":
-            recommendations.append("Significant feature drift detected (PSI > 0.2). Retraining or policy review recommended.")
+            recommendations.append(
+                "Significant feature drift detected (PSI > 0.2). Retraining or policy review recommended."
+            )
         elif drift_status == "WARNING":
             recommendations.append("Moderate feature drift observed. Monitor inference distributions closely.")
 
@@ -103,7 +105,9 @@ class ModelHealthEngine:
 
             if days_since_eval > 90:
                 fresh_score = 40.0
-                recommendations.append(f"Model has not been evaluated for {days_since_eval} days (stale model warning).")
+                recommendations.append(
+                    f"Model has not been evaluated for {days_since_eval} days (stale model warning)."
+                )
             elif days_since_eval > 30:
                 fresh_score = 75.0
 
@@ -111,22 +115,20 @@ class ModelHealthEngine:
 
         # Overall Health Score (Weighted average)
         overall_score = round(
-            (dq_score * 0.25)
-            + (drift_score * 0.25)
-            + (perf_score * 0.25)
-            + (lat_score * 0.15)
-            + (fresh_score * 0.10),
+            (dq_score * 0.25) + (drift_score * 0.25) + (perf_score * 0.25) + (lat_score * 0.15) + (fresh_score * 0.10),
             1,
         )
 
         if dq_status == "CRITICAL" or drift_status == "CRITICAL" or perf_status == "CRITICAL":
             overall_health = "CRITICAL"
-        elif dq_status == "WARNING" or drift_status == "WARNING" or perf_status == "WARNING" or fresh_status == "WARNING":
+        elif (
+            dq_status == "WARNING" or drift_status == "WARNING" or perf_status == "WARNING" or fresh_status == "WARNING"
+        ):
             overall_health = "WARNING"
         else:
             overall_health = "GOOD"
 
-        retraining_recommended = (drift_status == "CRITICAL" or perf_status != "HEALTHY" or fresh_status == "CRITICAL")
+        retraining_recommended = drift_status == "CRITICAL" or perf_status != "HEALTHY" or fresh_status == "CRITICAL"
         if not recommendations:
             recommendations.append("All monitoring dimensions are healthy and operating within nominal parameters.")
 

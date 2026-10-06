@@ -25,6 +25,7 @@ from tests.conftest import TestingSessionLocal
 # 1. SCENARIO ENGINE NUMERICAL & BOUNDARY UNIT TESTS
 # ==============================================================================
 
+
 def test_what_if_percentage_positive_and_negative() -> None:
     """Verify deterministic percentage increase and decrease calculations."""
     # Baseline 1,000,000 +10% -> 1,100,000 (+100k / +10%)
@@ -94,9 +95,9 @@ def test_bounded_variable_validation_and_non_negative() -> None:
     """Verify bounds constraints (e.g. discount rate 0-100%) and non-negative physical bounds."""
     # Disallow discount > 100%
     with pytest.raises(ScenarioEngineError) as exc_info:
-        ScenarioEngine.validate_assumptions([
-            AssumptionSpec(variable="discount_rate", operation=AssumptionOperation.DIRECT_SET, value=150.0)
-        ])
+        ScenarioEngine.validate_assumptions(
+            [AssumptionSpec(variable="discount_rate", operation=AssumptionOperation.DIRECT_SET, value=150.0)]
+        )
     assert "bounded between 0% and 100%" in str(exc_info.value)
 
     # Non-negative clamping: Baseline 100 -200 -> 0.0 when is_non_negative=True
@@ -170,7 +171,9 @@ def test_scenario_comparison_optimistic_and_conservative() -> None:
     """Verify side-by-side branch comparison evaluated against identical baseline."""
     scenarios = {
         "Optimistic": [AssumptionSpec(variable="revenue", operation=AssumptionOperation.PERCENTAGE_CHANGE, value=15.0)],
-        "Conservative": [AssumptionSpec(variable="revenue", operation=AssumptionOperation.PERCENTAGE_CHANGE, value=-10.0)],
+        "Conservative": [
+            AssumptionSpec(variable="revenue", operation=AssumptionOperation.PERCENTAGE_CHANGE, value=-10.0)
+        ],
     }
     items = ScenarioEngine.simulate_comparison(
         baseline_value=1_000_000.0,
@@ -194,6 +197,7 @@ def test_scenario_comparison_optimistic_and_conservative() -> None:
 # 2. DATABASE INTEGRATION & SERVICE LIFECYCLE TESTS
 # ==============================================================================
 
+
 @pytest.mark.asyncio
 async def test_scenario_service_end_to_end() -> None:
     """Verify ScenarioService executes simulations, persists records, and supports listing and retrieval."""
@@ -214,12 +218,14 @@ async def test_scenario_service_end_to_end() -> None:
         from app.datasets.storage import get_storage_provider
 
         storage = get_storage_provider()
-        df = pd.DataFrame({
-            "revenue": [1000.0, 2000.0, 3000.0, 4000.0],
-            "price": [100.0, 100.0, 100.0, 100.0],
-            "cost": [500.0, 1000.0, 1500.0, 2000.0],
-            "units": [10, 20, 30, 40],
-        })
+        df = pd.DataFrame(
+            {
+                "revenue": [1000.0, 2000.0, 3000.0, 4000.0],
+                "price": [100.0, 100.0, 100.0, 100.0],
+                "cost": [500.0, 1000.0, 1500.0, 2000.0],
+                "units": [10, 20, 30, 40],
+            }
+        )
         csv_bytes = df.to_csv(index=False).encode("utf-8")
         storage_ref = storage.save_file(csv_bytes, "scenario_test.csv")
 
@@ -284,8 +290,12 @@ async def test_scenario_service_end_to_end() -> None:
             name="Strategic Planning Comparison",
             target_metric="revenue",
             scenarios={
-                "Bull Case": [AssumptionSpec(variable="revenue", operation=AssumptionOperation.PERCENTAGE_CHANGE, value=20.0)],
-                "Bear Case": [AssumptionSpec(variable="revenue", operation=AssumptionOperation.PERCENTAGE_CHANGE, value=-20.0)],
+                "Bull Case": [
+                    AssumptionSpec(variable="revenue", operation=AssumptionOperation.PERCENTAGE_CHANGE, value=20.0)
+                ],
+                "Bear Case": [
+                    AssumptionSpec(variable="revenue", operation=AssumptionOperation.PERCENTAGE_CHANGE, value=-20.0)
+                ],
             },
         )
         comp_res = await service.run_scenario_comparison(user.id, comp_req)

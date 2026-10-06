@@ -30,12 +30,20 @@ class AnomalyDetectionRequest(BaseModel):
     """Request payload to initiate statistical anomaly detection across a dataset."""
 
     dataset_id: str = Field(..., description="ID of the dataset to analyze")
-    dataset_version_id: Optional[str] = Field(None, description="Optional specific version ID; defaults to latest READY")
-    metric_fields: Optional[List[str]] = Field(default=None, description="Numeric measures to analyze (e.g. ['revenue', 'orders'])")
+    dataset_version_id: Optional[str] = Field(
+        None, description="Optional specific version ID; defaults to latest READY"
+    )
+    metric_fields: Optional[List[str]] = Field(
+        default=None, description="Numeric measures to analyze (e.g. ['revenue', 'orders'])"
+    )
     time_field: Optional[str] = Field(default=None, description="Date/timestamp column for temporal series analysis")
-    dimension_fields: Optional[List[str]] = Field(default=None, description="Categorical attributes for subgroup and root-cause analysis")
+    dimension_fields: Optional[List[str]] = Field(
+        default=None, description="Categorical attributes for subgroup and root-cause analysis"
+    )
     method: DetectionMethod = Field(default=DetectionMethod.ROBUST_Z_SCORE, description="Detection methodology")
-    sensitivity: float = Field(default=3.0, ge=1.0, le=10.0, description="Statistical threshold multiplier (e.g. 2.5, 3.0, 3.5)")
+    sensitivity: float = Field(
+        default=3.0, ge=1.0, le=10.0, description="Statistical threshold multiplier (e.g. 2.5, 3.0, 3.5)"
+    )
     min_severity: AnomalySeverity = Field(default=AnomalySeverity.LOW, description="Minimum severity to return")
     allow_negative: bool = Field(default=False, description="Whether negative values are valid domain values")
     filters: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional filters to slice data")
@@ -46,11 +54,15 @@ class AnomalyDetectionRequest(BaseModel):
         if isinstance(data, dict):
             # Target alias
             if "metric_field" in data and "metric_fields" not in data:
-                data["metric_fields"] = [data["metric_field"]] if isinstance(data["metric_field"], str) else data["metric_field"]
+                data["metric_fields"] = (
+                    [data["metric_field"]] if isinstance(data["metric_field"], str) else data["metric_field"]
+                )
             if "target_field" in data and "metric_fields" not in data:
                 data["metric_fields"] = [data["target_field"]]
             if "dimension_field" in data and "dimension_fields" not in data:
-                data["dimension_fields"] = [data["dimension_field"]] if isinstance(data["dimension_field"], str) else data["dimension_field"]
+                data["dimension_fields"] = (
+                    [data["dimension_field"]] if isinstance(data["dimension_field"], str) else data["dimension_field"]
+                )
             if "method" in data and isinstance(data["method"], str):
                 data["method"] = data["method"].upper()
             if "min_severity" in data and isinstance(data["min_severity"], str):

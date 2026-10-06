@@ -34,11 +34,14 @@ from tests.conftest import TestingSessionLocal
 # 1. DETECTOR UNIT TESTS
 # ==============================================================================
 
+
 def test_z_score_detector_spike_and_drop() -> None:
     """Verify Z-score detector flags extreme spikes and drops in normal distribution."""
     detector = ZScoreDetector(sensitivity=2.0)
-    values = np.array([100.0, 102.0, 98.0, 101.0, 99.0, 100.0, 250.0, 101.0, 99.0, 10.0, 100.0, 99.0, 101.0, 100.0, 102.0])
-    dates = [f"2026-01-{i+1:02d}" for i in range(len(values))]
+    values = np.array(
+        [100.0, 102.0, 98.0, 101.0, 99.0, 100.0, 250.0, 101.0, 99.0, 10.0, 100.0, 99.0, 101.0, 100.0, 102.0]
+    )
+    dates = [f"2026-01-{i + 1:02d}" for i in range(len(values))]
 
     out = detector.detect(values=values, dates=dates)
     assert len(out.hits) >= 2
@@ -51,7 +54,7 @@ def test_robust_z_score_detector_outlier_resilience() -> None:
     """Verify Robust Z-Score (Median/MAD) is resilient to baseline distortion by outliers."""
     detector = RobustZScoreDetector(sensitivity=3.0)
     values = np.array([50.0] * 18 + [500.0, 500.0])
-    dates = [f"2026-01-{i+1:02d}" for i in range(len(values))]
+    dates = [f"2026-01-{i + 1:02d}" for i in range(len(values))]
 
     out = detector.detect(values=values, dates=dates)
     assert len(out.hits) == 2
@@ -65,7 +68,7 @@ def test_iqr_detector_tukey_fences() -> None:
     """Verify Interquartile Range (IQR) detection on skewed distributions."""
     detector = IQRDetector(sensitivity=1.5)
     values = np.array([10.0, 12.0, 11.0, 14.0, 13.0, 12.0, 11.0, 15.0, 12.0, 100.0])
-    dates = [f"2026-02-{i+1:02d}" for i in range(len(values))]
+    dates = [f"2026-02-{i + 1:02d}" for i in range(len(values))]
 
     out = detector.detect(values=values, dates=dates)
     assert len(out.hits) == 1
@@ -76,7 +79,7 @@ def test_rolling_baseline_detector_trend_shift() -> None:
     """Verify Rolling baseline detector detects abrupt shifts away from dynamic moving average."""
     detector = RollingBaselineDetector(window=4, sensitivity=2.0)
     values = np.array([100.0, 100.0, 100.0, 100.0, 100.0, 40.0, 40.0, 40.0])
-    dates = [f"2026-03-{i+1:02d}" for i in range(len(values))]
+    dates = [f"2026-03-{i + 1:02d}" for i in range(len(values))]
 
     out = detector.detect(values=values, dates=dates)
     assert len(out.hits) >= 1
@@ -92,7 +95,7 @@ def test_seasonal_baseline_detector_normal_peak_vs_anomaly() -> None:
     values = np.array(cycle * 3)  # Year 1, 2, 3
     # In Year 3 Q4, instead of expected 300, it drops to 80
     values[-1] = 80.0
-    dates = [f"2024-Q{i%4+1}" for i in range(len(values))]
+    dates = [f"2024-Q{i % 4 + 1}" for i in range(len(values))]
 
     out = detector.detect(values=values, dates=dates)
     # The normal 300 peaks in Year 1 & 2 must NOT be flagged as anomalies
@@ -120,6 +123,7 @@ def test_forecast_deviation_detector() -> None:
 # ==============================================================================
 # 2. SEVERITY & MATERIALITY TESTS
 # ==============================================================================
+
 
 def test_severity_evaluation_levels() -> None:
     """Verify deterministic mapping to severity levels based on score and materiality."""
@@ -170,6 +174,7 @@ def test_materiality_anti_fatigue() -> None:
 # 3. ROOT CAUSE & CONTRIBUTION ANALYSIS TESTS
 # ==============================================================================
 
+
 def test_root_cause_contribution_breakdown() -> None:
     """Verify dimensional contribution calculation logic and non-causal explanation formatting."""
     # Subgroup deltas: West=-70, East=-10, Total=-80
@@ -192,6 +197,7 @@ def test_root_cause_contribution_breakdown() -> None:
 # ==============================================================================
 # 4. DATABASE INTEGRATION & SERVICE LIFECYCLE TESTS
 # ==============================================================================
+
 
 @pytest.mark.asyncio
 async def test_anomaly_service_end_to_end() -> None:

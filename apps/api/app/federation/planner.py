@@ -151,14 +151,18 @@ class FederatedQueryPlanner:
             join_cond = f"CAST({source_alias}.{s_col} AS VARCHAR) = CAST({target_alias}.{t_col} AS VARCHAR)"
             join_clauses.append(f"LEFT JOIN {target_tbl} {target_alias} ON {join_cond}")
 
-            relationships_used_info.append({
-                "relationship_id": hop.relationship.id,
-                "from_dataset": hop.from_dataset_id,
-                "to_dataset": hop.to_dataset_id,
-                "from_field": hop.from_field,
-                "to_field": hop.to_field,
-                "type": hop.relationship.relationship_type.value if hasattr(hop.relationship.relationship_type, "value") else str(hop.relationship.relationship_type),
-            })
+            relationships_used_info.append(
+                {
+                    "relationship_id": hop.relationship.id,
+                    "from_dataset": hop.from_dataset_id,
+                    "to_dataset": hop.to_dataset_id,
+                    "from_field": hop.from_field,
+                    "to_field": hop.to_field,
+                    "type": hop.relationship.relationship_type.value
+                    if hasattr(hop.relationship.relationship_type, "value")
+                    else str(hop.relationship.relationship_type),
+                }
+            )
 
         # 6. Build WHERE clause for filters
         where_clauses: List[str] = []
@@ -215,15 +219,14 @@ class FederatedQueryPlanner:
         exec_time_ms = round((time.perf_counter() - start_time) * 1000, 2)
 
         # Build join path description
-        hops_desc = " -> ".join([f"{h.from_dataset_id}.{h.from_field}={h.to_dataset_id}.{h.to_field}" for h in join_hops])
+        hops_desc = " -> ".join(
+            [f"{h.from_dataset_id}.{h.from_field}={h.to_dataset_id}.{h.to_field}" for h in join_hops]
+        )
         join_path_desc = f"Root: {root_dataset_id} | Hops: {hops_desc or 'Single dataset'}"
 
         cols = exec_res.get("columns", column_names)
         raw_rows = exec_res.get("rows", [])
-        dict_rows = [
-            dict(zip(cols, row)) if isinstance(row, (tuple, list)) else row
-            for row in raw_rows
-        ]
+        dict_rows = [dict(zip(cols, row)) if isinstance(row, (tuple, list)) else row for row in raw_rows]
 
         return FederatedAnalysisResponse(
             analysis_id=analysis_id,

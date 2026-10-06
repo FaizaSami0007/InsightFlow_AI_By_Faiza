@@ -43,7 +43,9 @@ INTENT_CASES = [
 @pytest.mark.parametrize("query,is_forecast,expected_target,expected_horizon", INTENT_CASES)
 def test_forecast_intent_classification(query, is_forecast, expected_target, expected_horizon):
     q_lower = query.lower()
-    has_forecast_keyword = any(kw in q_lower for kw in ["forecast", "predict", "outlook", "project", "expected", "will", "estimate"])
+    has_forecast_keyword = any(
+        kw in q_lower for kw in ["forecast", "predict", "outlook", "project", "expected", "will", "estimate"]
+    )
     assert has_forecast_keyword == is_forecast
     assert expected_target in q_lower or any(part in q_lower for part in expected_target.split("_"))
     assert expected_horizon > 0
@@ -69,7 +71,11 @@ TARGET_SELECTION_CASES = [
     ({"columns": ["created_at", "ticket_count", "priority"], "user_target": "ticket_count"}, "ticket_count", True),
     ({"columns": ["date", "inventory_count", "warehouse"], "user_target": "inventory_count"}, "inventory_count", True),
     ({"columns": ["date", "refund_amount", "reason"], "user_target": "refund_amount"}, "refund_amount", True),
-    ({"columns": ["date", "cost_per_acquisition", "campaign"], "user_target": "cost_per_acquisition"}, "cost_per_acquisition", True),
+    (
+        {"columns": ["date", "cost_per_acquisition", "campaign"], "user_target": "cost_per_acquisition"},
+        "cost_per_acquisition",
+        True,
+    ),
     ({"columns": ["date", "gross_margin", "department"], "user_target": "gross_margin"}, "gross_margin", True),
     ({"columns": ["date", "pageviews", "device"], "user_target": "pageviews"}, "pageviews", True),
     ({"columns": ["date", "latency_ms", "endpoint"], "user_target": "latency_ms"}, "latency_ms", True),
@@ -107,7 +113,11 @@ TIME_FIELD_CASES = [
 
 @pytest.mark.parametrize("columns,expected_time_col", TIME_FIELD_CASES)
 def test_temporal_field_detection(columns, expected_time_col):
-    detected = [c for c in columns if any(t in c for t in ["date", "time", "month", "period", "ds", "created_at", "year", "logged", "at"])]
+    detected = [
+        c
+        for c in columns
+        if any(t in c for t in ["date", "time", "month", "period", "ds", "created_at", "year", "logged", "at"])
+    ]
     assert expected_time_col in detected
 
 

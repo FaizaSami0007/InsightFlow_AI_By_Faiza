@@ -9,6 +9,7 @@ from app.ai.agents.contracts import AgentID, TaskType
 
 class AgentDefinition(BaseModel):
     """Metadata specification for a registered agent."""
+
     model_config = ConfigDict(extra="ignore")
 
     agent_id: AgentID
@@ -53,7 +54,14 @@ class AgentRegistry:
                 name="Data Analyst Agent",
                 description="Executes deterministic data operations, aggregations, percentiles, correlations, group-bys, and multi-dataset federations.",
                 primary_task_type=TaskType.DATA_ANALYSIS,
-                capabilities=["dataset_profiling", "group_by", "aggregations", "percentiles", "correlations", "federation"],
+                capabilities=[
+                    "dataset_profiling",
+                    "group_by",
+                    "aggregations",
+                    "percentiles",
+                    "correlations",
+                    "federation",
+                ],
                 allowed_tools=[
                     "describe_dataset",
                     "group_by",

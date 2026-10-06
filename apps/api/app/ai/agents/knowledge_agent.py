@@ -97,15 +97,17 @@ class KnowledgeAgent(BaseAgent):
                         citation_label=citation_label,
                     )
                 )
-                citations_list.append({
-                    "citation_index": idx + 1,
-                    "document_title": item.document_title,
-                    "version_number": item.version_number,
-                    "page_number": item.page_number,
-                    "section_heading": item.section_heading,
-                    "snippet": item.content[:180] + "...",
-                    "similarity_score": item.similarity_score,
-                })
+                citations_list.append(
+                    {
+                        "citation_index": idx + 1,
+                        "document_title": item.document_title,
+                        "version_number": item.version_number,
+                        "page_number": item.page_number,
+                        "section_heading": item.section_heading,
+                        "snippet": item.content[:180] + "...",
+                        "similarity_score": item.similarity_score,
+                    }
+                )
 
             summary_text = f"Retrieved {len(search_res.results)} grounded business knowledge excerpts."
 
@@ -121,7 +123,9 @@ class KnowledgeAgent(BaseAgent):
                 evidence=evidence_list,
                 claims=claims_list,
                 citations=citations_list,
-                tool_calls_executed=[{"tool": "search_business_knowledge", "query": query, "results_count": len(search_res.results)}],
+                tool_calls_executed=[
+                    {"tool": "search_business_knowledge", "query": query, "results_count": len(search_res.results)}
+                ],
                 execution_time_ms=(time.perf_counter() - start_time) * 1000.0,
             )
         except Exception as ex:

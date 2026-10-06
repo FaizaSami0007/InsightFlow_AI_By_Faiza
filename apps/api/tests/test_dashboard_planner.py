@@ -76,7 +76,6 @@ def create_mock_profile_and_semantics():
         ),
     ]
 
-
     profile = DatasetProfile(
         id="dp1",
         dataset_version_id="dv1",
@@ -85,28 +84,56 @@ def create_mock_profile_and_semantics():
         column_profiles=cols,
     )
 
-
     semantics = {
         "order_date": SemanticColumn(
-            id="sc1", profile_id="dp1", column_name="order_date", inferred_role=SemanticRole.DATE, inferred_confidence=1.0, is_temporal=True
+            id="sc1",
+            profile_id="dp1",
+            column_name="order_date",
+            inferred_role=SemanticRole.DATE,
+            inferred_confidence=1.0,
+            is_temporal=True,
         ),
         "revenue": SemanticColumn(
-            id="sc2", profile_id="dp1", column_name="revenue", inferred_role=SemanticRole.MEASURE, inferred_confidence=1.0, is_measure=True
+            id="sc2",
+            profile_id="dp1",
+            column_name="revenue",
+            inferred_role=SemanticRole.MEASURE,
+            inferred_confidence=1.0,
+            is_measure=True,
         ),
         "profit": SemanticColumn(
-            id="sc3", profile_id="dp1", column_name="profit", inferred_role=SemanticRole.MEASURE, inferred_confidence=1.0, is_measure=True
+            id="sc3",
+            profile_id="dp1",
+            column_name="profit",
+            inferred_role=SemanticRole.MEASURE,
+            inferred_confidence=1.0,
+            is_measure=True,
         ),
         "region": SemanticColumn(
-            id="sc4", profile_id="dp1", column_name="region", inferred_role=SemanticRole.DIMENSION, inferred_confidence=1.0, is_dimension=True
+            id="sc4",
+            profile_id="dp1",
+            column_name="region",
+            inferred_role=SemanticRole.DIMENSION,
+            inferred_confidence=1.0,
+            is_dimension=True,
         ),
         "category": SemanticColumn(
-            id="sc5", profile_id="dp1", column_name="category", inferred_role=SemanticRole.DIMENSION, inferred_confidence=1.0, is_dimension=True
+            id="sc5",
+            profile_id="dp1",
+            column_name="category",
+            inferred_role=SemanticRole.DIMENSION,
+            inferred_confidence=1.0,
+            is_dimension=True,
         ),
         "low_quality_col": SemanticColumn(
-            id="sc6", profile_id="dp1", column_name="low_quality_col", inferred_role=SemanticRole.MEASURE, inferred_confidence=1.0, is_measure=True
+            id="sc6",
+            profile_id="dp1",
+            column_name="low_quality_col",
+            inferred_role=SemanticRole.MEASURE,
+            inferred_confidence=1.0,
+            is_measure=True,
         ),
     }
-
 
     return profile, semantics
 
@@ -136,14 +163,15 @@ def test_dashboard_planner_grounded_generation():
     # Ensure temporal trend was generated
     trend_widget = next((w for w in plan.widgets if w.operation == "time_series_summary"), None)
     assert trend_widget is not None
-    assert trend_widget.params.get("date_column") == "order_date" or trend_widget.params.get("time_column") == "order_date"
+    assert (
+        trend_widget.params.get("date_column") == "order_date" or trend_widget.params.get("time_column") == "order_date"
+    )
 
 
 def test_dashboard_planner_no_temporal_column():
     profile, semantics = create_mock_profile_and_semantics()
     profile.column_profiles = [c for c in profile.column_profiles if c.column_name != "order_date"]
     del semantics["order_date"]
-
 
     plan = DashboardPlanner.generate_plan(
         dataset_id="d1",

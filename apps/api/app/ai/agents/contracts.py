@@ -70,6 +70,7 @@ class ValidationStatus(str, enum.Enum):
 
 class AgentMessage(BaseModel):
     """Structured message communicated between agents or supervisor."""
+
     model_config = ConfigDict(extra="ignore")
 
     sender: AgentID
@@ -83,6 +84,7 @@ class AgentMessage(BaseModel):
 
 class EvidenceItem(BaseModel):
     """Unified evidence piece with source attribution and exact values."""
+
     model_config = ConfigDict(extra="ignore")
 
     id: str
@@ -99,6 +101,7 @@ class EvidenceItem(BaseModel):
 
 class ClaimItem(BaseModel):
     """Categorized factual or analytical claim linked to evidence items."""
+
     model_config = ConfigDict(extra="ignore")
 
     claim_id: str
@@ -111,6 +114,7 @@ class ClaimItem(BaseModel):
 
 class ValidationFinding(BaseModel):
     """Specific finding from the Critic/Validation agent."""
+
     model_config = ConfigDict(extra="ignore")
 
     check_name: str
@@ -122,6 +126,7 @@ class ValidationFinding(BaseModel):
 
 class ValidationReport(BaseModel):
     """Comprehensive critic evaluation of agent outputs."""
+
     model_config = ConfigDict(extra="ignore")
 
     overall_status: ValidationStatus = ValidationStatus.VALID
@@ -135,6 +140,7 @@ class ValidationReport(BaseModel):
 
 class ExecutionBudget(BaseModel):
     """Resource constraints to prevent runaway loops and excessive costs."""
+
     model_config = ConfigDict(extra="ignore")
 
     max_agents: int = 5
@@ -148,6 +154,7 @@ class ExecutionBudget(BaseModel):
 
 class AgentRequest(BaseModel):
     """Standardized input payload provided to an individual agent."""
+
     model_config = ConfigDict(extra="ignore")
 
     task_id: str
@@ -166,6 +173,7 @@ class AgentRequest(BaseModel):
 
 class AgentResponse(BaseModel):
     """Standardized output produced by an individual agent."""
+
     model_config = ConfigDict(extra="ignore")
 
     task_id: str
@@ -184,6 +192,7 @@ class AgentResponse(BaseModel):
 
 class TaskPlanStep(BaseModel):
     """A single node step in the multi-agent task plan."""
+
     model_config = ConfigDict(extra="ignore")
 
     task_id: str
@@ -197,6 +206,7 @@ class TaskPlanStep(BaseModel):
 
 class MultiAgentPlan(BaseModel):
     """Structured task decomposition produced by the Supervisor."""
+
     model_config = ConfigDict(extra="ignore")
 
     intent_category: str

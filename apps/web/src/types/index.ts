@@ -1534,5 +1534,161 @@ export interface MLModelHealthResponse {
   recommendations: string[];
 }
 
+// =============================================================================
+// PHASE 17 — ENTERPRISE DATA CONNECTORS & REAL-WORLD INGESTION
+// =============================================================================
+
+export type ConnectorType =
+  | "POSTGRESQL"
+  | "MYSQL"
+  | "SQLITE"
+  | "REST_API"
+  | "OBJECT_STORAGE"
+  | "GOOGLE_SHEETS"
+  | "FILE";
+
+export type ConnectionStatus =
+  | "CONFIGURED"
+  | "TESTING"
+  | "ACTIVE"
+  | "INACTIVE"
+  | "FAILED"
+  | "ERROR";
+
+export type ConnectionHealthStatus = "HEALTHY" | "WARNING" | "ERROR" | "UNKNOWN";
+
+export type SyncType = "FULL_SYNC" | "INCREMENTAL_SYNC";
+
+export type SyncJobStatus =
+  | "QUEUED"
+  | "RUNNING"
+  | "COMPLETED"
+  | "FAILED"
+  | "CANCELLED";
+
+export interface ConnectorCatalogItem {
+  connector_type: ConnectorType;
+  name: string;
+  category: string;
+  description: string;
+  supported_auth: string[];
+  capabilities: string[];
+  required_config: string[];
+  is_available: boolean;
+}
+
+export interface ConnectorCatalogResponse {
+  items: ConnectorCatalogItem[];
+  total: number;
+}
+
+export interface DataConnection {
+  id: string;
+  user_id: string;
+  workspace_id?: string | null;
+  name: string;
+  description?: string | null;
+  connector_type: ConnectorType;
+  status: ConnectionStatus;
+  configuration: Record<string, any>;
+  credential_reference?: string | null;
+  last_tested_at?: string | null;
+  last_sync_at?: string | null;
+  health_status: ConnectionHealthStatus;
+  health_details: Record<string, any>;
+  sync_schedule?: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ConnectionListResponse {
+  items: DataConnection[];
+  total: number;
+}
+
+export interface ConnectionTestResult {
+  success: boolean;
+  status: string;
+  message: string;
+  latency_ms: number;
+  discovered_resources_count: number;
+  tested_at: string;
+}
+
+export interface ResourceColumnSpec {
+  name: string;
+  data_type: string;
+  nullable: boolean;
+  is_primary_key: boolean;
+}
+
+export interface ResourceSpec {
+  resource_id: string;
+  name: string;
+  resource_type: string;
+  schema_name?: string | null;
+  estimated_rows?: number | null;
+  columns: ResourceColumnSpec[];
+}
+
+export interface SchemaDiscoveryResponse {
+  connection_id: string;
+  resources: ResourceSpec[];
+  discovered_at: string;
+}
+
+export interface ResourcePreviewResponse {
+  resource_id: string;
+  columns: string[];
+  data_types: Record<string, string>;
+  rows: Array<Record<string, any>>;
+  total_preview_rows: number;
+  estimated_total_rows?: number | null;
+}
+
+export interface DataConnectionSyncJob {
+  id: string;
+  connection_id: string;
+  dataset_id?: string | null;
+  dataset_version_id?: string | null;
+  source_resource: string;
+  sync_type: SyncType;
+  status: SyncJobStatus;
+  started_at?: string | null;
+  completed_at?: string | null;
+  rows_processed: number;
+  rows_added: number;
+  rows_updated: number;
+  rows_rejected: number;
+  error?: string | null;
+  sync_metadata: Record<string, any>;
+  created_at: string;
+}
+
+export interface SchemaDriftReport {
+  has_drift: boolean;
+  added_columns: string[];
+  removed_columns: string[];
+  type_changes: Record<string, { previous_type: string; current_type: string }>;
+  severity: "NONE" | "WARNING" | "CRITICAL";
+  recommendation: string;
+}
+
+export interface ConnectionHealthResponse {
+  connection_id: string;
+  health_status: string;
+  health_score: number;
+  last_successful_sync?: string | null;
+  freshness: {
+    freshness_status: string;
+    hours_since_sync?: number | null;
+    is_stale: boolean;
+    message: string;
+  };
+  drift_status: SchemaDriftReport;
+  recommendations: string[];
+}
+
 
 

@@ -17,6 +17,17 @@ from app.database.models.anomalies import (
     InsightRecord,
     InsightType,
 )
+from app.database.models.connectors import (
+    ConnectionHealthStatus,
+    ConnectionStatus,
+    ConnectorType,
+    DataConnection,
+    DataConnectionAuditLog,
+    DataConnectionSchemaSnapshot,
+    DataConnectionSyncJob,
+    SyncJobStatus,
+    SyncType,
+)
 from app.database.models.dashboards import (
     Dashboard,
     DashboardFilter,
@@ -156,5 +167,13 @@ __all__ = [
     "MLModelDeployment",
     "MLModelDriftReport",
     "MLModelAlert",
+    "ConnectorType",
+    "ConnectionStatus",
+    "SyncType",
+    "SyncJobStatus",
+    "ConnectionHealthStatus",
+    "DataConnection",
+    "DataConnectionSyncJob",
+    "DataConnectionSchemaSnapshot",
+    "DataConnectionAuditLog",
 ]
-

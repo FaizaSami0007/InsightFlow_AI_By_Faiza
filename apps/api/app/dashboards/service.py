@@ -99,7 +99,9 @@ class DashboardService:
         view_name = duckdb_manager.register_dataset(
             dataset_version_id=version.id,
             file_path=physical_path,
-            file_format=version.file_format.value if hasattr(version.file_format, "value") else str(version.file_format),
+            file_format=version.file_format.value
+            if hasattr(version.file_format, "value")
+            else str(version.file_format),
         )
         schema_dict = duckdb_manager.get_schema(version.id)
         dataset_columns = list(schema_dict.keys())
@@ -109,7 +111,9 @@ class DashboardService:
             version_id=version.id,
             view_name=view_name,
             file_path=physical_path,
-            file_format=version.file_format.value if hasattr(version.file_format, "value") else str(version.file_format),
+            file_format=version.file_format.value
+            if hasattr(version.file_format, "value")
+            else str(version.file_format),
             schema=schema_dict,
             columns=dataset_columns,
         )
@@ -223,9 +227,7 @@ class DashboardService:
                 detail="Dataset version has not been profiled yet. Please run profiling first.",
             )
 
-        sem_res = await db.execute(
-            select(SemanticColumn).where(SemanticColumn.profile_id == profile.id)
-        )
+        sem_res = await db.execute(select(SemanticColumn).where(SemanticColumn.profile_id == profile.id))
         semantic_cols = {sc.column_name: sc for sc in sem_res.scalars().all()}
 
         # 2. Plan generation
@@ -413,9 +415,7 @@ class DashboardService:
         request: DashboardCreateRequest,
     ) -> DashboardResponse:
         """Creates an empty dashboard container."""
-        ds_res = await db.execute(
-            select(Dataset).where(Dataset.id == request.dataset_id, Dataset.owner_id == user_id)
-        )
+        ds_res = await db.execute(select(Dataset).where(Dataset.id == request.dataset_id, Dataset.owner_id == user_id))
         dataset = ds_res.scalars().first()
         if not dataset:
             raise HTTPException(
@@ -545,15 +545,11 @@ class DashboardService:
         profile = prof_res.scalars().first()
         semantic_cols: Dict[str, SemanticColumn] = {}
         if profile:
-            sem_res = await db.execute(
-                select(SemanticColumn).where(SemanticColumn.profile_id == profile.id)
-            )
+            sem_res = await db.execute(select(SemanticColumn).where(SemanticColumn.profile_id == profile.id))
             semantic_cols = {sc.column_name: sc for sc in sem_res.scalars().all()}
 
         for patch in patches:
-            is_valid, errors = DashboardPatchValidator.validate_patch(
-                patch, dashboard, profile, semantic_cols
-            )
+            is_valid, errors = DashboardPatchValidator.validate_patch(patch, dashboard, profile, semantic_cols)
             if not is_valid:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
@@ -604,9 +600,7 @@ class DashboardService:
                 target_w = next((w for w in dashboard.widgets if w.id == patch.widget_id), None)
                 if target_w and target_w.analysis_id:
                     new_type = ChartType(patch.params["chart_type"])
-                    job_res = await db.execute(
-                        select(AnalysisJob).where(AnalysisJob.id == target_w.analysis_id)
-                    )
+                    job_res = await db.execute(select(AnalysisJob).where(AnalysisJob.id == target_w.analysis_id))
                     job = job_res.scalars().first()
                     if job:
                         new_spec = cls._get_visualization_for_job(
@@ -722,9 +716,7 @@ class DashboardService:
             if not widget.analysis_id:
                 continue
 
-            orig_res = await db.execute(
-                select(AnalysisJob).where(AnalysisJob.id == widget.analysis_id)
-            )
+            orig_res = await db.execute(select(AnalysisJob).where(AnalysisJob.id == widget.analysis_id))
             orig_job = orig_res.scalars().first()
 
             if not orig_job:
@@ -735,11 +727,13 @@ class DashboardService:
             if active_filters:
                 filter_conds = []
                 for col_name, val in active_filters.items():
-                    filter_conds.append({
-                        "column": col_name,
-                        "operator": "eq" if not isinstance(val, list) else "in",
-                        "value": val,
-                    })
+                    filter_conds.append(
+                        {
+                            "column": col_name,
+                            "operator": "eq" if not isinstance(val, list) else "in",
+                            "value": val,
+                        }
+                    )
 
             try:
                 new_job = await cls._execute_analytical_job(
@@ -803,12 +797,7 @@ class DashboardService:
         redundancy_pen = min(1.0, duplicates / max(1, total_widgets))
         coverage_score = min(1.0, len(operations) / 2.0)
 
-        raw_score = (
-            (valid_ratio * 40.0)
-            + (diversity_score * 25.0)
-            + (coverage_score * 35.0)
-            - (redundancy_pen * 20.0)
-        )
+        raw_score = (valid_ratio * 40.0) + (diversity_score * 25.0) + (coverage_score * 35.0) - (redundancy_pen * 20.0)
         final_score = max(0.0, min(100.0, raw_score))
 
         return DashboardQualityReport(
@@ -841,7 +830,9 @@ class DashboardService:
             analysis_status = None
             result_data = None
             if w.analysis:
-                analysis_status = w.analysis.status.value if hasattr(w.analysis.status, "value") else str(w.analysis.status)
+                analysis_status = (
+                    w.analysis.status.value if hasattr(w.analysis.status, "value") else str(w.analysis.status)
+                )
                 result_data = w.analysis.result_json
 
             widget_responses.append(

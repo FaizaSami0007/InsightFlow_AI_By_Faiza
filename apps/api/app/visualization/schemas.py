@@ -59,6 +59,7 @@ class VisualizationSpec(BaseModel):
     Complete, validated specification for deterministic chart rendering.
     LLMs or rules may propose specifications, but they MUST pass validation before rendering.
     """
+
     model_config = ConfigDict(extra="ignore")
 
     chart_type: ChartType = Field(..., description="Type of chart to render")
@@ -80,8 +81,7 @@ class VisualizationSpec(BaseModel):
 
     is_fallback: bool = Field(False, description="True if this is a fallback due to an invalid request")
     available_chart_types: List[ChartType] = Field(
-        default_factory=list,
-        description="Compatible alternate chart types the user can switch to"
+        default_factory=list, description="Compatible alternate chart types the user can switch to"
     )
 
 

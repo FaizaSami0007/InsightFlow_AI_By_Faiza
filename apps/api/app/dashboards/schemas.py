@@ -54,7 +54,9 @@ class DashboardPlan(BaseModel):
     dataset_id: str = Field(..., description="Target dataset ID")
     dataset_version_id: str = Field(..., description="Target dataset version ID")
     widgets: List[DashboardWidgetPlan] = Field(..., min_length=1, max_length=12, description="Planned widgets")
-    suggested_filters: List[str] = Field(default_factory=list, description="Suggested categorical or temporal filter fields")
+    suggested_filters: List[str] = Field(
+        default_factory=list, description="Suggested categorical or temporal filter fields"
+    )
     reasoning_summary: Optional[str] = Field(None, description="User-safe rationale for composition")
 
 

@@ -19,9 +19,7 @@ from app.exports.engine import (
 )
 from app.exports.schemas import ExportRequest, ExportResponse
 
-EXPORTS_STORAGE_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "data", "exports")
-)
+EXPORTS_STORAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data", "exports"))
 
 
 class ExportService:
@@ -70,23 +68,26 @@ class ExportService:
         # Format widgets
         widgets_data: List[Dict[str, Any]] = []
         for w in dashboard.widgets[:MAX_EXPORT_WIDGETS]:
-            widgets_data.append({
-                "id": w.id,
-                "title": w.title,
-                "description": w.description,
-                "widget_type": w.widget_type,
-                "analysis_id": w.analysis_id,
-                "chart_spec": w.chart_spec_json,
-                "grid_x": w.grid_x,
-                "grid_y": w.grid_y,
-                "grid_w": w.grid_w,
-                "grid_h": w.grid_h,
-                "metadata": w.metadata_json,
-                "result_data": (w.metadata_json or {}).get("result_data", {}),
-            })
+            widgets_data.append(
+                {
+                    "id": w.id,
+                    "title": w.title,
+                    "description": w.description,
+                    "widget_type": w.widget_type,
+                    "analysis_id": w.analysis_id,
+                    "chart_spec": w.chart_spec_json,
+                    "grid_x": w.grid_x,
+                    "grid_y": w.grid_y,
+                    "grid_w": w.grid_w,
+                    "grid_h": w.grid_h,
+                    "metadata": w.metadata_json,
+                    "result_data": (w.metadata_json or {}).get("result_data", {}),
+                }
+            )
 
         # 3. Create DB Export entry
         import uuid
+
         export_id = str(uuid.uuid4())
         clean_title = request.title_override or dashboard.name
         safe_base = sanitize_filename(clean_title)
@@ -139,6 +140,7 @@ class ExportService:
                 )
             elif ext == "json":
                 import json
+
                 os.makedirs(os.path.dirname(os.path.abspath(full_output_path)), exist_ok=True)
                 json_payload = {
                     "dashboard": dashboard_spec,

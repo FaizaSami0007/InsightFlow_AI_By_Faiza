@@ -62,7 +62,9 @@ class TimeSeriesPreprocessor:
         df_resampled, imputed_count = cls._regularize_timeline(df_dedup, freq)
 
         if len(df_resampled) < min_obs:
-            raise ValueError(f"Insufficient temporal observations ({len(df_resampled)} found). Minimum required is {min_obs}.")
+            raise ValueError(
+                f"Insufficient temporal observations ({len(df_resampled)} found). Minimum required is {min_obs}."
+            )
 
         values = df_resampled["val"].to_numpy(dtype=float)
         outliers_count = cls._count_outliers(values)
@@ -123,7 +125,7 @@ class TimeSeriesPreprocessor:
             TRY_CAST({time_col} AS TIMESTAMP) AS ts,
             TRY_CAST({t_col} AS DOUBLE) AS val
         FROM {table_name}
-        WHERE {' AND '.join(where_clauses)}
+        WHERE {" AND ".join(where_clauses)}
         ORDER BY ts ASC
         """
 

@@ -145,7 +145,9 @@ class ExponentialSmoothingModel(BaseForecastModel):
     """Holt-Winters Exponential Smoothing with automated trend/seasonality selection."""
 
     def __init__(self, seasonal_period: Optional[int] = None) -> None:
-        super().__init__(name="Exponential Smoothing (Holt-Winters)", model_type=ForecastModelType.EXPONENTIAL_SMOOTHING)
+        super().__init__(
+            name="Exponential Smoothing (Holt-Winters)", model_type=ForecastModelType.EXPONENTIAL_SMOOTHING
+        )
         self.seasonal_period = seasonal_period
         self._fitted_hw = None
 

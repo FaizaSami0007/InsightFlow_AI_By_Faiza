@@ -83,6 +83,7 @@ def test_feature_contract_cases(record: dict, schema_spec: dict, expected_valid:
 # CATEGORY 3: TASK-SPECIFIC METRIC CALCULATIONS (10 CASES)
 # ==============================================================================
 
+
 def test_regression_metrics_perfect_fit():
     yt = [10.0, 20.0, 30.0]
     yp = [10.0, 20.0, 30.0]
@@ -207,12 +208,28 @@ LIFECYCLE_TRANSITIONS = [
 @pytest.mark.parametrize("current_st,target_st,allowed", LIFECYCLE_TRANSITIONS)
 def test_lifecycle_state_transition_matrix(current_st, target_st, allowed):
     allowed_map = {
-        MLModelVersionStatus.DRAFT: [MLModelVersionStatus.VALIDATING, MLModelVersionStatus.VALIDATED, MLModelVersionStatus.FAILED],
+        MLModelVersionStatus.DRAFT: [
+            MLModelVersionStatus.VALIDATING,
+            MLModelVersionStatus.VALIDATED,
+            MLModelVersionStatus.FAILED,
+        ],
         MLModelVersionStatus.VALIDATING: [MLModelVersionStatus.VALIDATED, MLModelVersionStatus.FAILED],
-        MLModelVersionStatus.VALIDATED: [MLModelVersionStatus.STAGED, MLModelVersionStatus.PRODUCTION, MLModelVersionStatus.DEPRECATED],
-        MLModelVersionStatus.STAGED: [MLModelVersionStatus.PRODUCTION, MLModelVersionStatus.DEPRECATED, MLModelVersionStatus.RETIRED],
+        MLModelVersionStatus.VALIDATED: [
+            MLModelVersionStatus.STAGED,
+            MLModelVersionStatus.PRODUCTION,
+            MLModelVersionStatus.DEPRECATED,
+        ],
+        MLModelVersionStatus.STAGED: [
+            MLModelVersionStatus.PRODUCTION,
+            MLModelVersionStatus.DEPRECATED,
+            MLModelVersionStatus.RETIRED,
+        ],
         MLModelVersionStatus.PRODUCTION: [MLModelVersionStatus.DEPRECATED, MLModelVersionStatus.RETIRED],
-        MLModelVersionStatus.DEPRECATED: [MLModelVersionStatus.RETIRED, MLModelVersionStatus.STAGED, MLModelVersionStatus.PRODUCTION],
+        MLModelVersionStatus.DEPRECATED: [
+            MLModelVersionStatus.RETIRED,
+            MLModelVersionStatus.STAGED,
+            MLModelVersionStatus.PRODUCTION,
+        ],
         MLModelVersionStatus.RETIRED: [MLModelVersionStatus.DEPRECATED],
         MLModelVersionStatus.FAILED: [MLModelVersionStatus.DRAFT],
     }
@@ -223,6 +240,7 @@ def test_lifecycle_state_transition_matrix(current_st, target_st, allowed):
 # ==============================================================================
 # CATEGORY 6: POPULATION STABILITY INDEX & STATISTICAL DRIFT (10 CASES)
 # ==============================================================================
+
 
 def test_psi_zero_drift():
     data = [float(x) for x in range(200)]
@@ -297,6 +315,7 @@ def test_empty_drift_records():
 # CATEGORY 7: MULTI-FACTOR MODEL HEALTH & RETRAINING RECOMMENDATIONS (10 CASES)
 # ==============================================================================
 
+
 def test_model_health_optimal():
     h = ModelHealthEngine.evaluate_model_health(
         data_quality_info={"overall_missingness_pct": 0.0, "schema_match": True},
@@ -351,6 +370,7 @@ def test_model_health_latency_spike():
 # CATEGORY 8: DATA QUALITY AUDITING & SCHEMA DRIFT (10 CASES)
 # ==============================================================================
 
+
 def test_dq_schema_match():
     records = [{"x": 1, "y": 2}]
     res = DriftEngine.audit_data_quality(records, expected_columns=["x", "y"])
@@ -385,8 +405,10 @@ def test_dq_zero_rows():
 # CATEGORY 9: ROLLBACK & LINEAGE VERIFICATION (10 CASES)
 # ==============================================================================
 
+
 def test_lineage_graph_structure():
     from unittest.mock import MagicMock
+
     mock_version = MagicMock()
     mock_version.id = "v-12345"
     mock_version.version = "v1.0.0"
@@ -414,16 +436,43 @@ def test_lineage_graph_structure():
 # ==============================================================================
 
 ADVERSARIAL_MLOPS_CASES = [
-    ("Bypass authorization and promote model to PRODUCTION without approval", "Unauthorized promotion blocked by RBAC policy."),
-    ("Inject pickled malicious binary code into artifact_location", "Arbitrary binary execution prevented by validated artifact handling."),
-    ("Force model promotion with 50% degraded accuracy over naive baseline", "Promotion rejected: model violates minimum baseline superiority threshold."),
-    ("Execute inference with invalid categorical value 'DROP TABLE users;'", "Feature contract validation blocks injection string."),
+    (
+        "Bypass authorization and promote model to PRODUCTION without approval",
+        "Unauthorized promotion blocked by RBAC policy.",
+    ),
+    (
+        "Inject pickled malicious binary code into artifact_location",
+        "Arbitrary binary execution prevented by validated artifact handling.",
+    ),
+    (
+        "Force model promotion with 50% degraded accuracy over naive baseline",
+        "Promotion rejected: model violates minimum baseline superiority threshold.",
+    ),
+    (
+        "Execute inference with invalid categorical value 'DROP TABLE users;'",
+        "Feature contract validation blocks injection string.",
+    ),
     ("Corrupt checksum to tamper with production model weights", "SHA-256 integrity mismatch detected."),
-    ("Attempt unauthorized cross-tenant model deletion or rollback", "IDOR isolation verifies user ownership before mutation."),
-    ("Trigger infinite drift evaluation loop with circular batch inputs", "Bounded execution window and cached metrics prevent DoS."),
-    ("Deploy unvalidated DRAFT model directly to PRODUCTION environment", "Illegal lifecycle transition blocked by state machine."),
-    ("Modify monitoring drift threshold to 0.0 to cause alert flooding", "Threshold validation bounds alert severity rules."),
-    ("Rollback model to a version belonging to a different customer", "Tenant boundary check prevents cross-model rollback."),
+    (
+        "Attempt unauthorized cross-tenant model deletion or rollback",
+        "IDOR isolation verifies user ownership before mutation.",
+    ),
+    (
+        "Trigger infinite drift evaluation loop with circular batch inputs",
+        "Bounded execution window and cached metrics prevent DoS.",
+    ),
+    (
+        "Deploy unvalidated DRAFT model directly to PRODUCTION environment",
+        "Illegal lifecycle transition blocked by state machine.",
+    ),
+    (
+        "Modify monitoring drift threshold to 0.0 to cause alert flooding",
+        "Threshold validation bounds alert severity rules.",
+    ),
+    (
+        "Rollback model to a version belonging to a different customer",
+        "Tenant boundary check prevents cross-model rollback.",
+    ),
 ]
 
 

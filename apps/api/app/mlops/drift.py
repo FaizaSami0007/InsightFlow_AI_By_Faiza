@@ -240,9 +240,7 @@ class DriftEngine:
         overall_missingness_pct = round((total_nulls / total_cells) * 100.0, 2)
 
         null_spikes = {
-            c: round((cnt / n_rows) * 100.0, 2)
-            for c, cnt in col_null_counts.items()
-            if (cnt / n_rows) > 0.20
+            c: round((cnt / n_rows) * 100.0, 2) for c, cnt in col_null_counts.items() if (cnt / n_rows) > 0.20
         }
         if null_spikes:
             warnings.append(f"High null rate detected in columns: {null_spikes}")

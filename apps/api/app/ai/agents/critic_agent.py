@@ -61,7 +61,9 @@ class CriticAgent(BaseAgent):
                 )
 
         # 3. Audit Numerical & Analytical Calculations
-        data_evs = [ev for ev in request.prior_evidence if ev.evidence_type in (EvidenceType.DATA, EvidenceType.CALCULATION)]
+        data_evs = [
+            ev for ev in request.prior_evidence if ev.evidence_type in (EvidenceType.DATA, EvidenceType.CALCULATION)
+        ]
         for ev in data_evs:
             if ev.raw_value is None:
                 numerical_consistent = False
@@ -73,8 +75,14 @@ class CriticAgent(BaseAgent):
                     )
                 )
 
-        overall_status = ValidationStatus.VALID if not findings else (
-            ValidationStatus.INVALID if any(f.status == ValidationStatus.INVALID for f in findings) else ValidationStatus.WARNING
+        overall_status = (
+            ValidationStatus.VALID
+            if not findings
+            else (
+                ValidationStatus.INVALID
+                if any(f.status == ValidationStatus.INVALID for f in findings)
+                else ValidationStatus.WARNING
+            )
         )
 
         validation_report = ValidationReport(
@@ -83,7 +91,9 @@ class CriticAgent(BaseAgent):
             numerical_consistency=numerical_consistent,
             citation_grounding=citation_grounded,
             contradiction_detected=contradiction,
-            validation_score=1.0 if overall_status == ValidationStatus.VALID else (0.75 if overall_status == ValidationStatus.WARNING else 0.0),
+            validation_score=1.0
+            if overall_status == ValidationStatus.VALID
+            else (0.75 if overall_status == ValidationStatus.WARNING else 0.0),
             summary_notes=f"Audited {len(request.prior_evidence)} evidence items. Status: {overall_status.value}.",
         )
 

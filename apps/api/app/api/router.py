@@ -4,6 +4,7 @@ from app.ai.router import router as ai_router
 from app.analytics.router import router as analytics_router
 from app.anomalies.router import router as anomalies_router
 from app.api.routes.health import router as health_router
+from app.connectors.router import router as connector_router
 from app.dashboards.router import router as dashboards_router
 from app.datasets.router import router as datasets_router
 from app.exports.router import router as exports_router
@@ -67,4 +68,5 @@ api_router.include_router(knowledge_router, prefix="", tags=["knowledge"])
 # 16. Production MLOps, Model Lifecycle & Monitoring endpoints
 api_router.include_router(mlops_router, prefix="", tags=["mlops"])
 
-
+# 17. Enterprise Data Connectors & Real-World Ingestion endpoints
+api_router.include_router(connector_router, prefix="", tags=["connectors"])

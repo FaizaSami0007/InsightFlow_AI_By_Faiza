@@ -21,9 +21,7 @@ class FeatureContract:
         self.allow_extra_columns: bool = schema.get("allow_extra_columns", True)
         self.strict_types: bool = schema.get("strict_types", True)
 
-    def validate_inputs(
-        self, records: List[Dict[str, Any]]
-    ) -> Tuple[bool, List[str]]:
+    def validate_inputs(self, records: List[Dict[str, Any]]) -> Tuple[bool, List[str]]:
         """Validates an incoming batch of tabular records against the registered feature contract.
 
         Returns:
@@ -98,7 +96,9 @@ class FeatureContract:
         """Enforces input validation and raises FeatureContractViolationError if invalid."""
         is_valid, violations = self.validate_inputs(records)
         if not is_valid:
-            error_msg = f"Feature contract validation failed with {len(violations)} violation(s): " + "; ".join(violations[:5])
+            error_msg = f"Feature contract validation failed with {len(violations)} violation(s): " + "; ".join(
+                violations[:5]
+            )
             raise FeatureContractViolationError(error_msg)
 
 

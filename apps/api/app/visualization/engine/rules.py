@@ -97,9 +97,7 @@ class RecommendationEngine:
         subtitle = f"Analysis #{analysis_id[:8]} • {operation.replace('_', ' ').title()}" if analysis_id else None
 
         # Rule 1: Five-number summary / Boxplot
-        if operation == "distribution" and all(
-            k in summary for k in ["q1", "median", "q3", "min", "max"]
-        ):
+        if operation == "distribution" and all(k in summary for k in ["q1", "median", "q3", "min", "max"]):
             spec = VisualizationSpec(
                 chart_type=ChartType.BOXPLOT,
                 title=title,
@@ -121,9 +119,8 @@ class RecommendationEngine:
             return cls._apply_preference_if_compatible(spec, preferred_chart_type, col_types, columns, rows)
 
         # Rule 2: Single Scalar Metric -> KPI
-        if (
-            operation in ("aggregate", "scalar")
-            or (row_count == 1 and len(numeric_cols) == 1 and len(categorical_cols) == 0 and operation != "distribution")
+        if operation in ("aggregate", "scalar") or (
+            row_count == 1 and len(numeric_cols) == 1 and len(categorical_cols) == 0 and operation != "distribution"
         ):
             metric_col = numeric_cols[0] if numeric_cols else columns[0]
             val = rows[0].get(metric_col) if rows else summary.get(metric_col)
@@ -143,9 +140,7 @@ class RecommendationEngine:
             return cls._apply_preference_if_compatible(spec, preferred_chart_type, col_types, columns, rows)
 
         # Rule 3: Histogram / Binned Distribution
-        if operation in ("histogram", "distribution_bins") or (
-            operation == "distribution" and "bins" in summary
-        ):
+        if operation in ("histogram", "distribution_bins") or (operation == "distribution" and "bins" in summary):
             x_col = "bin_range" if "bin_range" in columns else (categorical_cols[0] if categorical_cols else columns[0])
             y_col = "count" if "count" in columns else (numeric_cols[0] if numeric_cols else columns[-1])
             spec = VisualizationSpec(
@@ -231,7 +226,13 @@ class RecommendationEngine:
                     cardinality=row_count,
                     provenance=provenance,
                     explanation=f"Part-to-whole composition with {row_count} categories is best visualized as a Donut Chart.",
-                    available_chart_types=[ChartType.DONUT, ChartType.PIE, ChartType.BAR, ChartType.HORIZONTAL_BAR, ChartType.TABLE],
+                    available_chart_types=[
+                        ChartType.DONUT,
+                        ChartType.PIE,
+                        ChartType.BAR,
+                        ChartType.HORIZONTAL_BAR,
+                        ChartType.TABLE,
+                    ],
                 )
                 return cls._apply_preference_if_compatible(spec, preferred_chart_type, col_types, columns, rows)
 
@@ -252,7 +253,11 @@ class RecommendationEngine:
                         ChartType.BAR,
                         ChartType.HORIZONTAL_BAR,
                         ChartType.TABLE,
-                        *([ChartType.DONUT, ChartType.PIE] if row_count <= chart_registry.MAX_PIE_CATEGORIES and all_numeric_non_negative else []),
+                        *(
+                            [ChartType.DONUT, ChartType.PIE]
+                            if row_count <= chart_registry.MAX_PIE_CATEGORIES and all_numeric_non_negative
+                            else []
+                        ),
                     ],
                 )
                 return cls._apply_preference_if_compatible(spec, preferred_chart_type, col_types, columns, rows)
@@ -329,7 +334,11 @@ class RecommendationEngine:
     @classmethod
     def _generate_title(cls, operation: str, columns: List[str], parameters: Dict[str, Any]) -> str:
         """Generates a human-readable title describing the analytical result."""
-        metric = parameters.get("metric") or parameters.get("column") or (columns[-1] if len(columns) > 1 else columns[0] if columns else "Data")
+        metric = (
+            parameters.get("metric")
+            or parameters.get("column")
+            or (columns[-1] if len(columns) > 1 else columns[0] if columns else "Data")
+        )
         group = parameters.get("group_by") or parameters.get("by") or (columns[0] if len(columns) > 1 else None)
         metric_fmt = str(metric).replace("_", " ").title()
 

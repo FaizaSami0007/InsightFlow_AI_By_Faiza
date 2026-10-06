@@ -109,7 +109,9 @@ class DataAnalystAgent(BaseAgent):
                 evidence_list.append(
                     EvidenceItem(
                         id=ev_id,
-                        evidence_type=EvidenceType.CALCULATION if "group_by" in tool_name or "aggregate" in tool_name else EvidenceType.DATA,
+                        evidence_type=EvidenceType.CALCULATION
+                        if "group_by" in tool_name or "aggregate" in tool_name
+                        else EvidenceType.DATA,
                         source=f"Dataset {request.dataset_id}",
                         dataset_version_id=request.dataset_version_id,
                         operation=tool_name,
@@ -126,7 +128,11 @@ class DataAnalystAgent(BaseAgent):
                     )
                 )
                 summary_text = f"Computed {tool_name} with result {result.result_summary or result.result_data}"
-                data_payload = {"analysis_id": result.id, "result_data": result.result_data, "summary": result.result_summary}
+                data_payload = {
+                    "analysis_id": result.id,
+                    "result_data": result.result_data,
+                    "summary": result.result_summary,
+                }
 
             return AgentResponse(
                 task_id=request.task_id,

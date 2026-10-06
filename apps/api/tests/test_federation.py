@@ -64,7 +64,6 @@ def products_dataset(auth_header):
     return res.json()
 
 
-
 def test_collection_lifecycle(auth_header, customer_dataset, orders_dataset):
     """Test creating, fetching, updating, and deleting a dataset collection."""
     # 1. Create collection

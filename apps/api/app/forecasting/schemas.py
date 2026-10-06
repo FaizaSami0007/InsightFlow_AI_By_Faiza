@@ -12,15 +12,25 @@ class ForecastRunRequest(BaseModel):
     """Request payload to initiate a validated time-series forecast."""
 
     dataset_id: str = Field(..., description="ID of the dataset to forecast")
-    dataset_version_id: Optional[str] = Field(None, description="Optional specific version ID; defaults to latest READY")
+    dataset_version_id: Optional[str] = Field(
+        None, description="Optional specific version ID; defaults to latest READY"
+    )
     target_field: str = Field(..., description="Numeric column name to predict (e.g. 'revenue', 'orders')")
     time_field: str = Field(..., description="Date/timestamp column name (e.g. 'order_date')")
-    frequency: Optional[str] = Field(None, description="Optional frequency ('D', 'W', 'M', 'Q', 'Y'); auto-detected if omitted")
+    frequency: Optional[str] = Field(
+        None, description="Optional frequency ('D', 'W', 'M', 'Q', 'Y'); auto-detected if omitted"
+    )
     forecast_horizon: int = Field(default=6, ge=1, le=100, description="Number of future periods to forecast")
-    confidence_level: float = Field(default=0.95, ge=0.50, le=0.99, description="Prediction interval confidence (e.g. 0.80, 0.90, 0.95)")
-    model_type: ForecastModelType = Field(default=ForecastModelType.AUTO, description="Preferred algorithm or AUTO for backtested selection")
+    confidence_level: float = Field(
+        default=0.95, ge=0.50, le=0.99, description="Prediction interval confidence (e.g. 0.80, 0.90, 0.95)"
+    )
+    model_type: ForecastModelType = Field(
+        default=ForecastModelType.AUTO, description="Preferred algorithm or AUTO for backtested selection"
+    )
     allow_negative: bool = Field(default=False, description="Whether negative predictions are valid for this target")
-    filters: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional filters to slice the time-series before fitting")
+    filters: Optional[List[Dict[str, Any]]] = Field(
+        default=None, description="Optional filters to slice the time-series before fitting"
+    )
 
     @model_validator(mode="before")
     @classmethod

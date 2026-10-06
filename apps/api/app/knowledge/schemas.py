@@ -167,7 +167,9 @@ class DatasetKnowledgeLinkRequest(BaseModel):
     dataset_version_id: Optional[str] = Field(None, description="Optional specific dataset version")
     document_id: Optional[str] = Field(None, description="Knowledge document ID to associate")
     collection_id: Optional[str] = Field(None, description="Knowledge collection ID to associate")
-    relationship_nature: str = Field(default="governed_by", description="Semantic relationship e.g. defined_by, governed_by")
+    relationship_nature: str = Field(
+        default="governed_by", description="Semantic relationship e.g. defined_by, governed_by"
+    )
 
 
 class DatasetKnowledgeLinkResponse(BaseModel):

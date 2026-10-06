@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 class TaskGraphCycleError(AppError):
     """Raised when a cyclical dependency is detected in the agent task graph."""
+
     pass
 
 

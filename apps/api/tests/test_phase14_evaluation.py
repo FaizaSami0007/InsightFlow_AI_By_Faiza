@@ -72,26 +72,98 @@ def create_mock_doc(
 # ==============================================================================
 
 KNOWLEDGE_ONLY_CASES = [
-    ("What is our official refund policy duration?", "Refunds are eligible within 30 calendar days of invoice date.", True),
-    ("How is customer churn defined?", "Customer churn is defined as accounts with zero login activity for 90 days.", True),
-    ("What is the maximum allowed sales discount without VP signoff?", "Discounts above 20% require written VP approval.", True),
-    ("Explain the gross margin calculation standard.", "Gross margin is computed as (Revenue - Cost of Goods Sold) / Revenue.", True),
+    (
+        "What is our official refund policy duration?",
+        "Refunds are eligible within 30 calendar days of invoice date.",
+        True,
+    ),
+    (
+        "How is customer churn defined?",
+        "Customer churn is defined as accounts with zero login activity for 90 days.",
+        True,
+    ),
+    (
+        "What is the maximum allowed sales discount without VP signoff?",
+        "Discounts above 20% require written VP approval.",
+        True,
+    ),
+    (
+        "Explain the gross margin calculation standard.",
+        "Gross margin is computed as (Revenue - Cost of Goods Sold) / Revenue.",
+        True,
+    ),
     ("What is the travel reimbursement per diem limit?", "Daily meal allowance is capped at $75 per employee.", True),
-    ("What are the criteria for Enterprise SLA uptime?", "Enterprise tier guarantees 99.99% monthly service availability.", True),
-    ("How are sales commissions calculated for renewals?", "Renewal commissions are structured at 5% of Annual Contract Value.", True),
-    ("What is the data retention policy for deleted accounts?", "User data is scrubbed 60 days following account termination.", True),
-    ("Describe the customer onboarding milestone process.", "Customer onboarding milestone process follows Phase 1: Kickoff. Phase 2: Migration. Phase 3: Validation.", True),
-    ("What are the rules regarding overtime pay?", "Overtime pay applies after 40 hours worked in a single calendar week.", True),
-    ("What is the protocol for security incident escalation?", "Severity 1 incidents must be escalated to the CISO within 15 minutes.", True),
+    (
+        "What are the criteria for Enterprise SLA uptime?",
+        "Enterprise tier guarantees 99.99% monthly service availability.",
+        True,
+    ),
+    (
+        "How are sales commissions calculated for renewals?",
+        "Renewal commissions are structured at 5% of Annual Contract Value.",
+        True,
+    ),
+    (
+        "What is the data retention policy for deleted accounts?",
+        "User data is scrubbed 60 days following account termination.",
+        True,
+    ),
+    (
+        "Describe the customer onboarding milestone process.",
+        "Customer onboarding milestone process follows Phase 1: Kickoff. Phase 2: Migration. Phase 3: Validation.",
+        True,
+    ),
+    (
+        "What are the rules regarding overtime pay?",
+        "Overtime pay applies after 40 hours worked in a single calendar week.",
+        True,
+    ),
+    (
+        "What is the protocol for security incident escalation?",
+        "Severity 1 incidents must be escalated to the CISO within 15 minutes.",
+        True,
+    ),
     ("How is Net Promoter Score (NPS) categorized?", "Promoters (9-10), Passives (7-8), and Detractors (0-6).", True),
-    ("What is the policy on equipment procurement?", "Equipment procurement and hardware requests over $1,500 require departmental head approval.", True),
-    ("Explain the definition of Qualified Lead (MQL).", "MQL requires confirmed budget, decision maker authority, and timeline under 6 months.", True),
-    ("What is the remote work equipment stipend?", "Employees receive a one-time $500 home office setup allowance.", True),
-    ("How is recurring revenue recognized across multi-year contracts?", "Revenue is recognized ratably over the contract duration.", True),
-    ("What is the grievance redressal mechanism?", "Formal grievances must be submitted in writing to HR within 10 days.", True),
-    ("Explain the standard warranty period for hardware products.", "Hardware is covered under limited warranty for 24 months from purchase.", True),
-    ("What is the policy on external open-source software contributions?", "Contributions must receive legal compliance approval prior to commit.", True),
-    ("How are product deprecations announced to customers?", "Deprecated APIs require a minimum 180-day deprecation notice.", True),
+    (
+        "What is the policy on equipment procurement?",
+        "Equipment procurement and hardware requests over $1,500 require departmental head approval.",
+        True,
+    ),
+    (
+        "Explain the definition of Qualified Lead (MQL).",
+        "MQL requires confirmed budget, decision maker authority, and timeline under 6 months.",
+        True,
+    ),
+    (
+        "What is the remote work equipment stipend?",
+        "Employees receive a one-time $500 home office setup allowance.",
+        True,
+    ),
+    (
+        "How is recurring revenue recognized across multi-year contracts?",
+        "Revenue is recognized ratably over the contract duration.",
+        True,
+    ),
+    (
+        "What is the grievance redressal mechanism?",
+        "Formal grievances must be submitted in writing to HR within 10 days.",
+        True,
+    ),
+    (
+        "Explain the standard warranty period for hardware products.",
+        "Hardware is covered under limited warranty for 24 months from purchase.",
+        True,
+    ),
+    (
+        "What is the policy on external open-source software contributions?",
+        "Contributions must receive legal compliance approval prior to commit.",
+        True,
+    ),
+    (
+        "How are product deprecations announced to customers?",
+        "Deprecated APIs require a minimum 180-day deprecation notice.",
+        True,
+    ),
 ]
 
 
@@ -162,21 +234,63 @@ def test_data_only_query_classification(query: str) -> None:
 # ==============================================================================
 
 FUSION_CASES = [
-    ("Why did churn increase in Q3 under our 90-day inactivity standard?", "Customers inactive for 90 days are classified as churned."),
-    ("Are the applied discounts in Europe compliant with our 20% cap?", "Discounts above 20% require written VP approval."),
+    (
+        "Why did churn increase in Q3 under our 90-day inactivity standard?",
+        "Customers inactive for 90 days are classified as churned.",
+    ),
+    (
+        "Are the applied discounts in Europe compliant with our 20% cap?",
+        "Discounts above 20% require written VP approval.",
+    ),
     ("Does our Q2 gross margin of 38% violate policy?", "Gross margins must remain strictly above 40%."),
-    ("Is our server uptime of 99.95% within the Enterprise SLA contract?", "Enterprise tier guarantees 99.99% monthly service availability."),
-    ("Explain why sales commissions in APAC were 5% on renewals.", "Renewal commissions are structured at 5% of Annual Contract Value."),
-    ("Do our 45-day retention metrics comply with privacy policy?", "User data is scrubbed 60 days following account termination."),
-    ("Why were hardware repair expenses classified under warranty?", "Hardware is covered under limited warranty for 24 months from purchase."),
-    ("Was our overtime expense in December aligned with policy?", "Overtime pay applies after 40 hours worked in a single calendar week."),
-    ("Are the recorded marketing leads qualified under MQL standards?", "MQL requires confirmed budget, decision maker authority, and timeline under 6 months."),
-    ("Does our customer satisfaction score match the NPS Promoter threshold?", "Promoters are defined as survey scores 9-10."),
-    ("Is our ratable revenue recognition compliant with multi-year accounting policy?", "Revenue is recognized ratably over the contract duration."),
-    ("Were customer refund requests in January processed within the 30-day window?", "Refunds are eligible within 30 calendar days of invoice date."),
-    ("Did the reported API deprecation give the required 180 days notice?", "Deprecated APIs require a minimum 180-day deprecation notice."),
-    ("Are hardware equipment purchases of $2,000 compliant with approval rules?", "Hardware requests over $1,500 require departmental head approval."),
-    ("Were employee meal expense claims in New York within the $75 per diem?", "Daily meal allowance is capped at $75 per employee."),
+    (
+        "Is our server uptime of 99.95% within the Enterprise SLA contract?",
+        "Enterprise tier guarantees 99.99% monthly service availability.",
+    ),
+    (
+        "Explain why sales commissions in APAC were 5% on renewals.",
+        "Renewal commissions are structured at 5% of Annual Contract Value.",
+    ),
+    (
+        "Do our 45-day retention metrics comply with privacy policy?",
+        "User data is scrubbed 60 days following account termination.",
+    ),
+    (
+        "Why were hardware repair expenses classified under warranty?",
+        "Hardware is covered under limited warranty for 24 months from purchase.",
+    ),
+    (
+        "Was our overtime expense in December aligned with policy?",
+        "Overtime pay applies after 40 hours worked in a single calendar week.",
+    ),
+    (
+        "Are the recorded marketing leads qualified under MQL standards?",
+        "MQL requires confirmed budget, decision maker authority, and timeline under 6 months.",
+    ),
+    (
+        "Does our customer satisfaction score match the NPS Promoter threshold?",
+        "Promoters are defined as survey scores 9-10.",
+    ),
+    (
+        "Is our ratable revenue recognition compliant with multi-year accounting policy?",
+        "Revenue is recognized ratably over the contract duration.",
+    ),
+    (
+        "Were customer refund requests in January processed within the 30-day window?",
+        "Refunds are eligible within 30 calendar days of invoice date.",
+    ),
+    (
+        "Did the reported API deprecation give the required 180 days notice?",
+        "Deprecated APIs require a minimum 180-day deprecation notice.",
+    ),
+    (
+        "Are hardware equipment purchases of $2,000 compliant with approval rules?",
+        "Hardware requests over $1,500 require departmental head approval.",
+    ),
+    (
+        "Were employee meal expense claims in New York within the $75 per diem?",
+        "Daily meal allowance is capped at $75 per employee.",
+    ),
 ]
 
 
@@ -265,7 +379,9 @@ OUT_OF_SCOPE_CASES = [
 def test_insufficient_evidence_refusal(query: str) -> None:
     provider = DeterministicEmbeddingProvider(dimension=384)
     retriever = HybridRetriever(provider)
-    candidate = create_mock_doc("doc-biz", "Corporate Expense Policy", "Daily meal allowance is capped at $75 per employee.")
+    candidate = create_mock_doc(
+        "doc-biz", "Corporate Expense Policy", "Daily meal allowance is capped at $75 per employee."
+    )
 
     results, citations, has_sufficient = retriever.retrieve(query, [candidate], top_k=1, min_similarity=0.45)
     assert has_sufficient is False
@@ -282,7 +398,11 @@ CONFLICT_CASES = [
     ("Churn inactivity", "Churn inactivity threshold is 60 days.", "Churn inactivity threshold is 90 days."),
     ("Per diem rate", "Per diem rate meal allowance is $50.", "Per diem rate meal allowance is $75."),
     ("SLA uptime", "SLA uptime contract guarantees 99.9% uptime.", "SLA uptime contract guarantees 99.99% uptime."),
-    ("Data retention", "Data retention policy keeps records for 30 days.", "Data retention policy keeps records for 60 days."),
+    (
+        "Data retention",
+        "Data retention policy keeps records for 30 days.",
+        "Data retention policy keeps records for 60 days.",
+    ),
     ("Commission rate", "Commission rate is structured at 4% of ACV.", "Commission rate is structured at 5% of ACV."),
     ("Hardware warranty", "Hardware warranty covers 12 months.", "Hardware warranty covers 24 months."),
     ("Overtime threshold", "Overtime threshold applies after 35 hours.", "Overtime threshold applies after 40 hours."),
@@ -297,7 +417,9 @@ def test_conflicting_documents_detection(topic: str, doc_a: str, doc_b: str) -> 
     cand_a = create_mock_doc("doc-a", "Old Policy 2024", doc_a, version_num=1)
     cand_b = create_mock_doc("doc-b", "New Policy 2026", doc_b, version_num=2)
 
-    results, citations, has_sufficient = retriever.retrieve(f"What is the official {topic}?", [cand_a, cand_b], top_k=2, min_similarity=0.15)
+    results, citations, has_sufficient = retriever.retrieve(
+        f"What is the official {topic}?", [cand_a, cand_b], top_k=2, min_similarity=0.15
+    )
     assert len(results) >= 2
     # Verify both sources are returned with distinct versions for disambiguation
     versions = {r.version_number for r in results}
@@ -353,7 +475,9 @@ def test_document_prompt_injection_passive_treatment(payload: str) -> None:
     retriever = HybridRetriever(provider)
     candidate = create_mock_doc("doc-inj", "Untrusted Document Upload", f"Policy text. {payload}")
 
-    results, citations, has_sufficient = retriever.retrieve("What is our policy?", [candidate], top_k=1, min_similarity=0.10)
+    results, citations, has_sufficient = retriever.retrieve(
+        "What is our policy?", [candidate], top_k=1, min_similarity=0.10
+    )
     # The payload is stored purely as passive data string in candidate snippet
     if results:
         assert isinstance(results[0].content, str)

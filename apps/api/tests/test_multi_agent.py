@@ -81,8 +81,20 @@ async def test_task_graph_dag_execution_and_cycle_detection() -> None:
 
     # Test 2: Cyclical graph should raise TaskGraphCycleError
     cycle_graph = TaskGraph()
-    c1 = TaskPlanStep(task_id="c1", agent_id=AgentID.DATA_ANALYST, task_type=TaskType.DATA_ANALYSIS, objective="C1", dependencies=["c2"])
-    c2 = TaskPlanStep(task_id="c2", agent_id=AgentID.KNOWLEDGE_AGENT, task_type=TaskType.KNOWLEDGE_RETRIEVAL, objective="C2", dependencies=["c1"])
+    c1 = TaskPlanStep(
+        task_id="c1",
+        agent_id=AgentID.DATA_ANALYST,
+        task_type=TaskType.DATA_ANALYSIS,
+        objective="C1",
+        dependencies=["c2"],
+    )
+    c2 = TaskPlanStep(
+        task_id="c2",
+        agent_id=AgentID.KNOWLEDGE_AGENT,
+        task_type=TaskType.KNOWLEDGE_RETRIEVAL,
+        objective="C2",
+        dependencies=["c1"],
+    )
     cycle_graph.add_step(c1)
     cycle_graph.add_step(c2)
 
@@ -185,4 +197,3 @@ def test_agent_api_endpoints(client: TestClient) -> None:
     assert any("Knowledge" in n for n in agent_names)
     assert any("Forecasting" in n for n in agent_names)
     assert any("Critic" in n for n in agent_names)
-

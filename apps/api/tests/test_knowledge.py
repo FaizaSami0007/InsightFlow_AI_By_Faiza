@@ -27,6 +27,7 @@ from tests.conftest import TestingSessionLocal
 # 1. UNIT TESTS: EXTRACTOR, CHUNKER, EMBEDDING & RETRIEVER
 # ==============================================================================
 
+
 def test_plaintext_and_markdown_extractor() -> None:
     """Verify DocumentExtractor extracts structural headings and sections from Markdown/TXT."""
     sample_md = """# Enterprise Revenue Policy 2026
@@ -88,6 +89,7 @@ def test_deterministic_embedding_cosine_similarity() -> None:
 # ==============================================================================
 # 2. SERVICE LIFECYCLE & INTEGRATION TESTS
 # ==============================================================================
+
 
 @pytest.mark.asyncio
 async def test_knowledge_service_end_to_end() -> None:
@@ -178,7 +180,10 @@ Sales reps are strictly prohibited from offering discounts higher than 20% witho
         assert search_res.results_count >= 1
         assert search_res.has_sufficient_evidence is True
         assert len(search_res.citations) >= 1
-        assert "Customer Churn" in search_res.citations[0].source_snippet or "90 consecutive" in search_res.citations[0].source_snippet
+        assert (
+            "Customer Churn" in search_res.citations[0].source_snippet
+            or "90 consecutive" in search_res.citations[0].source_snippet
+        )
 
         # 7. Check Version History and Chunks
         versions = await service.get_document_versions(user.id, doc_res.id)
@@ -197,12 +202,25 @@ Sales reps are strictly prohibited from offering discounts higher than 20% witho
 # 3. SECURITY & IDOR ISOLATION TESTS
 # ==============================================================================
 
+
 @pytest.mark.asyncio
 async def test_knowledge_security_idor_and_isolation() -> None:
     """Verify that unauthorized users cannot search, view, or delete other users' documents."""
     async with TestingSessionLocal() as session:
-        user1 = User(id=str(uuid.uuid4()), email="owner_u1@example.com", password_hash="pw1", full_name="User One", is_active=True)
-        user2 = User(id=str(uuid.uuid4()), email="attacker_u2@example.com", password_hash="pw2", full_name="User Two", is_active=True)
+        user1 = User(
+            id=str(uuid.uuid4()),
+            email="owner_u1@example.com",
+            password_hash="pw1",
+            full_name="User One",
+            is_active=True,
+        )
+        user2 = User(
+            id=str(uuid.uuid4()),
+            email="attacker_u2@example.com",
+            password_hash="pw2",
+            full_name="User Two",
+            is_active=True,
+        )
         session.add_all([user1, user2])
         await session.commit()
 

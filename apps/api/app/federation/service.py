@@ -47,9 +47,7 @@ class FederationService:
 
     # --- Collections CRUD ---
 
-    async def create_collection(
-        self, user_id: str, req: DatasetCollectionCreateRequest
-    ) -> DatasetCollectionResponse:
+    async def create_collection(self, user_id: str, req: DatasetCollectionCreateRequest) -> DatasetCollectionResponse:
         """Create a new dataset collection / workspace."""
         collection = DatasetCollection(
             id=str(uuid.uuid4()),
@@ -194,9 +192,7 @@ class FederationService:
 
     # --- Relationships Discovery, Validation & Management ---
 
-    async def discover_relationships_in_collection(
-        self, user_id: str, collection_id: str
-    ) -> DiscoveryResponse:
+    async def discover_relationships_in_collection(self, user_id: str, collection_id: str) -> DiscoveryResponse:
         """Discover candidate relationships among all datasets in a collection."""
         collection = await self.get_collection(user_id, collection_id)
         dataset_ids = [item.dataset_id for item in collection.items]
@@ -242,9 +238,7 @@ class FederationService:
 
         return DiscoveryResponse(candidates=all_candidates, total=len(all_candidates))
 
-    async def propose_relationship(
-        self, user_id: str, req: RelationshipProposeRequest
-    ) -> RelationshipResponse:
+    async def propose_relationship(self, user_id: str, req: RelationshipProposeRequest) -> RelationshipResponse:
         """Propose or register a new dataset relationship."""
         # 1. Verify ownership of source & target datasets
         s_stmt = select(Dataset).where(Dataset.id == req.source_dataset_id, Dataset.owner_id == user_id)

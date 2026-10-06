@@ -118,7 +118,7 @@ class ScenarioEngine:
                     driver_base = v_baselines.get(a.variable, 100.0)
                     sim_driver = cls.apply_assumption(driver_base, a)
                     if driver_base != 0:
-                        compound_multiplier *= (sim_driver / driver_base)
+                        compound_multiplier *= sim_driver / driver_base
                 current_val *= compound_multiplier
 
         scenario_val = round(float(current_val), 2)
@@ -160,7 +160,11 @@ class ScenarioEngine:
             step_pct = 5.0
 
         steps: List[SensitivityStep] = []
-        var_base = variable_baseline if variable_baseline is not None else (baseline_value if variable.lower() == target_metric.lower() else 100.0)
+        var_base = (
+            variable_baseline
+            if variable_baseline is not None
+            else (baseline_value if variable.lower() == target_metric.lower() else 100.0)
+        )
 
         current_pct = range_min_pct
         count = 0
@@ -188,7 +192,11 @@ class ScenarioEngine:
 
             sim_target = round(float(sim_target), 2)
             abs_delta = round(float(sim_target - baseline_value), 2)
-            pct_delta = round(float(((sim_target - baseline_value) / abs(baseline_value)) * 100.0), 2) if baseline_value != 0 else None
+            pct_delta = (
+                round(float(((sim_target - baseline_value) / abs(baseline_value)) * 100.0), 2)
+                if baseline_value != 0
+                else None
+            )
 
             steps.append(
                 SensitivityStep(

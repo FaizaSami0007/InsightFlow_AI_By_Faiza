@@ -59,9 +59,7 @@ class DashboardShare(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     owner_id: Mapped[str] = mapped_column(
         sa.String(36), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    share_token: Mapped[str] = mapped_column(
-        sa.String(128), unique=True, nullable=False, index=True
-    )
+    share_token: Mapped[str] = mapped_column(sa.String(128), unique=True, nullable=False, index=True)
     access_type: Mapped[str] = mapped_column(sa.String(50), nullable=False, default="read_only")
     is_active: Mapped[bool] = mapped_column(sa.Boolean, nullable=False, default=True)
     is_snapshot: Mapped[bool] = mapped_column(sa.Boolean, nullable=False, default=False)

@@ -36,6 +36,7 @@ from tests.conftest import TestingSessionLocal
 # 1. UNIT TESTS: FEATURE CONTRACT & VALIDATORS
 # ==============================================================================
 
+
 def test_feature_contract_validation_success():
     schema = {
         "features": {
@@ -99,6 +100,7 @@ def test_output_validator():
 # 2. UNIT TESTS: MODEL EVALUATION & BASELINE METRICS
 # ==============================================================================
 
+
 def test_model_evaluator_forecasting_and_regression_metrics():
     y_true = [100.0, 110.0, 120.0, 130.0, 140.0]
     y_pred = [102.0, 108.0, 122.0, 128.0, 142.0]
@@ -157,6 +159,7 @@ def test_baseline_comparison():
 # 3. UNIT TESTS: STATISTICAL DRIFT & DATA QUALITY
 # ==============================================================================
 
+
 def test_psi_calculation():
     # Identical distributions -> PSI near 0
     ref_data = [float(i) for i in range(100)]
@@ -200,6 +203,7 @@ def test_data_quality_audit():
 # 4. UNIT TESTS: MODEL HEALTH & LINEAGE
 # ==============================================================================
 
+
 def test_model_health_engine():
     # 1. Healthy model
     health_good = ModelHealthEngine.evaluate_model_health(
@@ -223,6 +227,7 @@ def test_model_health_engine():
 # ==============================================================================
 # 5. INTEGRATION TESTS: MLOPS SERVICE & LIFECYCLE WORKFLOW
 # ==============================================================================
+
 
 @pytest.mark.asyncio
 async def test_mlops_lifecycle_end_to_end():
@@ -259,7 +264,11 @@ async def test_mlops_lifecycle_end_to_end():
             feature_schema={
                 "features": {
                     "revenue": {"data_type": "numeric", "is_required": True, "min_value": 0.0, "max_value": 1000000.0},
-                    "region": {"data_type": "categorical", "is_required": True, "allowed_categories": ["North", "South", "East", "West"]},
+                    "region": {
+                        "data_type": "categorical",
+                        "is_required": True,
+                        "allowed_categories": ["North", "South", "East", "West"],
+                    },
                 }
             },
             preprocessing_version="v1.0.0",
@@ -324,12 +333,12 @@ async def test_mlops_lifecycle_end_to_end():
         )
         v2 = await service.create_model_version(model.id, user, v2_req)
         await service.promote_model_version(
-            v2.id, user,
-            MLModelPromotionRequest(target_status=MLModelVersionStatus.VALIDATED, reason="Passed benchmark.")
+            v2.id,
+            user,
+            MLModelPromotionRequest(target_status=MLModelVersionStatus.VALIDATED, reason="Passed benchmark."),
         )
         await service.promote_model_version(
-            v2.id, user,
-            MLModelPromotionRequest(target_status=MLModelVersionStatus.PRODUCTION, reason="Deploying v2.")
+            v2.id, user, MLModelPromotionRequest(target_status=MLModelVersionStatus.PRODUCTION, reason="Deploying v2.")
         )
 
         # Rollback back to v1.0.0
@@ -351,6 +360,7 @@ async def test_mlops_lifecycle_end_to_end():
 # ==============================================================================
 # 6. API INTEGRATION TESTS
 # ==============================================================================
+
 
 def test_mlops_api_endpoints(client: TestClient):
     client.post(

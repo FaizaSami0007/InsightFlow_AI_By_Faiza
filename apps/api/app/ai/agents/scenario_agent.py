@@ -98,7 +98,9 @@ class ScenarioAgent(BaseAgent):
                 )
             )
 
-            summary_text = f"Simulated {target_metric} change: {result.absolute_change:+,.2f} ({result.percentage_change:+.2f}%)."
+            summary_text = (
+                f"Simulated {target_metric} change: {result.absolute_change:+,.2f} ({result.percentage_change:+.2f}%)."
+            )
 
             return AgentResponse(
                 task_id=request.task_id,

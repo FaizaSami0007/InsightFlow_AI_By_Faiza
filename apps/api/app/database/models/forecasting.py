@@ -124,6 +124,4 @@ class ForecastExecution(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     dataset: Mapped["Dataset"] = relationship("Dataset", backref="forecasts")
     dataset_version: Mapped["DatasetVersion"] = relationship("DatasetVersion", backref="forecasts")
 
-    __table_args__ = (
-        Index("ix_forecast_lookup", "dataset_id", "dataset_version_id", "target_field", "time_field"),
-    )
+    __table_args__ = (Index("ix_forecast_lookup", "dataset_id", "dataset_version_id", "target_field", "time_field"),)

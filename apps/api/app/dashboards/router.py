@@ -63,16 +63,12 @@ async def preview_dashboard_plan(
     if not version:
         raise HTTPException(status_code=404, detail="Dataset version not found.")
 
-    p_res = await db.execute(
-        select(DatasetProfile).where(DatasetProfile.dataset_version_id == version.id)
-    )
+    p_res = await db.execute(select(DatasetProfile).where(DatasetProfile.dataset_version_id == version.id))
     profile = p_res.scalars().first()
     if not profile:
         raise HTTPException(status_code=400, detail="Dataset version must be profiled first.")
 
-    sc_res = await db.execute(
-        select(SemanticColumn).where(SemanticColumn.profile_id == profile.id)
-    )
+    sc_res = await db.execute(select(SemanticColumn).where(SemanticColumn.profile_id == profile.id))
     semantic_cols = {sc.column_name: sc for sc in sc_res.scalars().all()}
 
     return DashboardPlanner.generate_plan(
@@ -147,9 +143,7 @@ async def duplicate_dashboard(
     current_user: User = Depends(get_current_user),
 ) -> DashboardResponse:
     """Creates an independent clone of an existing dashboard."""
-    return await DashboardService.duplicate_dashboard(
-        db=db, user_id=current_user.id, dashboard_id=dashboard_id
-    )
+    return await DashboardService.duplicate_dashboard(db=db, user_id=current_user.id, dashboard_id=dashboard_id)
 
 
 @router.post("/{dashboard_id}/patches", response_model=DashboardResponse)
@@ -190,4 +184,3 @@ async def get_dashboard_quality(
     """Calculates an explainable quality and redundancy report for the dashboard."""
     dashboard = await DashboardService.get_dashboard_entity(db, current_user.id, dashboard_id)
     return DashboardService.calculate_quality_score(dashboard)
-

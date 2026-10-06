@@ -43,7 +43,9 @@ class HybridRetriever:
         for q in query_tokens:
             q_lower = q.lower()
             q_stem = q_lower[:4] if len(q_lower) >= 4 else q_lower
-            count = sum(1 for c in chunk_tokens if q_lower in c or c in q_lower or (len(q_stem) >= 4 and c.startswith(q_stem)))
+            count = sum(
+                1 for c in chunk_tokens if q_lower in c or c in q_lower or (len(q_stem) >= 4 and c.startswith(q_stem))
+            )
             if count > 0:
                 tf = (count * 2.2) / (count + 1.2 * (1.0 - 0.75 + 0.75 * (chunk_len / 100.0)))
                 score += tf
@@ -75,7 +77,9 @@ class HybridRetriever:
             hybrid_score = (0.60 * vector_score) + (0.40 * keyword_score)
 
             # Boost exact title or heading match
-            if doc.title.lower() in query.lower() or (chunk.section_heading and chunk.section_heading.lower() in query.lower()):
+            if doc.title.lower() in query.lower() or (
+                chunk.section_heading and chunk.section_heading.lower() in query.lower()
+            ):
                 hybrid_score = min(1.0, hybrid_score + 0.15)
 
             if hybrid_score >= min_similarity:
@@ -89,7 +93,11 @@ class HybridRetriever:
         citations: List[KnowledgeCitation] = []
 
         for idx, (score, chunk, doc, ver) in enumerate(top_results, start=1):
-            citation_label = f"[{doc.title}, p. {chunk.page_number}]" if chunk.page_number else f"[{doc.title}, {chunk.section_heading or 'General'}]"
+            citation_label = (
+                f"[{doc.title}, p. {chunk.page_number}]"
+                if chunk.page_number
+                else f"[{doc.title}, {chunk.section_heading or 'General'}]"
+            )
 
             results.append(
                 KnowledgeSearchResultItem(

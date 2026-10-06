@@ -37,6 +37,7 @@ class DashboardLayoutEngine:
         Widgets are grouped by visual hierarchy (KPIs top, charts middle, tables bottom)
         unless positions are already partially defined.
         """
+
         # Sort widgets to place KPIs first, then charts, then tables
         def sort_priority(w: Dict[str, Any]) -> int:
             wtype = w.get("widget_type")
@@ -120,7 +121,7 @@ class DashboardLayoutEngine:
 
         for i, pos in enumerate(positions):
             if pos.x < 0 or pos.x >= columns:
-                errors.append(f"Widget {i} x position {pos.x} is out of bounds (0-{columns-1})")
+                errors.append(f"Widget {i} x position {pos.x} is out of bounds (0-{columns - 1})")
             if pos.y < 0:
                 errors.append(f"Widget {i} y position {pos.y} is negative")
             if pos.w < 1 or pos.w > columns:
@@ -135,12 +136,7 @@ class DashboardLayoutEngine:
             p1 = positions[i]
             for j in range(i + 1, len(positions)):
                 p2 = positions[j]
-                if (
-                    p1.x < p2.x + p2.w
-                    and p1.x + p1.w > p2.x
-                    and p1.y < p2.y + p2.h
-                    and p1.y + p1.h > p2.y
-                ):
+                if p1.x < p2.x + p2.w and p1.x + p1.w > p2.x and p1.y < p2.y + p2.h and p1.y + p1.h > p2.y:
                     errors.append(f"Widgets {i} and {j} overlap in grid space")
 
         return len(errors) == 0, errors

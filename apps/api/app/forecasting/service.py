@@ -71,7 +71,9 @@ class ForecastService:
         self.duckdb_mgr.register_dataset(
             dataset_version_id=version.id,
             file_path=file_path,
-            file_format=version.file_format.value if hasattr(version.file_format, "value") else str(version.file_format),
+            file_format=version.file_format.value
+            if hasattr(version.file_format, "value")
+            else str(version.file_format),
         )
 
         # 4. Preprocess Time-Series

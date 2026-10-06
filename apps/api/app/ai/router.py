@@ -229,10 +229,14 @@ async def get_conversation_tasks(
     """Retrieve multi-agent task execution records and dependency graph nodes for a conversation."""
     from app.database.models.ai import AITask
 
-    stmt = select(AITask).where(
-        AITask.conversation_id == conversation_id,
-        AITask.user_id == current_user.id,
-    ).order_by(AITask.created_at.asc())
+    stmt = (
+        select(AITask)
+        .where(
+            AITask.conversation_id == conversation_id,
+            AITask.user_id == current_user.id,
+        )
+        .order_by(AITask.created_at.asc())
+    )
     res = await db.execute(stmt)
     tasks = res.scalars().all()
 
@@ -256,4 +260,3 @@ async def get_conversation_tasks(
         }
         for t in tasks
     ]
-

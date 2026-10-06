@@ -302,12 +302,28 @@ class MLOpsService:
 
         # Validate allowed lifecycle state progression
         allowed_transitions: Dict[MLModelVersionStatus, List[MLModelVersionStatus]] = {
-            MLModelVersionStatus.DRAFT: [MLModelVersionStatus.VALIDATING, MLModelVersionStatus.VALIDATED, MLModelVersionStatus.FAILED],
+            MLModelVersionStatus.DRAFT: [
+                MLModelVersionStatus.VALIDATING,
+                MLModelVersionStatus.VALIDATED,
+                MLModelVersionStatus.FAILED,
+            ],
             MLModelVersionStatus.VALIDATING: [MLModelVersionStatus.VALIDATED, MLModelVersionStatus.FAILED],
-            MLModelVersionStatus.VALIDATED: [MLModelVersionStatus.STAGED, MLModelVersionStatus.PRODUCTION, MLModelVersionStatus.DEPRECATED],
-            MLModelVersionStatus.STAGED: [MLModelVersionStatus.PRODUCTION, MLModelVersionStatus.DEPRECATED, MLModelVersionStatus.RETIRED],
+            MLModelVersionStatus.VALIDATED: [
+                MLModelVersionStatus.STAGED,
+                MLModelVersionStatus.PRODUCTION,
+                MLModelVersionStatus.DEPRECATED,
+            ],
+            MLModelVersionStatus.STAGED: [
+                MLModelVersionStatus.PRODUCTION,
+                MLModelVersionStatus.DEPRECATED,
+                MLModelVersionStatus.RETIRED,
+            ],
             MLModelVersionStatus.PRODUCTION: [MLModelVersionStatus.DEPRECATED, MLModelVersionStatus.RETIRED],
-            MLModelVersionStatus.DEPRECATED: [MLModelVersionStatus.RETIRED, MLModelVersionStatus.STAGED, MLModelVersionStatus.PRODUCTION],
+            MLModelVersionStatus.DEPRECATED: [
+                MLModelVersionStatus.RETIRED,
+                MLModelVersionStatus.STAGED,
+                MLModelVersionStatus.PRODUCTION,
+            ],
             MLModelVersionStatus.RETIRED: [MLModelVersionStatus.DEPRECATED],
             MLModelVersionStatus.FAILED: [MLModelVersionStatus.DRAFT],
         }
@@ -330,7 +346,11 @@ class MLOpsService:
 
         # If promoting to STAGING or PRODUCTION, update deployments
         if target in (MLModelVersionStatus.STAGED, MLModelVersionStatus.PRODUCTION):
-            env = MLDeploymentEnvironment.PRODUCTION if target == MLModelVersionStatus.PRODUCTION else MLDeploymentEnvironment.STAGING
+            env = (
+                MLDeploymentEnvironment.PRODUCTION
+                if target == MLModelVersionStatus.PRODUCTION
+                else MLDeploymentEnvironment.STAGING
+            )
 
             # Deactivate previous active deployment in this environment for this model
             for other_v in version.model.versions:
@@ -583,7 +603,9 @@ class MLOpsService:
             "metric_comparison": metric_comp,
             "feature_comparison": feat_comp,
             "parameter_comparison": param_comp,
-            "recommendation": f"Version '{versions[0].version}' exhibits optimal performance." if versions else "No versions registered.",
+            "recommendation": f"Version '{versions[0].version}' exhibits optimal performance."
+            if versions
+            else "No versions registered.",
         }
 
     # ==============================================================================
@@ -614,9 +636,7 @@ class MLOpsService:
     async def acknowledge_alert(self, alert_id: str, user: User) -> MLModelAlert:
         """Acknowledges a monitoring alert."""
         stmt = (
-            select(MLModelAlert)
-            .join(MLModel, MLModelAlert.model_id == MLModel.id)
-            .where(MLModelAlert.id == alert_id)
+            select(MLModelAlert).join(MLModel, MLModelAlert.model_id == MLModel.id).where(MLModelAlert.id == alert_id)
         )
         result = await self.db.execute(stmt)
         alert = result.scalar_one_or_none()

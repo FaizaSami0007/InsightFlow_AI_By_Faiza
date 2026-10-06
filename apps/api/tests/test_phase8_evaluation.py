@@ -37,7 +37,6 @@ def make_profile(columns_spec):
                 null_count=int(null_pct * 10),
                 null_percentage=null_pct,
                 unique_count=50,
-
             )
         )
         semantics[col_name] = SemanticColumn(
@@ -52,7 +51,6 @@ def make_profile(columns_spec):
             is_identifier=(role_type == SemanticRole.IDENTIFIER),
         )
 
-
     profile = DatasetProfile(
         id="dp_eval",
         dataset_version_id="dv_eval",
@@ -63,31 +61,190 @@ def make_profile(columns_spec):
     return profile, semantics
 
 
-
 # ==============================================================================
 # 1. 20 Golden Dashboard Generation Cases
 # ==============================================================================
 DOMAINS = [
-    ("sales", [("date", "DATE", SemanticRole.DATE, 0.0), ("revenue", "DOUBLE", SemanticRole.MEASURE, 0.0), ("units", "INTEGER", SemanticRole.MEASURE, 0.0), ("region", "VARCHAR", SemanticRole.DIMENSION, 0.0), ("category", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("finance", [("date", "DATE", SemanticRole.DATE, 0.0), ("net_income", "DOUBLE", SemanticRole.MEASURE, 0.0), ("expenses", "DOUBLE", SemanticRole.MEASURE, 0.0), ("department", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("operations", [("timestamp", "TIMESTAMP", SemanticRole.DATE, 0.0), ("latency_ms", "DOUBLE", SemanticRole.MEASURE, 0.0), ("throughput", "DOUBLE", SemanticRole.MEASURE, 0.0), ("service_name", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("customer", [("signup_date", "DATE", SemanticRole.DATE, 0.0), ("ltv", "DOUBLE", SemanticRole.MEASURE, 0.0), ("churn_score", "DOUBLE", SemanticRole.MEASURE, 0.0), ("segment", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("retail", [("tx_date", "DATE", SemanticRole.DATE, 0.0), ("basket_value", "DOUBLE", SemanticRole.MEASURE, 0.0), ("store_id", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("healthcare", [("admission_date", "DATE", SemanticRole.DATE, 0.0), ("stay_duration", "INTEGER", SemanticRole.MEASURE, 0.0), ("cost", "DOUBLE", SemanticRole.MEASURE, 0.0), ("ward", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("logistics", [("ship_date", "DATE", SemanticRole.DATE, 0.0), ("delivery_days", "DOUBLE", SemanticRole.MEASURE, 0.0), ("fuel_cost", "DOUBLE", SemanticRole.MEASURE, 0.0), ("carrier", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("ecommerce", [("order_date", "DATE", SemanticRole.DATE, 0.0), ("gmv", "DOUBLE", SemanticRole.MEASURE, 0.0), ("conversion_rate", "DOUBLE", SemanticRole.MEASURE, 0.0), ("channel", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("hr", [("hire_date", "DATE", SemanticRole.DATE, 0.0), ("salary", "DOUBLE", SemanticRole.MEASURE, 0.0), ("tenure_months", "INTEGER", SemanticRole.MEASURE, 0.0), ("department", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("marketing", [("campaign_date", "DATE", SemanticRole.DATE, 0.0), ("spend", "DOUBLE", SemanticRole.MEASURE, 0.0), ("clicks", "INTEGER", SemanticRole.MEASURE, 0.0), ("campaign_type", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("saas", [("mrr_date", "DATE", SemanticRole.DATE, 0.0), ("mrr", "DOUBLE", SemanticRole.MEASURE, 0.0), ("arr", "DOUBLE", SemanticRole.MEASURE, 0.0), ("tier", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("inventory", [("audit_date", "DATE", SemanticRole.DATE, 0.0), ("stock_qty", "INTEGER", SemanticRole.MEASURE, 0.0), ("unit_cost", "DOUBLE", SemanticRole.MEASURE, 0.0), ("warehouse", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("energy", [("reading_time", "TIMESTAMP", SemanticRole.DATE, 0.0), ("kwh_consumed", "DOUBLE", SemanticRole.MEASURE, 0.0), ("peak_demand", "DOUBLE", SemanticRole.MEASURE, 0.0), ("grid_zone", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("telecom", [("call_date", "DATE", SemanticRole.DATE, 0.0), ("call_minutes", "DOUBLE", SemanticRole.MEASURE, 0.0), ("data_usage_gb", "DOUBLE", SemanticRole.MEASURE, 0.0), ("plan_type", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("media", [("view_date", "DATE", SemanticRole.DATE, 0.0), ("watch_hours", "DOUBLE", SemanticRole.MEASURE, 0.0), ("impressions", "INTEGER", SemanticRole.MEASURE, 0.0), ("genre", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("education", [("exam_date", "DATE", SemanticRole.DATE, 0.0), ("score", "DOUBLE", SemanticRole.MEASURE, 0.0), ("attendance_pct", "DOUBLE", SemanticRole.MEASURE, 0.0), ("grade_level", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("banking", [("tx_time", "TIMESTAMP", SemanticRole.DATE, 0.0), ("balance", "DOUBLE", SemanticRole.MEASURE, 0.0), ("tx_amount", "DOUBLE", SemanticRole.MEASURE, 0.0), ("branch", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("real_estate", [("listing_date", "DATE", SemanticRole.DATE, 0.0), ("price", "DOUBLE", SemanticRole.MEASURE, 0.0), ("sqft", "DOUBLE", SemanticRole.MEASURE, 0.0), ("neighborhood", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("manufacturing", [("shift_date", "DATE", SemanticRole.DATE, 0.0), ("defect_rate", "DOUBLE", SemanticRole.MEASURE, 0.0), ("output_units", "INTEGER", SemanticRole.MEASURE, 0.0), ("line_id", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("gaming", [("session_date", "DATE", SemanticRole.DATE, 0.0), ("playtime_hours", "DOUBLE", SemanticRole.MEASURE, 0.0), ("iap_revenue", "DOUBLE", SemanticRole.MEASURE, 0.0), ("player_rank", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
+    (
+        "sales",
+        [
+            ("date", "DATE", SemanticRole.DATE, 0.0),
+            ("revenue", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("units", "INTEGER", SemanticRole.MEASURE, 0.0),
+            ("region", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+            ("category", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "finance",
+        [
+            ("date", "DATE", SemanticRole.DATE, 0.0),
+            ("net_income", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("expenses", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("department", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "operations",
+        [
+            ("timestamp", "TIMESTAMP", SemanticRole.DATE, 0.0),
+            ("latency_ms", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("throughput", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("service_name", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "customer",
+        [
+            ("signup_date", "DATE", SemanticRole.DATE, 0.0),
+            ("ltv", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("churn_score", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("segment", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "retail",
+        [
+            ("tx_date", "DATE", SemanticRole.DATE, 0.0),
+            ("basket_value", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("store_id", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "healthcare",
+        [
+            ("admission_date", "DATE", SemanticRole.DATE, 0.0),
+            ("stay_duration", "INTEGER", SemanticRole.MEASURE, 0.0),
+            ("cost", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("ward", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "logistics",
+        [
+            ("ship_date", "DATE", SemanticRole.DATE, 0.0),
+            ("delivery_days", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("fuel_cost", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("carrier", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "ecommerce",
+        [
+            ("order_date", "DATE", SemanticRole.DATE, 0.0),
+            ("gmv", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("conversion_rate", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("channel", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "hr",
+        [
+            ("hire_date", "DATE", SemanticRole.DATE, 0.0),
+            ("salary", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("tenure_months", "INTEGER", SemanticRole.MEASURE, 0.0),
+            ("department", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "marketing",
+        [
+            ("campaign_date", "DATE", SemanticRole.DATE, 0.0),
+            ("spend", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("clicks", "INTEGER", SemanticRole.MEASURE, 0.0),
+            ("campaign_type", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "saas",
+        [
+            ("mrr_date", "DATE", SemanticRole.DATE, 0.0),
+            ("mrr", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("arr", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("tier", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "inventory",
+        [
+            ("audit_date", "DATE", SemanticRole.DATE, 0.0),
+            ("stock_qty", "INTEGER", SemanticRole.MEASURE, 0.0),
+            ("unit_cost", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("warehouse", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "energy",
+        [
+            ("reading_time", "TIMESTAMP", SemanticRole.DATE, 0.0),
+            ("kwh_consumed", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("peak_demand", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("grid_zone", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "telecom",
+        [
+            ("call_date", "DATE", SemanticRole.DATE, 0.0),
+            ("call_minutes", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("data_usage_gb", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("plan_type", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "media",
+        [
+            ("view_date", "DATE", SemanticRole.DATE, 0.0),
+            ("watch_hours", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("impressions", "INTEGER", SemanticRole.MEASURE, 0.0),
+            ("genre", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "education",
+        [
+            ("exam_date", "DATE", SemanticRole.DATE, 0.0),
+            ("score", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("attendance_pct", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("grade_level", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "banking",
+        [
+            ("tx_time", "TIMESTAMP", SemanticRole.DATE, 0.0),
+            ("balance", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("tx_amount", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("branch", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "real_estate",
+        [
+            ("listing_date", "DATE", SemanticRole.DATE, 0.0),
+            ("price", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("sqft", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("neighborhood", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "manufacturing",
+        [
+            ("shift_date", "DATE", SemanticRole.DATE, 0.0),
+            ("defect_rate", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("output_units", "INTEGER", SemanticRole.MEASURE, 0.0),
+            ("line_id", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
+    (
+        "gaming",
+        [
+            ("session_date", "DATE", SemanticRole.DATE, 0.0),
+            ("playtime_hours", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("iap_revenue", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("player_rank", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ],
+    ),
 ]
 
 
@@ -127,21 +284,49 @@ REFINEMENT_CASES = [
     ("filter_category", PatchOp.CHANGE_FILTER, None, {"column_name": "category", "value": "Tech"}),
     ("filter_date", PatchOp.CHANGE_FILTER, None, {"column_name": "date", "value": "2025-01-01"}),
     ("remove_w1", PatchOp.REMOVE_WIDGET, "w1", {}),
-    ("add_describe", PatchOp.ADD_WIDGET, None, {"widget": {"title": "Summary", "operation": "describe_dataset", "params": {}}}),
-    ("add_group_by", PatchOp.ADD_WIDGET, None, {"widget": {"title": "By Region", "operation": "group_by", "params": {"group_column": "region", "aggregate_column": "revenue"}}}),
-    ("add_frequency", PatchOp.ADD_WIDGET, None, {"widget": {"title": "Category Counts", "operation": "frequency", "params": {"column": "category"}}}),
-    ("add_distribution", PatchOp.ADD_WIDGET, None, {"widget": {"title": "Revenue Spread", "operation": "distribution", "params": {"column": "revenue"}}}),
+    (
+        "add_describe",
+        PatchOp.ADD_WIDGET,
+        None,
+        {"widget": {"title": "Summary", "operation": "describe_dataset", "params": {}}},
+    ),
+    (
+        "add_group_by",
+        PatchOp.ADD_WIDGET,
+        None,
+        {
+            "widget": {
+                "title": "By Region",
+                "operation": "group_by",
+                "params": {"group_column": "region", "aggregate_column": "revenue"},
+            }
+        },
+    ),
+    (
+        "add_frequency",
+        PatchOp.ADD_WIDGET,
+        None,
+        {"widget": {"title": "Category Counts", "operation": "frequency", "params": {"column": "category"}}},
+    ),
+    (
+        "add_distribution",
+        PatchOp.ADD_WIDGET,
+        None,
+        {"widget": {"title": "Revenue Spread", "operation": "distribution", "params": {"column": "revenue"}}},
+    ),
 ]
 
 
 @pytest.mark.parametrize("case_name,op,w_id,params", REFINEMENT_CASES)
 def test_dashboard_refinement_patches(case_name, op, w_id, params):
-    profile, semantics = make_profile([
-        ("date", "DATE", SemanticRole.DATE, 0.0),
-        ("revenue", "DOUBLE", SemanticRole.MEASURE, 0.0),
-        ("region", "VARCHAR", SemanticRole.DIMENSION, 0.0),
-        ("category", "VARCHAR", SemanticRole.DIMENSION, 0.0),
-    ])
+    profile, semantics = make_profile(
+        [
+            ("date", "DATE", SemanticRole.DATE, 0.0),
+            ("revenue", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("region", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+            ("category", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ]
+    )
 
     dashboard = Dashboard(
         id="d_test",
@@ -160,7 +345,6 @@ def test_dashboard_refinement_patches(case_name, op, w_id, params):
         chart_spec_json={"chart_type": "bar"},
     )
     dashboard.widgets = [w_mock]
-
 
     patch = DashboardPatch(op=op, widget_id=w_id, params=params)
     is_valid, errors = DashboardPatchValidator.validate_patch(patch, dashboard, profile, semantics)
@@ -196,14 +380,41 @@ def test_widget_chart_types_supported(ctype):
 SPARSE_CASES = [
     ("single_metric", [("metric", "DOUBLE", SemanticRole.MEASURE, 0.0)]),
     ("no_temporal", [("val1", "DOUBLE", SemanticRole.MEASURE, 0.0), ("cat1", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
-    ("high_null_measure", [("good_metric", "DOUBLE", SemanticRole.MEASURE, 0.0), ("bad_metric", "DOUBLE", SemanticRole.MEASURE, 90.0)]),
-    ("many_dimensions", [("metric", "DOUBLE", SemanticRole.MEASURE, 0.0)] + [(f"dim_{i}", "VARCHAR", SemanticRole.DIMENSION, 0.0) for i in range(5)]),
-    ("only_dimensions", [("dim1", "VARCHAR", SemanticRole.DIMENSION, 0.0), ("dim2", "VARCHAR", SemanticRole.DIMENSION, 0.0)]),
+    (
+        "high_null_measure",
+        [("good_metric", "DOUBLE", SemanticRole.MEASURE, 0.0), ("bad_metric", "DOUBLE", SemanticRole.MEASURE, 90.0)],
+    ),
+    (
+        "many_dimensions",
+        [("metric", "DOUBLE", SemanticRole.MEASURE, 0.0)]
+        + [(f"dim_{i}", "VARCHAR", SemanticRole.DIMENSION, 0.0) for i in range(5)],
+    ),
+    (
+        "only_dimensions",
+        [("dim1", "VARCHAR", SemanticRole.DIMENSION, 0.0), ("dim2", "VARCHAR", SemanticRole.DIMENSION, 0.0)],
+    ),
     ("single_column_date", [("created_at", "DATE", SemanticRole.DATE, 0.0)]),
-    ("multiple_temporals", [("date_1", "DATE", SemanticRole.DATE, 0.0), ("date_2", "DATE", SemanticRole.DATE, 0.0), ("rev", "DOUBLE", SemanticRole.MEASURE, 0.0)]),
-    ("high_cardinality_dim", [("id_col", "VARCHAR", SemanticRole.IDENTIFIER, 0.0), ("rev", "DOUBLE", SemanticRole.MEASURE, 0.0)]),
+    (
+        "multiple_temporals",
+        [
+            ("date_1", "DATE", SemanticRole.DATE, 0.0),
+            ("date_2", "DATE", SemanticRole.DATE, 0.0),
+            ("rev", "DOUBLE", SemanticRole.MEASURE, 0.0),
+        ],
+    ),
+    (
+        "high_cardinality_dim",
+        [("id_col", "VARCHAR", SemanticRole.IDENTIFIER, 0.0), ("rev", "DOUBLE", SemanticRole.MEASURE, 0.0)],
+    ),
     ("tiny_dataset", [("x", "DOUBLE", SemanticRole.MEASURE, 0.0), ("y", "DOUBLE", SemanticRole.MEASURE, 0.0)]),
-    ("mixed_quality", [("m1", "DOUBLE", SemanticRole.MEASURE, 10.0), ("m2", "DOUBLE", SemanticRole.MEASURE, 70.0), ("d1", "VARCHAR", SemanticRole.DIMENSION, 5.0)]),
+    (
+        "mixed_quality",
+        [
+            ("m1", "DOUBLE", SemanticRole.MEASURE, 10.0),
+            ("m2", "DOUBLE", SemanticRole.MEASURE, 70.0),
+            ("d1", "VARCHAR", SemanticRole.DIMENSION, 5.0),
+        ],
+    ),
 ]
 
 
@@ -260,7 +471,6 @@ def test_unsupported_and_boundary_rejections(case_name, op, w_id, params):
     )
     dashboard.widgets = [w_mock]
 
-
     try:
         patch = DashboardPatch(op=op, widget_id=w_id, params=params)
         is_valid, errors = DashboardPatchValidator.validate_patch(patch, dashboard, profile, semantics)
@@ -289,11 +499,13 @@ SECURITY_INTENTS = [
 
 @pytest.mark.parametrize("malicious_intent", SECURITY_INTENTS)
 def test_security_and_prompt_injection_resilience(malicious_intent):
-    profile, semantics = make_profile([
-        ("date", "DATE", SemanticRole.DATE, 0.0),
-        ("revenue", "DOUBLE", SemanticRole.MEASURE, 0.0),
-        ("region", "VARCHAR", SemanticRole.DIMENSION, 0.0),
-    ])
+    profile, semantics = make_profile(
+        [
+            ("date", "DATE", SemanticRole.DATE, 0.0),
+            ("revenue", "DOUBLE", SemanticRole.MEASURE, 0.0),
+            ("region", "VARCHAR", SemanticRole.DIMENSION, 0.0),
+        ]
+    )
 
     plan = DashboardPlanner.generate_plan(
         dataset_id="ds_sec",
@@ -307,5 +519,13 @@ def test_security_and_prompt_injection_resilience(malicious_intent):
     assert plan is not None
     assert "<script>" not in plan.title
     for w in plan.widgets:
-        assert w.operation in ["describe_dataset", "group_by", "time_series_summary", "frequency", "distribution", "correlation", "compare_groups"]
+        assert w.operation in [
+            "describe_dataset",
+            "group_by",
+            "time_series_summary",
+            "frequency",
+            "distribution",
+            "correlation",
+            "compare_groups",
+        ]
         assert "<script>" not in (w.description or "")
