@@ -140,6 +140,31 @@ export default function LoginPage() {
                 Sign In
               </Button>
 
+              {/* Demo Account Quick-Fill Card */}
+              <div className="w-full rounded-xl bg-teal-soft/40 border border-teal-border p-3 text-xs">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="font-semibold text-teal block">Demo Account Credentials:</span>
+                    <span className="font-mono text-slate text-[11px] block mt-0.5">
+                      demo@insightflow.ai &bull; DemoPassword123!
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-[11px] h-7 px-2.5 bg-surface text-teal border-teal-border hover:bg-teal-soft"
+                    onClick={() => {
+                      setEmail("demo@insightflow.ai");
+                      setPassword("DemoPassword123!");
+                      setClientErrors({});
+                    }}
+                  >
+                    Auto-Fill
+                  </Button>
+                </div>
+              </div>
+
               <div className="text-center text-xs text-slate">
                 Don&apos;t have an account?{" "}
                 <Link
