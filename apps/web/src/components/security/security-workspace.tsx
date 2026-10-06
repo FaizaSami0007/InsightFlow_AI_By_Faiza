@@ -400,26 +400,26 @@ export function SecurityWorkspace() {
 
       {/* Main Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-cloud p-1 border border-border rounded-xl grid grid-cols-2 md:grid-cols-5 w-full">
-          <TabsTrigger value="scorecard" className="gap-2 text-xs font-semibold">
+        <TabsList className="bg-cloud p-1 border border-border rounded-xl flex flex-wrap sm:grid sm:grid-cols-2 lg:grid-cols-5 w-full gap-1">
+          <TabsTrigger value="scorecard" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
             <ShieldCheck className="h-4 w-4 text-teal" />
-            Security Scorecard (15)
+            <span>Scorecard (15)</span>
           </TabsTrigger>
-          <TabsTrigger value="threat_model" className="gap-2 text-xs font-semibold">
+          <TabsTrigger value="threat_model" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
             <Layers className="h-4 w-4 text-teal" />
-            Threat Model (13)
+            <span>Threat Model (13)</span>
           </TabsTrigger>
-          <TabsTrigger value="audit_logs" className="gap-2 text-xs font-semibold">
+          <TabsTrigger value="audit_logs" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
             <FileCheck className="h-4 w-4 text-blue" />
-            Immutable Audit Trail
+            <span>Audit Trail</span>
           </TabsTrigger>
-          <TabsTrigger value="ai_sandbox" className="gap-2 text-xs font-semibold">
+          <TabsTrigger value="ai_sandbox" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
             <Sparkles className="h-4 w-4 text-amber" />
-            AI & Policy Sandbox
+            <span>AI Sandbox</span>
           </TabsTrigger>
-          <TabsTrigger value="config_verifier" className="gap-2 text-xs font-semibold">
+          <TabsTrigger value="config_verifier" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
             <Server className="h-4 w-4 text-teal" />
-            Config Verifier
+            <span>Config Verifier</span>
           </TabsTrigger>
         </TabsList>
 

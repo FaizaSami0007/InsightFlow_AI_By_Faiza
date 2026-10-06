@@ -257,7 +257,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-soft border border-teal-border text-teal text-xs font-medium">
             <ShieldCheck className="w-4 h-4" />
             <span>Immutable Source Data</span>
@@ -800,9 +800,9 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
               )}
 
               {/* Provenance Box */}
-              <div className="p-3.5 bg-cloud-subtle rounded-xl border border-border text-[11px] text-slate flex items-center justify-between">
+              <div className="p-3.5 bg-cloud-subtle rounded-xl border border-border text-[11px] text-slate flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-teal" />
+                  <ShieldCheck className="w-4 h-4 text-teal shrink-0" />
                   <span>
                     Deterministic Engine:{" "}
                     <code className="text-ink font-mono">{result.engine_version}</code>

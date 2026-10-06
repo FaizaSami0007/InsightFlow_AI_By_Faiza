@@ -264,44 +264,44 @@ export function ObservabilityWorkspace() {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-cloud p-1 border border-border rounded-xl grid grid-cols-2 md:grid-cols-5 w-full">
-          <TabsTrigger value="telemetry" className="gap-2 text-xs font-semibold">
-            <Activity className="h-4 w-4 text-teal" />
-            Live Telemetry
+        <TabsList className="bg-cloud p-1 border border-border rounded-xl flex flex-wrap sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-1 w-full h-auto">
+          <TabsTrigger value="telemetry" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+            <Activity className="h-4 w-4 text-teal shrink-0" />
+            <span className="truncate">Live Telemetry</span>
           </TabsTrigger>
-          <TabsTrigger value="cache" className="gap-2 text-xs font-semibold">
-            <Database className="h-4 w-4 text-teal" />
-            LRU Cache Engine
+          <TabsTrigger value="cache" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+            <Database className="h-4 w-4 text-teal shrink-0" />
+            <span className="truncate">LRU Cache Engine</span>
           </TabsTrigger>
-          <TabsTrigger value="slos" className="gap-2 text-xs font-semibold">
-            <ShieldCheck className="h-4 w-4 text-blue" />
-            SLO & SLA Status
+          <TabsTrigger value="slos" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+            <ShieldCheck className="h-4 w-4 text-blue shrink-0" />
+            <span className="truncate">SLO & SLA Status</span>
           </TabsTrigger>
-          <TabsTrigger value="benchmarks" className="gap-2 text-xs font-semibold">
-            <TrendingUp className="h-4 w-4 text-amber" />
-            Capacity Benchmarks
+          <TabsTrigger value="benchmarks" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+            <TrendingUp className="h-4 w-4 text-amber shrink-0" />
+            <span className="truncate">Capacity Benchmarks</span>
           </TabsTrigger>
-          <TabsTrigger value="alerts" className="gap-2 text-xs font-semibold">
-            <AlertCircle className="h-4 w-4 text-danger" />
-            Alerts & Events
+          <TabsTrigger value="alerts" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+            <AlertCircle className="h-4 w-4 text-danger shrink-0" />
+            <span className="truncate">Alerts & Events</span>
           </TabsTrigger>
         </TabsList>
 
         {/* TAB 1: LIVE TELEMETRY & LATENCIES */}
         <TabsContent value="telemetry" className="space-y-6">
           {/* Key Stat Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="border-slate-200">
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">P50 Latency (Median)</CardDescription>
                 <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Clock className="h-5 w-5 text-sky-600" />
+                  <Clock className="h-5 w-5 text-sky-600 shrink-0" />
                   {telemetry?.latency_ms?.p50 || 18.4} ms
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <span className="text-[11px] text-emerald-600 flex items-center font-medium">
-                  <ArrowDownRight className="h-3.5 w-3.5 mr-0.5" /> High responsiveness
+                  <ArrowDownRight className="h-3.5 w-3.5 mr-0.5 shrink-0" /> High responsiveness
                 </span>
               </CardContent>
             </Card>
@@ -310,7 +310,7 @@ export function ObservabilityWorkspace() {
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">P95 Latency (SLA Bound)</CardDescription>
                 <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Clock className="h-5 w-5 text-indigo-600" />
+                  <Clock className="h-5 w-5 text-indigo-600 shrink-0" />
                   {telemetry?.latency_ms?.p95 || 68.1} ms
                 </CardTitle>
               </CardHeader>
@@ -323,7 +323,7 @@ export function ObservabilityWorkspace() {
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">Throughput (RPS)</CardDescription>
                 <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Zap className="h-5 w-5 text-amber-500" />
+                  <Zap className="h-5 w-5 text-amber-500 shrink-0" />
                   {telemetry?.requests_per_second || 42.5} req/s
                 </CardTitle>
               </CardHeader>
@@ -338,7 +338,7 @@ export function ObservabilityWorkspace() {
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">Memory RSS & CPU</CardDescription>
                 <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Cpu className="h-5 w-5 text-purple-600" />
+                  <Cpu className="h-5 w-5 text-purple-600 shrink-0" />
                   {telemetry?.memory_usage_mb || 185} MB
                 </CardTitle>
               </CardHeader>
@@ -362,8 +362,8 @@ export function ObservabilityWorkspace() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-xl border border-slate-200 overflow-hidden">
-                <table className="w-full text-left text-xs border-collapse">
+              <div className="rounded-xl border border-slate-200 overflow-x-auto">
+                <table className="w-full min-w-[540px] text-left text-xs border-collapse">
                   <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
                     <tr>
                       <th className="p-3">Endpoint Route</th>
@@ -377,7 +377,7 @@ export function ObservabilityWorkspace() {
                   <tbody className="divide-y divide-slate-100">
                     {(telemetry?.top_endpoints || []).map((ep, idx) => (
                       <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="p-3 font-semibold text-slate-900 font-mono">{ep.endpoint}</td>
+                        <td className="p-3 font-semibold text-slate-900 font-mono whitespace-nowrap">{ep.endpoint}</td>
                         <td className="p-3 text-slate-700">{ep.request_count}</td>
                         <td className="p-3 text-slate-600 font-mono">{ep.p50_ms} ms</td>
                         <td className="p-3 text-slate-600 font-mono font-bold text-sky-700">{ep.p95_ms} ms</td>
@@ -545,7 +545,7 @@ export function ObservabilityWorkspace() {
                 <Button
                   onClick={handleRunBenchmark}
                   disabled={isRunningBenchmark}
-                  className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold gap-1.5 px-6"
+                  className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold gap-1.5 px-6"
                 >
                   <Play className="h-3.5 w-3.5" />
                   {isRunningBenchmark ? "Executing Benchmark Harness..." : `Run ${selectedTier} Capacity Benchmark`}
@@ -554,9 +554,9 @@ export function ObservabilityWorkspace() {
 
               {benchmarkResult && (
                 <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/40 space-y-3">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                     <h4 className="text-xs font-bold text-amber-900 flex items-center gap-1.5">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
                       Benchmark Results: {benchmarkResult.tier} Tier (Scale: {benchmarkResult.simulated_scale_multiplier}x)
                     </h4>
                     <span className="text-[11px] font-mono text-slate-500">
@@ -564,7 +564,7 @@ export function ObservabilityWorkspace() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                     <div className="p-2.5 bg-white rounded-lg border border-amber-200/70">
                       <span className="text-slate-500 block text-[10px]">Analytics Aggregation</span>
                       <strong className="text-slate-900 font-mono">
@@ -611,17 +611,17 @@ export function ObservabilityWorkspace() {
                 {alerts.map((al) => (
                   <div
                     key={al.id}
-                    className="p-3 rounded-xl border border-slate-200 bg-white flex items-center justify-between text-xs"
+                    className="p-3 rounded-xl border border-slate-200 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
                   >
                     <div className="flex items-center gap-3">
                       <Badge
                         variant="outline"
                         className={
                           al.severity === "CRITICAL"
-                            ? "bg-red-50 text-red-700 border-red-200 font-bold"
+                            ? "bg-red-50 text-red-700 border-red-200 font-bold shrink-0"
                             : al.severity === "WARNING"
-                            ? "bg-amber-50 text-amber-700 border-amber-200 font-bold"
-                            : "bg-sky-50 text-sky-700 border-sky-200 font-bold"
+                            ? "bg-amber-50 text-amber-700 border-amber-200 font-bold shrink-0"
+                            : "bg-sky-50 text-sky-700 border-sky-200 font-bold shrink-0"
                         }
                       >
                         {al.severity}
@@ -631,7 +631,7 @@ export function ObservabilityWorkspace() {
                         <span className="text-slate-600 text-[11px]">{al.message}</span>
                       </div>
                     </div>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-[10px] text-slate-400 font-mono shrink-0 sm:text-right">
                       {new Date(al.triggered_at).toLocaleTimeString()}
                     </span>
                   </div>

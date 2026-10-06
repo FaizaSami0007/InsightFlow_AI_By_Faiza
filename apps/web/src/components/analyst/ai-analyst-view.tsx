@@ -129,6 +129,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
   const [tasks, setTasks] = useState<AITaskResponse[]>([]);
   const [registeredAgents, setRegisteredAgents] = useState<AgentMetadataResponse[]>([]);
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const [showMobileSessions, setShowMobileSessions] = useState(false);
   const [loadingTasks, setLoadingTasks] = useState(false);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -445,24 +446,49 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
       {/* ─── MAIN ANALYST CHAT WORKSPACE ─── */}
       <div className="flex-1 flex flex-col h-full overflow-hidden bg-surface">
         {/* Header Bar: Dataset & Version Selector */}
-        <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-3.5 border-b border-border bg-cloud/30">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal text-white shadow-soft">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-ink">Conversational AI Analyst</h2>
-                <Badge variant="teal">Phase 15 Multi-Agent</Badge>
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-3 sm:px-6 py-3.5 border-b border-border bg-cloud/30">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 sm:h-9 w-8 sm:w-9 items-center justify-center rounded-xl bg-teal text-white shadow-soft shrink-0">
+                <Sparkles className="h-4 w-4" />
               </div>
-              <p className="text-[11px] text-slate">
-                Governed 9-agent DAG orchestrator with deterministic tools &amp; Critic validation
-              </p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xs sm:text-sm font-bold text-ink">Conversational AI Analyst</h2>
+                  <Badge variant="teal" className="text-[10px] hidden sm:inline-flex">Multi-Agent DAG</Badge>
+                </div>
+                <p className="text-[10px] sm:text-[11px] text-slate truncate max-w-[200px] sm:max-w-none">
+                  Governed 9-agent DAG orchestrator with deterministic tools &amp; Critic validation
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile Session Toggle */}
+            <div className="flex items-center gap-1 md:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowMobileSessions(!showMobileSessions)}
+                className="text-xs h-7 px-2 gap-1 border-border"
+                title="Toggle Past Sessions"
+              >
+                <MessageSquare className="h-3 w-3 text-teal" />
+                <span className="text-[11px]">Sessions ({conversations.length})</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleNewConversation}
+                className="h-7 w-7 p-0 rounded-lg hover:bg-cloud"
+                title="New Analysis Session"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </Button>
             </div>
           </div>
 
           {/* Dataset & Version Selectors + Task Graph Trigger */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
             {activeConversationId && (
               <Button
                 variant="outline"
@@ -474,11 +500,11 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                 title="View Multi-Agent Task Execution Graph"
               >
                 <Network className="h-3.5 w-3.5 text-teal" />
-                <span>Agent Graph ({tasks.length})</span>
+                <span className="text-[11px]">Graph ({tasks.length})</span>
               </Button>
             )}
 
-            <div className="w-44">
+            <div className="flex-1 sm:w-44 min-w-[120px]">
               <Select
                 options={datasets.map((d) => ({ value: d.id, label: d.name }))}
                 value={selectedDatasetId}
@@ -487,7 +513,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
               />
             </div>
             {versionOptions.length > 0 && (
-              <div className="w-40">
+              <div className="flex-1 sm:w-36 min-w-[100px]">
                 <Select
                   options={versionOptions}
                   value={selectedVersionId}
@@ -499,8 +525,56 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
           </div>
         </header>
 
+        {/* Mobile Sessions Drawer */}
+        {showMobileSessions && (
+          <div className="md:hidden border-b border-border bg-cloud/80 p-3 max-h-48 overflow-y-auto space-y-1.5 shadow-inner">
+            <div className="flex items-center justify-between pb-1">
+              <span className="text-[10px] font-bold text-slate uppercase tracking-wider">Past Sessions</span>
+              <Button
+                size="sm"
+                onClick={() => {
+                  handleNewConversation();
+                  setShowMobileSessions(false);
+                }}
+                className="text-[10px] h-6 px-2 py-0"
+              >
+                <Plus className="h-2.5 w-2.5 mr-1" /> New Session
+              </Button>
+            </div>
+            {conversations.length === 0 ? (
+              <p className="text-xs text-slate py-2 text-center">No sessions recorded yet.</p>
+            ) : (
+              conversations.map((conv) => (
+                <div
+                  key={conv.id}
+                  onClick={() => {
+                    selectConversation(conv.id);
+                    setShowMobileSessions(false);
+                  }}
+                  className={`flex items-center justify-between p-2 rounded-lg text-xs cursor-pointer ${
+                    activeConversationId === conv.id
+                      ? "bg-teal-soft text-teal-dark font-medium border border-teal-border"
+                      : "bg-surface text-ink hover:bg-cloud border border-border"
+                  }`}
+                >
+                  <span className="truncate flex-1 pr-2">{conv.title || "Untitled Session"}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setConversationToDelete(conv.id);
+                    }}
+                    className="p-1 text-slate hover:text-danger"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
         {/* Chat History Messages */}
-        <main className="flex-1 overflow-y-auto p-6 space-y-6" aria-label="Conversation Messages">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6" aria-label="Conversation Messages">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center max-w-lg mx-auto py-8">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-soft text-teal mb-3">

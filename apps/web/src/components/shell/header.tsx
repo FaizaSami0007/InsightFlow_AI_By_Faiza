@@ -44,10 +44,10 @@ export function Header() {
         </button>
 
         {/* Current View & Breadcrumb */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-slate">Workspace</span>
-          <span className="text-xs text-slate/60">/</span>
-          <h1 className="text-sm font-semibold text-ink">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <span className="text-xs font-medium text-slate hidden xs:inline">Workspace</span>
+          <span className="text-xs text-slate/60 hidden xs:inline">/</span>
+          <h1 className="text-xs sm:text-sm font-semibold text-ink truncate max-w-[130px] sm:max-w-xs md:max-w-none">
             {viewTitles[activeView] || "InsightFlow AI"}
           </h1>
         </div>
