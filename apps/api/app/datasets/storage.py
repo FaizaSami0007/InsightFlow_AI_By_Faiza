@@ -36,10 +36,12 @@ class LocalStorageProvider:
             )
         return target_path
 
+    ALLOWED_EXTENSIONS = {".csv", ".parquet", ".pdf", ".docx", ".doc", ".txt", ".md", ".json", ".markdown"}
+
     def save_file(self, file_bytes: bytes, original_filename: str) -> str:
         """Store file bytes under a generated unique identifier preserving safe extension."""
         safe_ext = Path(original_filename).suffix.lower()
-        if safe_ext not in [".csv", ".parquet"]:
+        if safe_ext not in self.ALLOWED_EXTENSIONS:
             safe_ext = ".bin"
 
         unique_key = f"{uuid.uuid4().hex}{safe_ext}"
@@ -48,16 +50,16 @@ class LocalStorageProvider:
         try:
             with open(target_path, "wb") as f:
                 f.write(file_bytes)
-            logger.info(f"Stored dataset file {unique_key} ({len(file_bytes)} bytes)")
+            logger.info(f"Stored file {unique_key} ({len(file_bytes)} bytes)")
             return unique_key
         except Exception as exc:
-            logger.error(f"Failed to write dataset file to {target_path}: {exc}")
-            raise AppError("Failed to persist dataset file to storage", code="STORAGE_WRITE_ERROR", status_code=500)
+            logger.error(f"Failed to write file to {target_path}: {exc}")
+            raise AppError("Failed to persist file to storage", code="STORAGE_WRITE_ERROR", status_code=500)
 
     def save_stream(self, stream: BinaryIO, original_filename: str) -> str:
         """Stream file directly to disk avoiding full memory buffering."""
         safe_ext = Path(original_filename).suffix.lower()
-        if safe_ext not in [".csv", ".parquet"]:
+        if safe_ext not in self.ALLOWED_EXTENSIONS:
             safe_ext = ".bin"
 
         unique_key = f"{uuid.uuid4().hex}{safe_ext}"

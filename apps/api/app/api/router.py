@@ -9,6 +9,7 @@ from app.datasets.router import router as datasets_router
 from app.exports.router import router as exports_router
 from app.federation.router import router as federation_router
 from app.forecasting.router import router as forecasting_router
+from app.knowledge.router import router as knowledge_router
 from app.profiling.router import router as profiling_router
 from app.scenarios.router import router as scenarios_router
 from app.shares.router import router as shares_router
@@ -58,3 +59,7 @@ api_router.include_router(anomalies_router, prefix="", tags=["anomalies"])
 
 # 14. Decision Intelligence & Scenario Simulation endpoints
 api_router.include_router(scenarios_router, prefix="", tags=["scenarios"])
+
+# 15. Knowledge Intelligence, RAG & Business Knowledge endpoints
+api_router.include_router(knowledge_router, prefix="", tags=["knowledge"])
+

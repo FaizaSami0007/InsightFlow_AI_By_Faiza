@@ -1085,3 +1085,175 @@ export interface ScenarioListResponse {
   total: number;
 }
 
+// ==========================================
+// Phase 14 — Knowledge Intelligence & RAG Types
+// ==========================================
+
+export type DocumentProcessingStatus =
+  | "UPLOADED"
+  | "EXTRACTING"
+  | "CHUNKED"
+  | "EMBEDDED"
+  | "INDEXED"
+  | "READY"
+  | "FAILED"
+  | "STALE";
+
+export type DocumentType =
+  | "PDF"
+  | "DOCX"
+  | "TXT"
+  | "MARKDOWN"
+  | "CSV_REFERENCE"
+  | "OTHER";
+
+export type KnowledgeType =
+  | "GENERAL_POLICY"
+  | "KPI_DEFINITION"
+  | "METRIC_FORMULA"
+  | "BUSINESS_RULE"
+  | "SOP"
+  | "GLOSSARY"
+  | "DOMAIN_GUIDE";
+
+export interface KnowledgeCollectionResponse {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string | null;
+  is_system: boolean;
+  document_count: number;
+  metadata_json: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface KnowledgeCollectionCreateRequest {
+  name: string;
+  description?: string | null;
+  metadata?: Record<string, unknown>;
+}
+
+export interface KnowledgeDocumentResponse {
+  id: string;
+  collection_id?: string | null;
+  collection_name?: string | null;
+  user_id: string;
+  title: string;
+  filename: string;
+  file_type: DocumentType;
+  file_size_bytes: number;
+  checksum: string;
+  knowledge_type: KnowledgeType;
+  status: DocumentProcessingStatus;
+  current_version_num: number;
+  chunk_count: number;
+  error_message?: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface KnowledgeDocumentListResponse {
+  items: KnowledgeDocumentResponse[];
+  total: number;
+}
+
+export interface KnowledgeChunkResponse {
+  id: string;
+  document_id: string;
+  document_version_id: string;
+  chunk_index: number;
+  content: string;
+  token_count: number;
+  page_number?: number | null;
+  section_heading?: string | null;
+  has_embedding: boolean;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface KnowledgeDocumentVersionResponse {
+  id: string;
+  document_id: string;
+  version_number: number;
+  storage_reference: string;
+  checksum: string;
+  extracted_text_length: number;
+  chunk_count: number;
+  is_ocr: boolean;
+  ocr_confidence?: number | null;
+  status: DocumentProcessingStatus;
+  created_at: string;
+}
+
+export interface KnowledgeSearchRequest {
+  query: string;
+  collection_id?: string | null;
+  document_ids?: string[] | null;
+  dataset_id?: string | null;
+  knowledge_types?: KnowledgeType[] | null;
+  top_k?: number;
+  min_similarity?: number;
+  include_full_chunks?: boolean;
+}
+
+export interface KnowledgeCitation {
+  citation_index: number;
+  document_id: string;
+  document_title: string;
+  document_version_id: string;
+  version_number: number;
+  page_number?: number | null;
+  section_heading?: string | null;
+  chunk_id: string;
+  source_snippet: string;
+  similarity_score: number;
+}
+
+export interface KnowledgeSearchResultItem {
+  chunk_id: string;
+  document_id: string;
+  document_title: string;
+  document_version_id: string;
+  version_number: number;
+  chunk_index: number;
+  content: string;
+  page_number?: number | null;
+  section_heading?: string | null;
+  similarity_score: number;
+  citation_label: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface KnowledgeSearchResponse {
+  query: string;
+  results_count: number;
+  execution_time_ms: number;
+  results: KnowledgeSearchResultItem[];
+  citations: KnowledgeCitation[];
+  has_sufficient_evidence: boolean;
+  notice?: string | null;
+}
+
+export interface DatasetKnowledgeLinkRequest {
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  document_id?: string | null;
+  collection_id?: string | null;
+  relationship_nature?: string;
+}
+
+export interface DatasetKnowledgeLinkResponse {
+  id: string;
+  dataset_id: string;
+  dataset_version_id?: string | null;
+  document_id?: string | null;
+  document_title?: string | null;
+  collection_id?: string | null;
+  collection_name?: string | null;
+  relationship_nature: string;
+  created_at: string;
+}
+
+

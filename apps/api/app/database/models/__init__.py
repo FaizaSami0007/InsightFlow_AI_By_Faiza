@@ -35,6 +35,16 @@ from app.database.models.forecasting import (
     ForecastModelType,
     ForecastStatus,
 )
+from app.database.models.knowledge import (
+    DatasetKnowledgeLink,
+    DocumentProcessingStatus,
+    DocumentType,
+    KnowledgeChunk,
+    KnowledgeCollection,
+    KnowledgeDocument,
+    KnowledgeDocumentVersion,
+    KnowledgeType,
+)
 from app.database.models.profiling import (
     ColumnProfile,
     ConceptualType,
@@ -103,4 +113,12 @@ __all__ = [
     "ScenarioStatus",
     "ScenarioType",
     "AssumptionOperation",
+    "KnowledgeCollection",
+    "KnowledgeDocument",
+    "KnowledgeDocumentVersion",
+    "KnowledgeChunk",
+    "DatasetKnowledgeLink",
+    "DocumentProcessingStatus",
+    "DocumentType",
+    "KnowledgeType",
 ]

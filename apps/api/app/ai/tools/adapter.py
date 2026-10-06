@@ -163,6 +163,22 @@ class AIToolAdapter:
             )
         )
 
+        tool_defs.append(
+            ToolDefinition(
+                name="search_business_knowledge",
+                description="Retrieves grounded business domain knowledge, policy definitions, KPI formulas, and document context with verifiable citations.",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string", "description": "Natural language question or concept to search for in the knowledge base"},
+                        "collection_id": {"type": "string", "description": "Optional specific knowledge collection ID"},
+                        "top_k": {"type": "integer", "description": "Number of relevant chunks to retrieve (default: 5)"},
+                    },
+                    "required": ["query"],
+                },
+            )
+        )
+
         return tool_defs
 
     @classmethod
@@ -173,6 +189,7 @@ class AIToolAdapter:
             "run_time_series_forecast",
             "detect_anomalies_and_insights",
             "run_what_if_scenario",
+            "search_business_knowledge",
         ]
         if tool_call.name in allowed_extras:
             return
@@ -365,6 +382,39 @@ class AIToolAdapter:
                 "narrative": sc_res.narrative,
                 "summary": sc_res.narrative,
                 "provenance": sc_res.provenance,
+            }
+
+        if tool_call.name == "search_business_knowledge":
+            from app.knowledge.schemas import KnowledgeSearchRequest
+            from app.knowledge.service import KnowledgeService
+
+            k_service = KnowledgeService(db)
+            search_req = KnowledgeSearchRequest(
+                query=tool_call.arguments.get("query", ""),
+                collection_id=tool_call.arguments.get("collection_id"),
+                dataset_id=dataset_id,
+                top_k=tool_call.arguments.get("top_k", 5),
+            )
+            k_res = await k_service.search(user.id, search_req)
+
+            citations_text = "\n".join([f"[{c.citation_index}] {c.document_title}: {c.source_snippet}" for c in k_res.citations])
+            summary_text = (
+                f"Retrieved {len(k_res.results)} grounded knowledge snippets for '{search_req.query}'.\n"
+                f"Citations:\n{citations_text}"
+                if k_res.has_sufficient_evidence
+                else "No sufficiently relevant business knowledge found."
+            )
+
+            return {
+                "operation": "search_business_knowledge",
+                "status": "COMPLETED",
+                "query": k_res.query,
+                "results_count": k_res.results_count,
+                "results": [r.model_dump() for r in k_res.results],
+                "citations": [c.model_dump() for c in k_res.citations],
+                "has_sufficient_evidence": k_res.has_sufficient_evidence,
+                "summary": summary_text,
+                "notice": k_res.notice,
             }
 
         args = dict(tool_call.arguments)
