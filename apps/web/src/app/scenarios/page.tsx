@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { AppShell } from "@/components/shell/app-shell";
 import { ScenarioWorkspace } from "@/components/scenarios/scenario-workspace";
 
 export const metadata: Metadata = {
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function ScenariosPage() {
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 md:px-6">
+    <AppShell>
       <ScenarioWorkspace />
-    </div>
+    </AppShell>
   );
 }

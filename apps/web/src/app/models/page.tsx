@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { AppShell } from "@/components/shell/app-shell";
 import { ModelOperationsView } from "@/components/models/model-operations-view";
 
 export const metadata: Metadata = {
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function ModelsPage() {
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 md:px-6">
+    <AppShell>
       <ModelOperationsView />
-    </div>
+    </AppShell>
   );
 }

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { AppShell } from "@/components/shell/app-shell";
 import { SecurityWorkspace } from "@/components/security/security-workspace";
 
 export const metadata: Metadata = {
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function SecurityPage() {
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 md:px-6">
+    <AppShell>
       <SecurityWorkspace />
-    </div>
+    </AppShell>
   );
 }

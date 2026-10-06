@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { AppShell } from "@/components/shell/app-shell";
 import { CollectionManagement } from "@/components/collections/collection-management";
 
 export const metadata: Metadata = {
@@ -9,10 +10,8 @@ export const metadata: Metadata = {
 
 export default function CollectionsPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        <CollectionManagement />
-      </main>
-    </div>
+    <AppShell>
+      <CollectionManagement />
+    </AppShell>
   );
 }

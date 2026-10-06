@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { AppShell } from "@/components/shell/app-shell";
 import { ObservabilityWorkspace } from "@/components/observability/observability-workspace";
 
 export const metadata: Metadata = {
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function ObservabilityPage() {
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 md:px-6">
+    <AppShell>
       <ObservabilityWorkspace />
-    </div>
+    </AppShell>
   );
 }

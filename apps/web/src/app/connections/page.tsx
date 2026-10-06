@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+import { AppShell } from "@/components/shell/app-shell";
 import { ConnectionWorkspace } from "@/components/connectors/connection-workspace";
 
 export default function ConnectionsPage() {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <AppShell>
       <ConnectionWorkspace />
-    </div>
+    </AppShell>
   );
 }
