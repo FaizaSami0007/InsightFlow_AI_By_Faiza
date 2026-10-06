@@ -35,18 +35,18 @@ interface NavItemConfig {
 const NAV_ITEMS: NavItemConfig[] = [
   { id: "overview", label: "Overview", href: "/", icon: Layers },
   { id: "datasets", label: "Datasets", href: "/datasets", icon: Database },
+  { id: "collections", label: "Collections & Federation", href: "/collections", icon: Layers },
   { id: "connections", label: "Data Connections", href: "/connections", icon: Zap },
-  { id: "security", label: "Security & Compliance", href: "/security", icon: ShieldCheck },
-  { id: "observability", label: "Observability & Scaling", href: "/observability", icon: Activity },
-  { id: "knowledge", label: "Knowledge Center", href: "/knowledge", icon: BookOpen },
-  { id: "analytics", label: "Analytics Engine", href: "/#analytics", icon: LineChart },
+  { id: "analytics", label: "Analytics Engine", href: "/analytics", icon: LineChart },
   { id: "ai", label: "AI Analyst", href: "/analyst", icon: Bot },
   { id: "dashboards", label: "Dashboards", href: "/dashboards", icon: LayoutDashboard },
   { id: "forecast", label: "Forecasting", href: "/forecast", icon: TrendingUp },
   { id: "insights", label: "Insights & Anomalies", href: "/insights", icon: Zap },
   { id: "scenarios", label: "Scenarios & What-If", href: "/scenarios", icon: SlidersHorizontal },
   { id: "models", label: "Model Operations", href: "/models", icon: Cpu },
-  { id: "settings", label: "Settings", href: "/#settings", icon: SlidersHorizontal },
+  { id: "knowledge", label: "Knowledge Center", href: "/knowledge", icon: BookOpen },
+  { id: "security", label: "Security & Compliance", href: "/security", icon: ShieldCheck },
+  { id: "observability", label: "Observability & Scaling", href: "/observability", icon: Activity },
 ];
 
 export function Sidebar() {
