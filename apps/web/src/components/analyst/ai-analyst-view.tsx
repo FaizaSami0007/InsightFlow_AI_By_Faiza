@@ -41,6 +41,7 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { VisualizationRenderer } from "@/components/visualization/visualization-renderer";
+import { useAuthStore } from "@/stores/use-auth-store";
 
 
 interface AIAnalystViewProps {
@@ -130,11 +131,15 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [loadingTasks, setLoadingTasks] = useState(false);
 
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const token = useAuthStore((s) => s.token);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Load registered agents metadata
   useEffect(() => {
     async function loadAgents() {
+      if (!isAuthenticated && !token) return;
       try {
         const res = await api.get<AgentMetadataResponse[]>("/api/v1/ai/agents");
         setRegisteredAgents(res || []);
@@ -143,11 +148,11 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
       }
     }
     loadAgents();
-  }, []);
+  }, [isAuthenticated, token]);
 
   // Load tasks for active conversation
   const loadConversationTasks = useCallback(async (convId: string) => {
-    if (!convId) {
+    if (!convId || (!isAuthenticated && !token)) {
       setTasks([]);
       return;
     }
@@ -160,12 +165,16 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
     } finally {
       setLoadingTasks(false);
     }
-  }, []);
+  }, [isAuthenticated, token]);
 
 
   // 1. Load User Datasets
   useEffect(() => {
     async function loadDatasets() {
+      if (!isAuthenticated && !token) {
+        setDatasets([]);
+        return;
+      }
       try {
         const res = await api.get<{ items: Dataset[] }>("/api/v1/datasets");
         setDatasets(res.items || []);
@@ -178,23 +187,23 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
             setSelectedVersionId(firstDs.versions[0].id);
           }
         }
-      } catch (err) {
-        console.error("Failed to load datasets:", err);
+      } catch {
+        // Silently handle unauthenticated or failed dataset fetches
       }
     }
     loadDatasets();
-  }, [selectedDatasetId]);
+  }, [selectedDatasetId, isAuthenticated, token]);
 
   // 2. Load Conversations for Selected Dataset
   const loadConversations = useCallback(async (dsId: string) => {
-    if (!dsId) return;
+    if (!dsId || (!isAuthenticated && !token)) return;
     try {
       const list = await api.get<AIConversationSummary[]>(`/api/v1/ai/conversations?dataset_id=${dsId}`);
       setConversations(list || []);
-    } catch (err) {
-      console.error("Failed to load conversations:", err);
+    } catch {
+      // Silently handle
     }
-  }, []);
+  }, [isAuthenticated, token]);
 
   // 3. Load Dynamic Starter Questions for Dataset Version
   const loadStarterQuestions = useCallback(async (dsId: string, verId: string) => {

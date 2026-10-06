@@ -28,8 +28,13 @@ export default function DashboardsListPage() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
+      const token = typeof window !== "undefined" ? localStorage.getItem("insightflow_auth_token") : null;
+      if (!token) {
+        setDashboards([]);
+        setDatasets([]);
+        return;
+      }
+      const headers: HeadersInit = { Authorization: `Bearer ${token}` };
 
       const [dashboardsRes, datasetsRes] = await Promise.all([
         fetch("/api/v1/dashboards", { headers }),
@@ -38,11 +43,11 @@ export default function DashboardsListPage() {
 
       if (dashboardsRes.ok) {
         const data = await dashboardsRes.json();
-        setDashboards(data);
+        setDashboards(Array.isArray(data) ? data : data.items || []);
       }
       if (datasetsRes.ok) {
         const data = await datasetsRes.json();
-        setDatasets(data);
+        setDatasets(Array.isArray(data) ? data : data.items || []);
       }
     } catch {
       // Ignore
