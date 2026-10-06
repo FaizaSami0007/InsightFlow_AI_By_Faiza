@@ -1369,7 +1369,169 @@ export interface AITaskResponse {
   error_message?: string | null;
   validation_report?: ValidationReport | null;
   created_at: string;
+}
+
+// ==============================================================================
+// Phase 16 MLOps & Model Monitoring Types
+// ==============================================================================
+
+export type MLModelType =
+  | "FORECASTING"
+  | "ANOMALY_DETECTION"
+  | "CLASSIFICATION"
+  | "REGRESSION"
+  | "CLUSTERING"
+  | "RECOMMENDATION"
+  | "EMBEDDING"
+  | "LLM_ADAPTER";
+
+export type MLModelVersionStatus =
+  | "DRAFT"
+  | "VALIDATING"
+  | "VALIDATED"
+  | "STAGED"
+  | "PRODUCTION"
+  | "DEPRECATED"
+  | "RETIRED"
+  | "FAILED";
+
+export type MLDeploymentEnvironment = "DEVELOPMENT" | "STAGING" | "PRODUCTION";
+export type MLDeploymentStatus = "ACTIVE" | "INACTIVE" | "ROLLED_BACK";
+export type MLAlertSeverity = "INFO" | "WARNING" | "CRITICAL";
+
+export interface MLModelResponse {
+  id: string;
+  user_id: string;
+  workspace_id?: string | null;
+  name: string;
+  description?: string | null;
+  model_type: MLModelType;
+  task_type: string;
+  framework: string;
+  provider: string;
+  status: string;
+  owner: string;
+  tags: string[];
+  metadata_json: Record<string, any>;
+  versions_count: number;
+  active_production_version?: string | null;
+  health_status: string;
+  created_at: string;
   updated_at: string;
+}
+
+export interface MLModelListResponse {
+  items: MLModelResponse[];
+  total: number;
+}
+
+export interface MLModelVersionResponse {
+  id: string;
+  model_id: string;
+  model_name?: string | null;
+  model_type?: MLModelType | null;
+  version: string;
+  artifact_location: string;
+  checksum: string;
+  training_dataset_id?: string | null;
+  training_dataset_version_id?: string | null;
+  feature_schema: Record<string, any>;
+  preprocessing_version: string;
+  parameters: Record<string, any>;
+  metrics: Record<string, any>;
+  baseline_metrics: Record<string, any>;
+  status: MLModelVersionStatus;
+  approval_record?: Record<string, any> | null;
+  health_status: string;
+  health_details: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MLModelEvaluationResponse {
+  id: string;
+  model_version_id: string;
+  dataset_id?: string | null;
+  dataset_version_id?: string | null;
+  evaluation_type: string;
+  metrics: Record<string, any>;
+  baseline_comparison: Record<string, any>;
+  passed_validation: boolean;
+  warnings: string[];
+  evaluated_at: string;
+}
+
+export interface MLModelDriftReportResponse {
+  id: string;
+  model_version_id: string;
+  dataset_id?: string | null;
+  dataset_version_id?: string | null;
+  drift_detected: boolean;
+  data_drift_score: number;
+  feature_drift_results: Record<string, any>;
+  prediction_drift_results: Record<string, any>;
+  concept_drift_results: Record<string, any>;
+  data_quality_results: Record<string, any>;
+  recommendation: string;
+  evaluated_at: string;
+}
+
+export interface MLModelAlertResponse {
+  id: string;
+  model_id: string;
+  model_version_id?: string | null;
+  model_name?: string | null;
+  alert_type: string;
+  severity: MLAlertSeverity;
+  metric_name: string;
+  observed_value: number;
+  threshold: number;
+  message: string;
+  evidence: Record<string, any>;
+  is_acknowledged: boolean;
+  created_at: string;
+}
+
+export interface MLModelAlertListResponse {
+  items: MLModelAlertResponse[];
+  total: number;
+}
+
+export interface MLModelLineageNode {
+  id: string;
+  node_type: string;
+  label: string;
+  details: Record<string, any>;
+}
+
+export interface MLModelLineageEdge {
+  source: string;
+  target: string;
+  relationship: string;
+}
+
+export interface MLModelLineageResponse {
+  model_version_id: string;
+  nodes: MLModelLineageNode[];
+  edges: MLModelLineageEdge[];
+}
+
+export interface MLModelHealthDimension {
+  score: number;
+  status: "HEALTHY" | "WARNING" | "CRITICAL";
+  details: Record<string, any>;
+}
+
+export interface MLModelHealthResponse {
+  overall_health: "GOOD" | "WARNING" | "CRITICAL" | "UNKNOWN";
+  overall_score: number;
+  retraining_recommended: boolean;
+  data_quality: MLModelHealthDimension;
+  drift: MLModelHealthDimension;
+  performance: MLModelHealthDimension;
+  latency: MLModelHealthDimension;
+  freshness: MLModelHealthDimension;
+  recommendations: string[];
 }
 
 

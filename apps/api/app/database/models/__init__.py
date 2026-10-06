@@ -52,6 +52,20 @@ from app.database.models.knowledge import (
     KnowledgeDocumentVersion,
     KnowledgeType,
 )
+from app.database.models.mlops import (
+    MLAlertSeverity,
+    MLDeploymentEnvironment,
+    MLDeploymentStatus,
+    MLExperiment,
+    MLModel,
+    MLModelAlert,
+    MLModelDeployment,
+    MLModelDriftReport,
+    MLModelEvaluation,
+    MLModelType,
+    MLModelVersion,
+    MLModelVersionStatus,
+)
 from app.database.models.profiling import (
     ColumnProfile,
     ConceptualType,
@@ -130,4 +144,17 @@ __all__ = [
     "DocumentProcessingStatus",
     "DocumentType",
     "KnowledgeType",
+    "MLModel",
+    "MLModelVersion",
+    "MLModelType",
+    "MLModelVersionStatus",
+    "MLDeploymentEnvironment",
+    "MLDeploymentStatus",
+    "MLAlertSeverity",
+    "MLExperiment",
+    "MLModelEvaluation",
+    "MLModelDeployment",
+    "MLModelDriftReport",
+    "MLModelAlert",
 ]
+
