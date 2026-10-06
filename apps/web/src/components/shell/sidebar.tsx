@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Activity,
   BookOpen,
   Bot,
   ChevronLeft,
@@ -36,6 +37,7 @@ const NAV_ITEMS: NavItemConfig[] = [
   { id: "datasets", label: "Datasets", href: "/datasets", icon: Database },
   { id: "connections", label: "Data Connections", href: "/connections", icon: Zap, badge: "Phase 17" },
   { id: "security", label: "Security & Compliance", href: "/security", icon: ShieldCheck, badge: "Phase 18" },
+  { id: "observability", label: "Observability & Scaling", href: "/observability", icon: Activity, badge: "Phase 19" },
   { id: "knowledge", label: "Knowledge Center", href: "/knowledge", icon: BookOpen, badge: "Phase 14" },
   { id: "analytics", label: "Analytics Engine", href: "/#analytics", icon: LineChart, badge: "Phase 4" },
   { id: "ai", label: "AI Analyst", href: "/analyst", icon: Bot, badge: "Phase 5" },

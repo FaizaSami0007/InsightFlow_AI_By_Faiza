@@ -12,6 +12,7 @@ from app.federation.router import router as federation_router
 from app.forecasting.router import router as forecasting_router
 from app.knowledge.router import router as knowledge_router
 from app.mlops.router import router as mlops_router
+from app.observability.router import router as observability_router
 from app.profiling.router import router as profiling_router
 from app.scenarios.router import router as scenarios_router
 from app.security.router import router as security_router
@@ -74,3 +75,7 @@ api_router.include_router(connector_router, prefix="", tags=["connectors"])
 
 # 18. Production Security, Compliance & Enterprise Hardening endpoints
 api_router.include_router(security_router, prefix="", tags=["security"])
+
+# 19. Scalability, Performance & Production Observability endpoints
+api_router.include_router(observability_router, prefix="", tags=["observability"])
+

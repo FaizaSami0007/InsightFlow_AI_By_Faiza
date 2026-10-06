@@ -48,6 +48,13 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
             response.headers["X-Request-ID"] = req_id
             response.headers["X-Process-Time-Ms"] = f"{process_time:.2f}"
 
+            # Record telemetry in metrics collector
+            try:
+                from app.observability.metrics import metrics_collector
+                metrics_collector.record_request(request.url.path, process_time, response.status_code)
+            except Exception:
+                pass
+
             # Only log API paths at debug/info
             if not request.url.path.startswith("/docs") and not request.url.path.startswith("/openapi"):
                 logger.info(

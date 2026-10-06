@@ -1763,5 +1763,107 @@ export interface PasswordValidationResponse {
   violations: string[];
 }
 
+// ==========================================
+// Phase 19 — Scalability, Performance & Observability Types
+// ==========================================
+
+export interface LatencyPercentiles {
+  p50: number;
+  p90: number;
+  p95: number;
+  p99: number;
+  avg: number;
+  min: number;
+  max: number;
+}
+
+export interface EndpointMetric {
+  endpoint: string;
+  request_count: number;
+  p50_ms: number;
+  p95_ms: number;
+  avg_ms: number;
+}
+
+export interface SystemTelemetryResponse {
+  timestamp: string;
+  uptime_seconds: number;
+  total_requests: number;
+  total_errors: number;
+  error_rate_percent: number;
+  requests_per_second: number;
+  latency_ms: LatencyPercentiles;
+  memory_usage_mb: number;
+  cpu_usage_percent: number;
+  ai_tokens_consumed: number;
+  status_distribution: Record<string, number>;
+  top_endpoints: EndpointMetric[];
+}
+
+export interface SLOStatusItem {
+  id: string;
+  name: string;
+  category: string;
+  target: string;
+  current_value: number;
+  metric_type: string;
+  is_compliant: boolean;
+  status: "COMPLIANT" | "BREACHED" | string;
+}
+
+export interface SystemAlertItem {
+  id: string;
+  severity: "INFO" | "WARNING" | "CRITICAL" | string;
+  category: string;
+  title: string;
+  message: string;
+  triggered_at: string;
+  resolved: boolean;
+}
+
+export interface WorkloadDefinition {
+  tier: "SMALL" | "MEDIUM" | "LARGE" | string;
+  label: string;
+  dataset_rows: number;
+  document_count: number;
+  concurrent_users: number;
+  target_p95_ms: number;
+  description: string;
+}
+
+export interface BenchmarkReport {
+  tier: string;
+  simulated_scale_multiplier: number;
+  total_duration_ms: number;
+  operations: Record<string, number>;
+  p50_latency_ms: number;
+  p95_latency_ms: number;
+  throughput_ops_per_sec: number;
+  tested_at: string;
+  status: string;
+}
+
+export interface CacheStats {
+  total_keys: number;
+  max_capacity: number;
+  hits: number;
+  misses: number;
+  total_lookups: number;
+  hit_ratio_percent: number;
+  evictions: number;
+}
+
+export interface DistributedTraceSpan {
+  name: string;
+  span_id: string;
+  trace_id: string;
+  parent_span_id?: string | null;
+  duration_ms: number;
+  status: string;
+  error?: string | null;
+  tags?: Record<string, any> | null;
+}
+
+
 
 
