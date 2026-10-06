@@ -60,37 +60,37 @@ export function Sidebar() {
   } = useShellStore();
 
   const navContent = (
-    <div className="flex h-full flex-col justify-between p-3">
-      <div>
-        {/* Brand Header */}
-        <div className="flex h-12 items-center justify-between px-2 pb-2">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal rounded-xl"
-            aria-label="InsightFlow AI Home"
-          >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-teal text-white shadow-soft">
-              <Sparkles className="h-4 w-4" />
+    <div className="flex h-full max-h-screen flex-col justify-between p-3 overflow-hidden">
+      {/* Brand Header */}
+      <div className="flex h-12 shrink-0 items-center justify-between px-2 pb-2">
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal rounded-xl"
+          aria-label="InsightFlow AI Home"
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-teal text-white shadow-soft">
+            <Sparkles className="h-4 w-4" />
+          </div>
+          {isSidebarExpanded && (
+            <div className="flex flex-col overflow-hidden leading-tight">
+              <span className="truncate text-sm font-semibold text-ink tracking-tight">InsightFlow AI</span>
+              <span className="truncate text-[10px] text-slate font-medium">Enterprise Analytics</span>
             </div>
-            {isSidebarExpanded && (
-              <div className="flex flex-col overflow-hidden leading-tight">
-                <span className="truncate text-sm font-semibold text-ink tracking-tight">InsightFlow AI</span>
-                <span className="truncate text-[10px] text-slate font-medium">Enterprise Analytics</span>
-              </div>
-            )}
-          </Link>
-          {/* Mobile close button */}
-          <button
-            onClick={() => setMobileSidebarOpen(false)}
-            className="md:hidden rounded-lg p-1.5 text-slate hover:bg-cloud hover:text-ink focus-visible:ring-2 focus-visible:ring-teal"
-            aria-label="Close navigation sidebar"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+          )}
+        </Link>
+        {/* Mobile close button */}
+        <button
+          onClick={() => setMobileSidebarOpen(false)}
+          className="md:hidden rounded-lg p-1.5 text-slate hover:bg-cloud hover:text-ink focus-visible:ring-2 focus-visible:ring-teal"
+          aria-label="Close navigation sidebar"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
 
-        {/* Navigation Section */}
-        <nav className="mt-4 space-y-1" aria-label="Main Navigation">
+      {/* Scrollable Navigation Section */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden my-2 pr-1 space-y-1 overscroll-contain">
+        <nav className="space-y-1" aria-label="Main Navigation">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive =
@@ -141,15 +141,15 @@ export function Sidebar() {
       </div>
 
       {/* Sidebar Footer & Collapse Toggle */}
-      <div className="space-y-2 border-t border-border pt-3">
+      <div className="shrink-0 space-y-2 border-t border-border pt-3 mt-auto">
         {isSidebarExpanded && (
           <div className="rounded-xl bg-cloud p-3 text-xs">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-teal animate-pulse" />
-              <span className="font-semibold text-ink text-[11px]">Phase 2 Active</span>
+              <span className="font-semibold text-ink text-[11px]">System Status</span>
             </div>
             <p className="mt-1 text-[11px] text-slate leading-tight">
-              Identity & Ingestion Ready
+              AI Analytics Engine Active
             </p>
           </div>
         )}
@@ -178,7 +178,7 @@ export function Sidebar() {
       {/* Desktop & Tablet Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col border-r border-border bg-surface transition-all duration-200 ease-in-out shrink-0 sticky top-0 h-screen z-30",
+          "hidden md:flex flex-col border-r border-border bg-surface transition-all duration-200 ease-in-out shrink-0 sticky top-0 h-screen z-30 overflow-hidden",
           isSidebarExpanded ? "w-64" : "w-18"
         )}
       >
@@ -193,7 +193,7 @@ export function Sidebar() {
             onClick={() => setMobileSidebarOpen(false)}
             aria-hidden="true"
           />
-          <aside className="fixed inset-y-0 left-0 z-50 w-72 border-r border-border bg-surface shadow-soft-lg transition-transform">
+          <aside className="fixed inset-y-0 left-0 z-50 w-72 border-r border-border bg-surface shadow-soft-lg transition-transform overflow-hidden">
             {navContent}
           </aside>
         </div>
