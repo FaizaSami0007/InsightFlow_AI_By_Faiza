@@ -240,20 +240,17 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gradient-to-r from-blue-900/40 via-indigo-900/20 to-slate-900/60 p-6 rounded-2xl border border-blue-500/20 backdrop-blur-sm shadow-xl">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-surface p-6 rounded-2xl border border-border shadow-soft">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-blue-500/20 rounded-xl border border-blue-400/30 text-blue-400 shadow-inner">
-              <SlidersHorizontal className="w-6 h-6" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal border border-teal-border">
+              <SlidersHorizontal className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
+              <h1 className="text-xl font-bold text-ink flex items-center gap-2">
                 Decision Intelligence & Scenario Simulation
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-medium">
-                  Phase 13
-                </span>
               </h1>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-xs text-slate mt-0.5">
                 Deterministic what-if modeling, sensitivity parameter sweeps, and branch comparisons with guaranteed source data immutability.
               </p>
             </div>
@@ -261,11 +258,11 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-soft border border-teal-border text-teal text-xs font-medium">
             <ShieldCheck className="w-4 h-4" />
             <span>Immutable Source Data</span>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-medium">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-soft border border-blue-border text-blue text-xs font-medium">
             <Sparkles className="w-4 h-4" />
             <span>Zero Hallucination</span>
           </div>
@@ -277,20 +274,20 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
         {/* Left Column: Configuration & Assumptions */}
         <div className="lg:col-span-5 space-y-5">
           {/* Controls Card */}
-          <div className="bg-slate-900/80 rounded-xl border border-slate-800 p-5 shadow-lg space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <div className="bg-surface rounded-2xl border border-border p-5 shadow-soft space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate">
                 Simulation Setup
               </span>
               {/* Type Switcher */}
-              <div className="flex bg-slate-950 p-1 rounded-lg border border-slate-800">
+              <div className="flex bg-cloud p-1 rounded-lg border border-border">
                 <button
                   type="button"
                   onClick={() => setActiveTab("what_if")}
                   className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
                     activeTab === "what_if"
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-teal text-white shadow-soft"
+                      : "text-slate hover:text-ink"
                   }`}
                 >
                   What-If
@@ -300,8 +297,8 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                   onClick={() => setActiveTab("sensitivity")}
                   className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
                     activeTab === "sensitivity"
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-teal text-white shadow-soft"
+                      : "text-slate hover:text-ink"
                   }`}
                 >
                   Sensitivity
@@ -311,8 +308,8 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                   onClick={() => setActiveTab("comparison")}
                   className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
                     activeTab === "comparison"
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-teal text-white shadow-soft"
+                      : "text-slate hover:text-ink"
                   }`}
                 >
                   Comparison
@@ -322,7 +319,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
 
             {/* Target Metric Selection */}
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-ink mb-1.5">
                 Target Outcome Metric
               </label>
               <input
@@ -330,13 +327,13 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                 value={targetMetric}
                 onChange={(e) => setTargetMetric(e.target.value)}
                 placeholder="e.g. revenue, gross_profit, orders"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="w-full px-3 py-2 bg-cloud-subtle border border-border rounded-lg text-sm text-ink placeholder-slate focus:outline-none focus:ring-2 focus:ring-teal"
               />
             </div>
 
             {/* Scenario Name (Optional) */}
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-ink mb-1.5">
                 Scenario Name
               </label>
               <input
@@ -344,7 +341,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                 value={scenarioName}
                 onChange={(e) => setScenarioName(e.target.value)}
                 placeholder="e.g. 2026 Optimistic Growth Model"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="w-full px-3 py-2 bg-cloud-subtle border border-border rounded-lg text-sm text-ink placeholder-slate focus:outline-none focus:ring-2 focus:ring-teal"
               />
             </div>
 
@@ -352,13 +349,13 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
             {activeTab === "what_if" && (
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-300">
+                  <span className="text-xs font-semibold text-ink">
                     Structured Assumptions ({assumptions.length})
                   </span>
                   <button
                     type="button"
                     onClick={handleAddAssumption}
-                    className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                    className="flex items-center gap-1 text-xs text-teal hover:text-teal-hover font-medium transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add Driver
@@ -369,17 +366,17 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                   {assumptions.map((assumption, idx) => (
                     <div
                       key={idx}
-                      className="p-3 bg-slate-950/80 rounded-lg border border-slate-800 space-y-2.5 relative group"
+                      className="p-3 bg-cloud-subtle rounded-xl border border-border space-y-2.5 relative group"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-blue-400">
+                        <span className="text-xs font-medium text-teal">
                           Driver #{idx + 1}
                         </span>
                         {assumptions.length > 1 && (
                           <button
                             type="button"
                             onClick={() => handleRemoveAssumption(idx)}
-                            className="text-slate-500 hover:text-rose-400 transition-colors p-1"
+                            className="text-slate hover:text-danger transition-colors p-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -388,7 +385,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
 
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <label className="block text-[10px] text-slate-400 uppercase tracking-wider mb-1">
+                          <label className="block text-[10px] text-slate uppercase tracking-wider mb-1">
                             Variable
                           </label>
                           <input
@@ -397,12 +394,12 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                             onChange={(e) =>
                               handleUpdateAssumption(idx, { variable: e.target.value })
                             }
-                            className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-750 rounded text-xs text-slate-200"
+                            className="w-full px-2.5 py-1.5 bg-surface border border-border rounded-lg text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                             placeholder="e.g. price"
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] text-slate-400 uppercase tracking-wider mb-1">
+                          <label className="block text-[10px] text-slate uppercase tracking-wider mb-1">
                             Operation
                           </label>
                           <select
@@ -412,7 +409,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                                 operation: e.target.value as AssumptionOperation,
                               })
                             }
-                            className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-750 rounded text-xs text-slate-200"
+                            className="w-full px-2.5 py-1.5 bg-surface border border-border rounded-lg text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                           >
                             <option value="PERCENTAGE_CHANGE">Percentage Change (%)</option>
                             <option value="ABSOLUTE_CHANGE">Absolute Delta (+/-)</option>
@@ -423,8 +420,8 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
 
                       <div>
                         <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-slate-400">Modifier Value</span>
-                          <span className="font-mono text-blue-400 font-medium">
+                          <span className="text-slate">Modifier Value</span>
+                          <span className="font-mono text-teal font-medium">
                             {assumption.value > 0 ? `+${assumption.value}` : assumption.value}
                             {assumption.operation === "PERCENTAGE_CHANGE" ? "%" : ""}
                           </span>
@@ -438,7 +435,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                           onChange={(e) =>
                             handleUpdateAssumption(idx, { value: parseFloat(e.target.value) })
                           }
-                          className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                          className="w-full h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-teal"
                         />
                       </div>
                     </div>
@@ -451,7 +448,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
             {activeTab === "sensitivity" && (
               <div className="space-y-3 pt-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label className="block text-xs font-medium text-ink mb-1">
                     Sweep Variable
                   </label>
                   <input
@@ -459,42 +456,42 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                     value={sweepVariable}
                     onChange={(e) => setSweepVariable(e.target.value)}
                     placeholder="e.g. price, marketing_spend"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-100"
+                    className="w-full px-3 py-2 bg-cloud-subtle border border-border rounded-lg text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                   />
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="block text-[10px] text-slate-400 uppercase tracking-wider mb-1">
+                    <label className="block text-[10px] text-slate uppercase tracking-wider mb-1">
                       Min %
                     </label>
                     <input
                       type="number"
                       value={rangeMinPct}
                       onChange={(e) => setRangeMinPct(parseFloat(e.target.value))}
-                      className="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded text-xs text-slate-200"
+                      className="w-full px-2.5 py-1.5 bg-cloud-subtle border border-border rounded-lg text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-400 uppercase tracking-wider mb-1">
+                    <label className="block text-[10px] text-slate uppercase tracking-wider mb-1">
                       Max %
                     </label>
                     <input
                       type="number"
                       value={rangeMaxPct}
                       onChange={(e) => setRangeMaxPct(parseFloat(e.target.value))}
-                      className="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded text-xs text-slate-200"
+                      className="w-full px-2.5 py-1.5 bg-cloud-subtle border border-border rounded-lg text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-400 uppercase tracking-wider mb-1">
+                    <label className="block text-[10px] text-slate uppercase tracking-wider mb-1">
                       Step %
                     </label>
                     <input
                       type="number"
                       value={stepPct}
                       onChange={(e) => setStepPct(parseFloat(e.target.value))}
-                      className="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded text-xs text-slate-200"
+                      className="w-full px-2.5 py-1.5 bg-cloud-subtle border border-border rounded-lg text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                     />
                   </div>
                 </div>
@@ -504,17 +501,17 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
             {/* TAB 3: COMPARISON BRANCHES */}
             {activeTab === "comparison" && (
               <div className="space-y-3 pt-2">
-                <span className="text-xs font-semibold text-slate-300">
+                <span className="text-xs font-semibold text-ink">
                   Scenario Branches ({comparisonBranches.length})
                 </span>
                 <div className="space-y-2 max-h-[280px] overflow-y-auto">
                   {comparisonBranches.map((branch, idx) => (
                     <div
                       key={idx}
-                      className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-between text-xs"
+                      className="p-2.5 bg-cloud-subtle rounded-xl border border-border flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-2">
-                        <GitBranch className="w-3.5 h-3.5 text-indigo-400" />
+                        <GitBranch className="w-3.5 h-3.5 text-teal" />
                         <input
                           type="text"
                           value={branch.name}
@@ -525,12 +522,12 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                               )
                             )
                           }
-                          className="bg-transparent text-slate-200 font-medium focus:outline-none border-b border-transparent focus:border-indigo-400"
+                          className="bg-transparent text-ink font-medium focus:outline-none border-b border-transparent focus:border-teal"
                         />
                       </div>
                       <div className="flex items-center gap-1.5 font-mono">
-                        <span className="text-slate-400">{branch.variable}:</span>
-                        <span className={branch.deltaPct >= 0 ? "text-emerald-400" : "text-rose-400"}>
+                        <span className="text-slate">{branch.variable}:</span>
+                        <span className={branch.deltaPct >= 0 ? "text-teal font-semibold" : "text-danger font-semibold"}>
                           {branch.deltaPct >= 0 ? `+${branch.deltaPct}%` : `${branch.deltaPct}%`}
                         </span>
                       </div>
@@ -542,8 +539,8 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
 
             {/* Error Message */}
             {errorMessage && (
-              <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg flex items-start gap-2.5 text-xs text-rose-300">
-                <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
+              <div className="p-3 bg-danger-soft border border-danger/20 rounded-xl flex items-start gap-2.5 text-xs text-danger">
+                <AlertTriangle className="w-4 h-4 text-danger flex-shrink-0 mt-0.5" />
                 <span>{errorMessage}</span>
               </div>
             )}
@@ -554,7 +551,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                 type="button"
                 onClick={handleRunSimulation}
                 disabled={isLoading}
-                className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white font-medium text-sm rounded-xl shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+                className="w-full py-2.5 px-4 bg-teal hover:bg-teal-hover disabled:opacity-50 text-white font-medium text-sm rounded-xl shadow-soft flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
               >
                 {isLoading ? (
                   <>
@@ -575,26 +572,26 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
         {/* Right Column: Simulation Results & Visualizations */}
         <div className="lg:col-span-7 space-y-5">
           {isLoading && (
-            <div className="bg-slate-900/60 rounded-xl border border-slate-800 p-12 text-center space-y-4">
-              <div className="inline-flex p-4 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 animate-pulse">
+            <div className="bg-surface rounded-2xl border border-border p-12 text-center space-y-4 shadow-soft">
+              <div className="inline-flex p-4 rounded-full bg-teal-soft border border-teal-border text-teal animate-pulse">
                 <RotateCcw className="w-8 h-8 animate-spin" />
               </div>
-              <h3 className="text-base font-semibold text-slate-200">
+              <h3 className="text-base font-semibold text-ink">
                 Simulating Scenario Context
               </h3>
-              <p className="text-xs text-slate-400 max-w-md mx-auto">{progressStep}</p>
+              <p className="text-xs text-slate max-w-md mx-auto">{progressStep}</p>
             </div>
           )}
 
           {!isLoading && !result && (
-            <div className="bg-slate-900/40 rounded-xl border border-dashed border-slate-800 p-12 text-center space-y-3">
-              <div className="p-3 bg-slate-800/40 rounded-full inline-flex text-slate-400">
+            <div className="bg-surface rounded-2xl border border-dashed border-border p-12 text-center space-y-3 shadow-soft">
+              <div className="p-3 bg-cloud-subtle rounded-full inline-flex text-slate">
                 <SlidersHorizontal className="w-6 h-6" />
               </div>
-              <h3 className="text-sm font-medium text-slate-300">
+              <h3 className="text-sm font-medium text-ink">
                 No Scenario Executed Yet
               </h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              <p className="text-xs text-slate max-w-sm mx-auto">
                 Configure your what-if drivers, sensitivity parameters, or branch cases on the left and click &quot;Run Deterministic Scenario&quot;.
               </p>
             </div>
@@ -605,29 +602,29 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
               {/* Actual vs Simulation Metric Comparison Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Baseline Card */}
-                <div className="bg-slate-900/90 rounded-xl border border-slate-800 p-5 space-y-1 shadow-md relative overflow-hidden">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-slate-500"></span>
+                <div className="bg-surface rounded-2xl border border-border p-5 space-y-1 shadow-soft relative overflow-hidden">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-slate"></span>
                     ACTUAL (BASELINE)
                   </div>
-                  <div className="text-2xl font-bold font-mono text-slate-200">
+                  <div className="text-2xl font-bold font-mono text-ink">
                     {result.baseline_value.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </div>
-                  <div className="text-xs text-slate-500 flex items-center gap-1">
+                  <div className="text-xs text-slate flex items-center gap-1">
                     <span>Source: {result.baseline_source}</span>
                   </div>
                 </div>
 
                 {/* Scenario Card */}
-                <div className="bg-gradient-to-br from-slate-900 to-blue-950/40 rounded-xl border border-blue-500/30 p-5 space-y-1 shadow-lg relative overflow-hidden">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                <div className="bg-teal-soft/30 rounded-2xl border border-teal-border p-5 space-y-1 shadow-soft relative overflow-hidden">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-teal flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-teal animate-pulse"></span>
                     SIMULATION (SCENARIO)
                   </div>
-                  <div className="text-2xl font-bold font-mono text-blue-300 flex items-center gap-3">
+                  <div className="text-2xl font-bold font-mono text-teal flex items-center gap-3">
                     {result.scenario_value.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -636,8 +633,8 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                       <span
                         className={`text-xs px-2 py-0.5 rounded-md font-sans font-semibold flex items-center gap-0.5 ${
                           result.percentage_change >= 0
-                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                            : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+                            ? "bg-teal-soft text-teal border border-teal-border"
+                            : "bg-danger-soft text-danger border border-danger/20"
                         }`}
                       >
                         {result.percentage_change >= 0 ? (
@@ -651,9 +648,9 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-slate-400">
+                  <div className="text-xs text-slate">
                     Delta:{" "}
-                    <span className="font-mono text-slate-300 font-medium">
+                    <span className="font-mono text-ink font-medium">
                       {result.absolute_change >= 0
                         ? `+${result.absolute_change.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                         : result.absolute_change.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -664,24 +661,24 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
 
               {/* Narrative Summary */}
               {result.narrative && (
-                <div className="p-4 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 flex items-start gap-3">
-                  <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
-                  <p className="leading-relaxed">{result.narrative}</p>
+                <div className="p-4 bg-surface rounded-2xl border border-border text-xs text-ink shadow-soft flex items-start gap-3">
+                  <Info className="w-4 h-4 text-teal flex-shrink-0 mt-0.5" />
+                  <p className="leading-relaxed text-slate">{result.narrative}</p>
                 </div>
               )}
 
               {/* SENSITIVITY SWEEP TABLE & CURVE */}
               {result.scenario_type === "SENSITIVITY" && result.steps && (
-                <div className="bg-slate-900 rounded-xl border border-slate-800 p-5 space-y-4 shadow-lg">
+                <div className="bg-surface rounded-2xl border border-border p-5 space-y-4 shadow-soft">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                      <BarChart3 className="w-4 h-4 text-blue-400" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-ink flex items-center gap-1.5">
+                      <BarChart3 className="w-4 h-4 text-teal" />
                       Sensitivity Response Curve
                     </span>
                     <button
                       type="button"
                       onClick={exportCSV}
-                      className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 px-2 py-1 rounded bg-slate-800 hover:bg-slate-750 transition-colors"
+                      className="flex items-center gap-1 text-xs text-slate hover:text-ink px-2.5 py-1 rounded-lg bg-cloud border border-border hover:bg-cloud-subtle transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" />
                       Export CSV
@@ -689,8 +686,8 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-xs text-left text-slate-300">
-                      <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                    <table className="w-full text-xs text-left text-ink">
+                      <thead className="bg-cloud-subtle text-slate uppercase text-[10px] tracking-wider border-b border-border">
                         <tr>
                           <th className="py-2.5 px-3">Variation</th>
                           <th className="py-2.5 px-3">Driver Value</th>
@@ -699,40 +696,40 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                           <th className="py-2.5 px-3">Change %</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 font-mono">
+                      <tbody className="divide-y divide-border font-mono">
                         {result.steps.map((step, idx) => (
                           <tr
                             key={idx}
-                            className={`hover:bg-slate-800/30 transition-colors ${
-                              step.delta_pct === 0 ? "bg-blue-500/10 font-bold" : ""
+                            className={`hover:bg-cloud-subtle/50 transition-colors ${
+                              step.delta_pct === 0 ? "bg-teal-soft/40 font-bold" : ""
                             }`}
                           >
-                            <td className="py-2 px-3">
+                            <td className="py-2 px-3 text-ink">
                               {step.delta_pct !== null && step.delta_pct !== undefined
                                 ? step.delta_pct >= 0
-                                  ? `+${step.delta_pct}%`
-                                  : `${step.delta_pct}%`
+                                ? `+${step.delta_pct}%`
+                                : `${step.delta_pct}%`
                                 : "—"}
                             </td>
-                            <td className="py-2 px-3 text-slate-400">
+                            <td className="py-2 px-3 text-slate">
                               {step.simulated_driver_value.toFixed(2)}
                             </td>
-                            <td className="py-2 px-3 text-slate-100">
+                            <td className="py-2 px-3 text-ink font-semibold">
                               {step.outcome_value.toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                               })}
                             </td>
-                            <td className="py-2 px-3 text-slate-300">
+                            <td className="py-2 px-3 text-slate">
                               {step.absolute_change >= 0
                                 ? `+${step.absolute_change.toFixed(2)}`
                                 : step.absolute_change.toFixed(2)}
                             </td>
                             <td
-                              className={`py-2 px-3 ${
+                              className={`py-2 px-3 font-semibold ${
                                 (step.percentage_change || 0) >= 0
-                                  ? "text-emerald-400"
-                                  : "text-rose-400"
+                                  ? "text-teal"
+                                  : "text-danger"
                               }`}
                             >
                               {step.percentage_change !== null && step.percentage_change !== undefined
@@ -751,16 +748,16 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
 
               {/* COMPARISON BRANCHES TABLE */}
               {result.scenario_type === "COMPARISON" && result.comparisons && (
-                <div className="bg-slate-900 rounded-xl border border-slate-800 p-5 space-y-4 shadow-lg">
+                <div className="bg-surface rounded-2xl border border-border p-5 space-y-4 shadow-soft">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                      <GitBranch className="w-4 h-4 text-indigo-400" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-ink flex items-center gap-1.5">
+                      <GitBranch className="w-4 h-4 text-teal" />
                       Side-by-Side Branch Comparison
                     </span>
                     <button
                       type="button"
                       onClick={exportCSV}
-                      className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 px-2 py-1 rounded bg-slate-800 hover:bg-slate-750 transition-colors"
+                      className="flex items-center gap-1 text-xs text-slate hover:text-ink px-2.5 py-1 rounded-lg bg-cloud border border-border hover:bg-cloud-subtle transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" />
                       Export CSV
@@ -771,22 +768,22 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                     {result.comparisons.map((c, idx) => (
                       <div
                         key={idx}
-                        className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2 hover:border-indigo-500/30 transition-all"
+                        className="p-4 bg-cloud-subtle rounded-xl border border-border space-y-2 hover:border-teal-border transition-all"
                       >
-                        <span className="text-xs font-semibold text-indigo-300 block">
+                        <span className="text-xs font-semibold text-teal block">
                           {c.branch_name}
                         </span>
-                        <div className="text-xl font-bold font-mono text-slate-100">
+                        <div className="text-xl font-bold font-mono text-ink">
                           {c.outcome_value.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                           })}
                         </div>
-                        <div className="text-xs flex items-center justify-between text-slate-400">
+                        <div className="text-xs flex items-center justify-between text-slate">
                           <span>Delta:</span>
                           <span
-                            className={`font-mono font-medium ${
-                              (c.percentage_change || 0) >= 0 ? "text-emerald-400" : "text-rose-400"
+                            className={`font-mono font-semibold ${
+                              (c.percentage_change || 0) >= 0 ? "text-teal" : "text-danger"
                             }`}
                           >
                             {c.percentage_change !== null && c.percentage_change !== undefined
@@ -803,15 +800,15 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
               )}
 
               {/* Provenance Box */}
-              <div className="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+              <div className="p-3.5 bg-cloud-subtle rounded-xl border border-border text-[11px] text-slate flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <ShieldCheck className="w-4 h-4 text-teal" />
                   <span>
                     Deterministic Engine:{" "}
-                    <code className="text-slate-300">{result.engine_version}</code>
+                    <code className="text-ink font-mono">{result.engine_version}</code>
                   </span>
                 </div>
-                <div className="font-mono text-[10px] text-slate-500">
+                <div className="font-mono text-[10px] text-slate">
                   Scenario ID: {result.id}
                 </div>
               </div>

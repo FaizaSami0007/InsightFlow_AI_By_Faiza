@@ -39,7 +39,7 @@ export function SemanticsTab({
 
   if (!profile || semanticCols.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-400 bg-slate-900/30 rounded-xl border border-slate-800">
+      <div className="p-8 text-center text-slate bg-surface rounded-xl border border-border shadow-soft">
         No semantic metadata available. Run the profiler to discover semantic roles.
       </div>
     );
@@ -72,14 +72,14 @@ export function SemanticsTab({
     const confidencePct = Math.round(s.inferred_confidence * 100);
 
     return (
-      <Card key={s.id} className="p-4 bg-slate-950/60 border-slate-800 space-y-3">
+      <Card key={s.id} className="p-4 bg-surface border-border shadow-soft space-y-3">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <div className="text-sm font-semibold text-slate-200">{s.column_name}</div>
-            <p className="text-xs text-slate-400 mt-0.5">{s.description}</p>
+            <div className="text-sm font-semibold text-ink">{s.column_name}</div>
+            <p className="text-xs text-slate mt-0.5">{s.description}</p>
           </div>
           <div className="flex flex-col items-end gap-1">
-            <Badge variant={s.user_role ? "blue" : "outline"}>
+            <Badge variant={s.user_role ? "teal" : "outline"}>
               {s.user_role ? `User: ${s.user_role}` : `Inferred: ${s.inferred_role}`}
             </Badge>
             {s.possible_currency && (
@@ -93,13 +93,13 @@ export function SemanticsTab({
         {/* Confidence bar */}
         {!s.user_role && (
           <div className="space-y-1">
-            <div className="flex justify-between text-xs text-slate-500">
+            <div className="flex justify-between text-xs text-slate">
               <span>Confidence</span>
-              <span>{confidencePct}%</span>
+              <span className="font-mono font-medium text-ink">{confidencePct}%</span>
             </div>
-            <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+            <div className="w-full bg-cloud-subtle rounded-full h-1.5 overflow-hidden border border-border-subtle">
               <div
-                className="bg-indigo-500 h-1.5 rounded-full"
+                className="bg-teal h-1.5 rounded-full"
                 style={{ width: `${confidencePct}%` }}
               />
             </div>
@@ -108,8 +108,8 @@ export function SemanticsTab({
 
         {/* User Override action */}
         {isEditing ? (
-          <div className="pt-2 border-t border-slate-800 space-y-2">
-            <label className="text-xs font-medium text-slate-400">Override Semantic Role</label>
+          <div className="pt-2 border-t border-border space-y-2">
+            <label className="text-xs font-medium text-slate">Override Semantic Role</label>
             <Select
               options={ROLE_OPTIONS}
               value={selectedRole}
@@ -142,7 +142,7 @@ export function SemanticsTab({
                 setEditingCol(s.column_name);
                 setSelectedRole(activeRole);
               }}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium"
+              className="text-xs text-teal hover:underline font-medium"
             >
               Override Role &rarr;
             </button>
@@ -154,10 +154,10 @@ export function SemanticsTab({
 
   return (
     <div className="space-y-6">
-      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+      <div className="p-4 rounded-xl bg-surface border border-border shadow-soft flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-slate-200">Semantic Classification Layer</h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <h3 className="text-sm font-semibold text-ink">Semantic Classification Layer</h3>
+          <p className="text-xs text-slate mt-0.5">
             Deterministic inference categorizes fields into analytical roles. You can manually override any classification.
           </p>
         </div>
@@ -169,7 +169,7 @@ export function SemanticsTab({
           <Badge variant="blue">
             Measures ({measures.length})
           </Badge>
-          <span className="text-xs text-slate-400">Quantitative numeric variables suitable for aggregation</span>
+          <span className="text-xs text-slate">Quantitative numeric variables suitable for aggregation</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {measures.map(renderColumnCard)}
@@ -182,7 +182,7 @@ export function SemanticsTab({
           <Badge variant="teal">
             Dimensions ({dimensions.length})
           </Badge>
-          <span className="text-xs text-slate-400">Qualitative categorical attributes suitable for grouping and filtering</span>
+          <span className="text-xs text-slate">Qualitative categorical attributes suitable for grouping and filtering</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {dimensions.map(renderColumnCard)}
@@ -196,7 +196,7 @@ export function SemanticsTab({
             <Badge variant="amber">
               Identifiers ({identifiers.length})
             </Badge>
-            <span className="text-xs text-slate-400">Keys and IDs</span>
+            <span className="text-xs text-slate">Keys and IDs</span>
           </div>
           <div className="space-y-3">{identifiers.map(renderColumnCard)}</div>
         </div>
@@ -206,7 +206,7 @@ export function SemanticsTab({
             <Badge variant="outline">
               Temporal ({temporals.length})
             </Badge>
-            <span className="text-xs text-slate-400">Dates and Timestamps</span>
+            <span className="text-xs text-slate">Dates and Timestamps</span>
           </div>
           <div className="space-y-3">{temporals.map(renderColumnCard)}</div>
         </div>

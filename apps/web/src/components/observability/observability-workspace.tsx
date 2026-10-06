@@ -221,20 +221,17 @@ export function ObservabilityWorkspace() {
   return (
     <div className="space-y-6">
       {/* Top Banner Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 p-6 text-white shadow-xl border border-sky-900/50">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl bg-surface p-6 text-ink shadow-soft border border-border">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal border border-teal-border">
               <Activity className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <h1 className="text-xl font-bold tracking-tight text-ink flex items-center gap-2">
                 Scalability, Performance & Observability
-                <Badge variant="outline" className="bg-sky-500/10 text-sky-400 border-sky-500/30 text-xs">
-                  Phase 19 Active
-                </Badge>
               </h1>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate">
                 P50/P95/P99 Telemetry • Prometheus Metrics • Multi-Tenant LRU Cache • SLO Tracking • Capacity Benchmarks
               </p>
             </div>
@@ -243,9 +240,9 @@ export function ObservabilityWorkspace() {
 
         <div className="flex items-center gap-4">
           <div className="text-right hidden sm:block">
-            <span className="text-[11px] text-slate-400 block font-medium">Global P95 Latency</span>
-            <span className="text-2xl font-black text-sky-400">
-              {telemetry?.latency_ms?.p95 || 68.1} <span className="text-sm font-normal text-slate-400">ms</span>
+            <span className="text-[11px] text-slate block font-medium">Global P95 Latency</span>
+            <span className="text-2xl font-black text-teal">
+              {telemetry?.latency_ms?.p95 || 68.1} <span className="text-sm font-normal text-slate">ms</span>
             </span>
           </div>
 
@@ -254,7 +251,7 @@ export function ObservabilityWorkspace() {
             size="sm"
             onClick={fetchObservabilityData}
             disabled={isLoading}
-            className="border-slate-700 bg-slate-800/80 text-white hover:bg-slate-700 text-xs gap-1.5"
+            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Refresh Telemetry
@@ -264,25 +261,25 @@ export function ObservabilityWorkspace() {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-slate-100 p-1 border border-slate-200/80 rounded-xl grid grid-cols-2 md:grid-cols-5 w-full">
+        <TabsList className="bg-cloud p-1 border border-border rounded-xl grid grid-cols-2 md:grid-cols-5 w-full">
           <TabsTrigger value="telemetry" className="gap-2 text-xs font-semibold">
-            <Activity className="h-4 w-4 text-sky-600" />
+            <Activity className="h-4 w-4 text-teal" />
             Live Telemetry
           </TabsTrigger>
           <TabsTrigger value="cache" className="gap-2 text-xs font-semibold">
-            <Database className="h-4 w-4 text-teal-600" />
+            <Database className="h-4 w-4 text-teal" />
             LRU Cache Engine
           </TabsTrigger>
           <TabsTrigger value="slos" className="gap-2 text-xs font-semibold">
-            <ShieldCheck className="h-4 w-4 text-indigo-600" />
+            <ShieldCheck className="h-4 w-4 text-blue" />
             SLO & SLA Status
           </TabsTrigger>
           <TabsTrigger value="benchmarks" className="gap-2 text-xs font-semibold">
-            <TrendingUp className="h-4 w-4 text-amber-600" />
+            <TrendingUp className="h-4 w-4 text-amber" />
             Capacity Benchmarks
           </TabsTrigger>
           <TabsTrigger value="alerts" className="gap-2 text-xs font-semibold">
-            <AlertCircle className="h-4 w-4 text-purple-600" />
+            <AlertCircle className="h-4 w-4 text-danger" />
             Alerts & Events
           </TabsTrigger>
         </TabsList>

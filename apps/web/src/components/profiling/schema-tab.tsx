@@ -15,7 +15,7 @@ export function SchemaTab({ profile }: SchemaTabProps) {
 
   if (!profile || !profile.column_profiles || profile.column_profiles.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-400 bg-slate-900/30 rounded-xl border border-slate-800">
+      <div className="p-8 text-center text-slate bg-surface rounded-xl border border-border shadow-soft">
         No schema available. Run the profiler to inspect columns.
       </div>
     );
@@ -72,26 +72,26 @@ export function SchemaTab({ profile }: SchemaTabProps) {
           placeholder="Filter columns by name or type..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="max-w-md bg-slate-900/50 border-slate-800"
+          className="max-w-md bg-surface border-border"
         />
-        <div className="text-xs text-slate-400">
+        <div className="text-xs text-slate">
           Showing {filteredColumns.length} of {profile.column_profiles.length} columns
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
+      <div className="rounded-xl border border-border bg-surface shadow-soft overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="border-slate-800 hover:bg-transparent">
-              <TableHead className="w-12 text-slate-400">#</TableHead>
-              <TableHead className="text-slate-300">Column Name</TableHead>
-              <TableHead className="text-slate-300">Conceptual Type</TableHead>
-              <TableHead className="text-slate-300">Native Type</TableHead>
-              <TableHead className="text-slate-300">Inferred Role</TableHead>
-              <TableHead className="text-slate-300">Confidence</TableHead>
-              <TableHead className="text-slate-300">Nulls</TableHead>
-              <TableHead className="text-slate-300">Uniques</TableHead>
-              <TableHead className="text-slate-300">Flags</TableHead>
+            <TableRow>
+              <TableHead className="w-12">#</TableHead>
+              <TableHead>Column Name</TableHead>
+              <TableHead>Conceptual Type</TableHead>
+              <TableHead>Native Type</TableHead>
+              <TableHead>Inferred Role</TableHead>
+              <TableHead>Confidence</TableHead>
+              <TableHead>Nulls</TableHead>
+              <TableHead>Uniques</TableHead>
+              <TableHead>Flags</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -101,14 +101,14 @@ export function SchemaTab({ profile }: SchemaTabProps) {
               const confidence = sem ? Math.round(sem.inferred_confidence * 100) : 0;
 
               return (
-                <TableRow key={col.id} className="border-slate-800 hover:bg-slate-800/40">
-                  <TableCell className="font-mono text-xs text-slate-500">
+                <TableRow key={col.id}>
+                  <TableCell className="font-mono text-xs text-slate">
                     {col.ordinal_position + 1}
                   </TableCell>
-                  <TableCell className="font-medium text-slate-200">
+                  <TableCell className="font-medium text-ink">
                     <div>{col.column_name}</div>
                     {col.normalized_name !== col.column_name.toLowerCase() && (
-                      <div className="text-xs font-mono text-slate-500">
+                      <div className="text-xs font-mono text-slate">
                         {col.normalized_name}
                       </div>
                     )}
@@ -118,7 +118,7 @@ export function SchemaTab({ profile }: SchemaTabProps) {
                       {col.conceptual_type}
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-slate-400">
+                  <TableCell className="font-mono text-xs text-slate">
                     {col.data_type}
                   </TableCell>
                   <TableCell>
@@ -128,29 +128,29 @@ export function SchemaTab({ profile }: SchemaTabProps) {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <div className="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                      <div className="w-16 bg-cloud-subtle rounded-full h-1.5 overflow-hidden border border-border-subtle">
                         <div
-                          className="bg-indigo-500 h-1.5 rounded-full"
+                          className="bg-teal h-1.5 rounded-full"
                           style={{ width: `${confidence}%` }}
                         />
                       </div>
-                      <span className="text-xs text-slate-400">{confidence}%</span>
+                      <span className="text-xs text-slate font-mono">{confidence}%</span>
                     </div>
                   </TableCell>
                   <TableCell>
                     <span
                       className={`text-xs ${
                         col.null_percentage > 20
-                          ? "text-red-400 font-semibold"
+                          ? "text-rose font-semibold"
                           : col.null_percentage > 0
-                          ? "text-amber-400"
-                          : "text-slate-400"
+                          ? "text-amber font-medium"
+                          : "text-slate"
                       }`}
                     >
                       {col.null_count} ({col.null_percentage}%)
                     </span>
                   </TableCell>
-                  <TableCell className="text-xs text-slate-400">
+                  <TableCell className="text-xs text-slate">
                     {col.unique_count} ({col.unique_percentage}%)
                   </TableCell>
                   <TableCell>

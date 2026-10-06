@@ -362,7 +362,7 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
           </div>
         </div>
         <div className="bg-surface rounded-xl p-4 border border-border shadow-soft flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-indigo-50 text-indigo-600">
+          <div className="p-2.5 rounded-lg bg-teal-soft text-teal">
             <Layers className="w-5 h-5" />
           </div>
           <div>

@@ -357,20 +357,17 @@ export function SecurityWorkspace() {
   return (
     <div className="space-y-6">
       {/* Top Banner Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 text-white shadow-xl border border-indigo-900/50">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl bg-surface p-6 text-ink shadow-soft border border-border">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/20 text-teal-400 border border-teal-500/30">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal border border-teal-border">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <h1 className="text-xl font-bold tracking-tight text-ink flex items-center gap-2">
                 Production Security & Enterprise Compliance
-                <Badge variant="outline" className="bg-teal-500/10 text-teal-400 border-teal-500/30 text-xs">
-                  Phase 18 Hardened
-                </Badge>
               </h1>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate">
                 15-Dimension Technical Scorecard • Zero-Trust Identity • Prompt Injection Defense • Immutable Audit Trail
               </p>
             </div>
@@ -379,9 +376,9 @@ export function SecurityWorkspace() {
 
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <span className="text-[11px] text-slate-400 block font-medium">Security Posture Score</span>
-            <span className="text-2xl font-black text-teal-400">
-              {scorecard?.overall_score || 93.5}<span className="text-sm font-normal text-slate-400">/100</span>
+            <span className="text-[11px] text-slate block font-medium">Security Posture Score</span>
+            <span className="text-2xl font-black text-teal">
+              {scorecard?.overall_score || 93.5}<span className="text-sm font-normal text-slate">/100</span>
             </span>
           </div>
 
@@ -390,7 +387,7 @@ export function SecurityWorkspace() {
             size="sm"
             onClick={fetchSecurityData}
             disabled={isLoading}
-            className="border-slate-700 bg-slate-800/80 text-white hover:bg-slate-700 text-xs gap-1.5"
+            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Re-Audit Posture
@@ -400,25 +397,25 @@ export function SecurityWorkspace() {
 
       {/* Main Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-slate-100 p-1 border border-slate-200/80 rounded-xl grid grid-cols-2 md:grid-cols-5 w-full">
+        <TabsList className="bg-cloud p-1 border border-border rounded-xl grid grid-cols-2 md:grid-cols-5 w-full">
           <TabsTrigger value="scorecard" className="gap-2 text-xs font-semibold">
-            <ShieldCheck className="h-4 w-4 text-teal-600" />
+            <ShieldCheck className="h-4 w-4 text-teal" />
             Security Scorecard (15)
           </TabsTrigger>
           <TabsTrigger value="threat_model" className="gap-2 text-xs font-semibold">
-            <Layers className="h-4 w-4 text-indigo-600" />
+            <Layers className="h-4 w-4 text-teal" />
             Threat Model (13)
           </TabsTrigger>
           <TabsTrigger value="audit_logs" className="gap-2 text-xs font-semibold">
-            <FileCheck className="h-4 w-4 text-sky-600" />
+            <FileCheck className="h-4 w-4 text-blue" />
             Immutable Audit Trail
           </TabsTrigger>
           <TabsTrigger value="ai_sandbox" className="gap-2 text-xs font-semibold">
-            <Sparkles className="h-4 w-4 text-amber-600" />
+            <Sparkles className="h-4 w-4 text-amber" />
             AI & Policy Sandbox
           </TabsTrigger>
           <TabsTrigger value="config_verifier" className="gap-2 text-xs font-semibold">
-            <Server className="h-4 w-4 text-purple-600" />
+            <Server className="h-4 w-4 text-teal" />
             Config Verifier
           </TabsTrigger>
         </TabsList>
@@ -528,19 +525,19 @@ export function SecurityWorkspace() {
                 <span className="font-bold text-slate-900 block text-xs">Architectural Trust Boundaries:</span>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="p-2 bg-white rounded-lg border border-slate-200 flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-indigo-500 shrink-0" />
+                    <span className="h-2 w-2 rounded-full bg-teal shrink-0" />
                     <span>Internet / Public Edge → API Gateway</span>
                   </div>
                   <div className="p-2 bg-white rounded-lg border border-slate-200 flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-indigo-500 shrink-0" />
+                    <span className="h-2 w-2 rounded-full bg-teal shrink-0" />
                     <span>API Gateway → Authentication & RBAC Middleware</span>
                   </div>
                   <div className="p-2 bg-white rounded-lg border border-slate-200 flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-indigo-500 shrink-0" />
+                    <span className="h-2 w-2 rounded-full bg-teal shrink-0" />
                     <span>Application Services → AI Orchestration Layer</span>
                   </div>
                   <div className="p-2 bg-white rounded-lg border border-slate-200 flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-indigo-500 shrink-0" />
+                    <span className="h-2 w-2 rounded-full bg-teal shrink-0" />
                     <span>AI Orchestration → Deterministic Tool Sandbox</span>
                   </div>
                 </div>
@@ -550,11 +547,11 @@ export function SecurityWorkspace() {
                 {(threatModel?.threat_vectors || []).map((tv: ThreatVectorItem) => (
                   <div
                     key={tv.id}
-                    className="p-4 rounded-xl border border-slate-200 bg-white hover:border-indigo-200 transition-all space-y-2"
+                    className="p-4 rounded-xl border border-slate-200 bg-white hover:border-teal-border transition-all space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 font-bold">
+                        <Badge variant="teal">
                           {tv.id}
                         </Badge>
                         <h4 className="text-xs font-bold text-slate-900">{tv.profile}</h4>

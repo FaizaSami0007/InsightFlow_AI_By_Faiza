@@ -105,7 +105,7 @@ export default function DatasetDetailPage() {
             onRetry={loadDataset}
           />
           <div className="mt-4 text-center">
-            <Link href="/datasets" className="text-sm text-indigo-400 hover:text-indigo-300">
+            <Link href="/datasets" className="text-sm text-teal hover:text-teal-hover font-medium">
               &larr; Return to Datasets
             </Link>
           </div>
@@ -141,16 +141,16 @@ export default function DatasetDetailPage() {
         {/* Breadcrumb & Top Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <nav className="flex items-center gap-2 text-xs text-slate-400">
-              <Link href="/datasets" className="hover:text-slate-200 transition-colors">
+            <nav className="flex items-center gap-2 text-xs text-slate">
+              <Link href="/datasets" className="hover:text-ink transition-colors">
                 Datasets
               </Link>
               <span>/</span>
-              <span className="text-slate-200 font-medium truncate max-w-xs">{dataset.name}</span>
+              <span className="text-ink font-semibold truncate max-w-xs">{dataset.name}</span>
             </nav>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-100">{dataset.name}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-ink">{dataset.name}</h1>
             {dataset.description && (
-              <p className="text-sm text-slate-400 max-w-3xl">{dataset.description}</p>
+              <p className="text-sm text-slate max-w-3xl">{dataset.description}</p>
             )}
           </div>
 

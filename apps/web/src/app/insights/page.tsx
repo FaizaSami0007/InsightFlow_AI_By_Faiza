@@ -9,10 +9,8 @@ export const metadata: Metadata = {
 
 export default function InsightsPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        <AnomalyWorkspace />
-      </main>
+    <div className="container mx-auto max-w-7xl px-4 py-8 md:px-6">
+      <AnomalyWorkspace />
     </div>
   );
 }

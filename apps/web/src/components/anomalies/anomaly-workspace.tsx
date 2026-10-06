@@ -38,6 +38,9 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface AnomalyWorkspaceProps {
   dataset?: Dataset;
@@ -70,8 +73,6 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
   const [viewMode, setViewMode] = useState<"insights" | "chart" | "table">("insights");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [feedbackSuccess, setFeedbackSuccess] = useState<string | null>(null);
-
-  const currentDataset = initialDataset || datasets.find((d) => d.id === selectedDatasetId);
 
   useEffect(() => {
     if (initialDataset?.id) {
@@ -181,18 +182,18 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
     }
   };
 
-  const getSeverityBadgeClass = (severity: AnomalySeverity) => {
+  const getSeverityBadgeVariant = (severity: AnomalySeverity): "danger" | "amber" | "blue" | "outline" => {
     switch (severity) {
       case "CRITICAL":
-        return "bg-rose-500/15 text-rose-400 border border-rose-500/30";
+        return "danger";
       case "HIGH":
-        return "bg-amber-500/15 text-amber-400 border border-amber-500/30";
+        return "amber";
       case "MEDIUM":
-        return "bg-yellow-500/15 text-yellow-300 border border-yellow-500/30";
+        return "blue";
       case "LOW":
-        return "bg-sky-500/15 text-sky-400 border border-sky-500/30";
+        return "outline";
       default:
-        return "bg-slate-500/15 text-slate-400 border border-slate-500/30";
+        return "outline";
     }
   };
 
@@ -204,43 +205,43 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
   return (
     <div className="space-y-6">
       {/* 1. Header & Quick Metrics */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 backdrop-blur-xl">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-surface p-6 rounded-2xl border border-border shadow-soft">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-rose-500/20 to-amber-500/20 border border-rose-500/30 text-rose-400">
+            <div className="p-2 rounded-xl bg-teal-soft border border-teal-border text-teal">
               <Zap className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-semibold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-ink tracking-tight">
               Anomaly Intelligence & Proactive Insights
             </h1>
           </div>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+          <p className="text-xs text-slate mt-1 max-w-2xl">
             Deterministic statistical detection, materiality scoring, and explainable dimensional root-cause analysis with zero AI hallucinations.
           </p>
         </div>
 
         {result && (
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300">
-              Total: <span className="font-semibold text-white">{result.total_anomalies_count}</span>
+            <div className="px-3 py-1.5 rounded-xl bg-cloud border border-border text-xs text-ink font-medium">
+              Total: <span className="font-bold text-ink">{result.total_anomalies_count}</span>
             </div>
             {result.critical_count > 0 && (
-              <div className="px-3 py-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-xs text-rose-300 font-medium">
+              <Badge variant="danger">
                 {result.critical_count} Critical
-              </div>
+              </Badge>
             )}
             {result.high_count > 0 && (
-              <div className="px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-xs text-amber-300 font-medium">
+              <Badge variant="amber">
                 {result.high_count} High
-              </div>
+              </Badge>
             )}
             {result.medium_count > 0 && (
-              <div className="px-3 py-1.5 rounded-lg bg-yellow-500/15 border border-yellow-500/30 text-xs text-yellow-300 font-medium">
+              <Badge variant="blue">
                 {result.medium_count} Medium
-              </div>
+              </Badge>
             )}
-            <div className="px-3 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/40 text-xs text-slate-400 flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="px-3 py-1.5 rounded-xl bg-cloud border border-border text-xs text-slate flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-teal" />
               {result.execution_time_ms.toFixed(1)}ms
             </div>
           </div>
@@ -248,15 +249,15 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
       </div>
 
       {/* 2. Configuration & Parameter Panel */}
-      <div className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/60 space-y-4">
+      <div className="bg-surface p-6 rounded-2xl border border-border shadow-soft space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Dataset Selector */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Dataset</label>
+            <label className="block text-xs font-medium text-slate mb-1.5">Dataset</label>
             <select
               value={selectedDatasetId}
               onChange={(e) => setSelectedDatasetId(e.target.value)}
-              className="w-full bg-slate-800/90 border border-slate-700/80 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-500/40 transition-all"
+              className="w-full bg-surface border border-border rounded-xl px-3.5 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-teal"
             >
               {datasets.map((d) => (
                 <option key={d.id} value={d.id}>
@@ -268,49 +269,49 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
 
           {/* Metric Field */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Numeric Measure</label>
+            <label className="block text-xs font-medium text-slate mb-1.5">Numeric Measure</label>
             <input
               type="text"
               placeholder="e.g. revenue, orders, volume"
               value={selectedMetric}
               onChange={(e) => setSelectedMetric(e.target.value)}
-              className="w-full bg-slate-800/90 border border-slate-700/80 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/40 transition-all"
+              className="w-full bg-surface border border-border rounded-xl px-3.5 py-2 text-sm text-ink placeholder-slate focus:outline-none focus:ring-2 focus:ring-teal"
             />
           </div>
 
           {/* Time Field */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Time Column (Optional)</label>
+            <label className="block text-xs font-medium text-slate mb-1.5">Time Column (Optional)</label>
             <input
               type="text"
               placeholder="e.g. order_date, timestamp"
               value={selectedTimeField}
               onChange={(e) => setSelectedTimeField(e.target.value)}
-              className="w-full bg-slate-800/90 border border-slate-700/80 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/40 transition-all"
+              className="w-full bg-surface border border-border rounded-xl px-3.5 py-2 text-sm text-ink placeholder-slate focus:outline-none focus:ring-2 focus:ring-teal"
             />
           </div>
 
           {/* Root-Cause Dimension */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Decomposition Dimension</label>
+            <label className="block text-xs font-medium text-slate mb-1.5">Decomposition Dimension</label>
             <input
               type="text"
               placeholder="e.g. region, category, channel"
               value={selectedDimension}
               onChange={(e) => setSelectedDimension(e.target.value)}
-              className="w-full bg-slate-800/90 border border-slate-700/80 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/40 transition-all"
+              className="w-full bg-surface border border-border rounded-xl px-3.5 py-2 text-sm text-ink placeholder-slate focus:outline-none focus:ring-2 focus:ring-teal"
             />
           </div>
         </div>
 
         {/* Method & Sensitivity Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-800/40">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-border">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Statistical Detector</label>
+            <label className="block text-xs font-medium text-slate mb-1.5">Statistical Detector</label>
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value as DetectionMethod)}
-              className="w-full bg-slate-800/90 border border-slate-700/80 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+              className="w-full bg-surface border border-border rounded-xl px-3.5 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-teal"
             >
               <option value="ROBUST_Z_SCORE">Robust Z-Score (Median / MAD - Recommended)</option>
               <option value="Z_SCORE">Standard Z-Score (Mean / Std)</option>
@@ -323,8 +324,8 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
 
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <label className="text-xs font-medium text-slate-300">Sensitivity Multiplier</label>
-              <span className="text-xs text-slate-400 font-mono">{sensitivity.toFixed(1)}σ</span>
+              <label className="text-xs font-medium text-slate">Sensitivity Multiplier</label>
+              <span className="text-xs text-ink font-mono font-semibold">{sensitivity.toFixed(1)}σ</span>
             </div>
             <input
               type="range"
@@ -333,41 +334,34 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
               step={0.1}
               value={sensitivity}
               onChange={(e) => setSensitivity(parseFloat(e.target.value))}
-              className="w-full accent-sky-500 cursor-pointer"
+              className="w-full accent-teal cursor-pointer"
             />
           </div>
 
           <div className="flex items-end">
-            <button
+            <Button
               onClick={handleRunDetection}
               disabled={isLoading}
-              className="w-full h-[38px] flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-sky-500 hover:from-rose-600 hover:to-sky-600 text-white font-medium text-sm shadow-lg shadow-rose-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              isLoading={isLoading}
+              variant="primary"
+              className="w-full"
+              leftIcon={<Sparkles className="w-4 h-4" />}
             >
-              {isLoading ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Analyzing…</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Detect Anomalies & Insights</span>
-                </>
-              )}
-            </button>
+              Detect Anomalies & Insights
+            </Button>
           </div>
         </div>
 
         {/* Progress or Error Banner */}
         {isLoading && progressStep && (
-          <div className="flex items-center gap-2.5 text-xs text-sky-400 bg-sky-500/10 border border-sky-500/20 p-3 rounded-xl animate-pulse">
+          <div className="flex items-center gap-2.5 text-xs text-teal bg-teal-soft border border-teal-border p-3 rounded-xl">
             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
             <span>{progressStep}</span>
           </div>
         )}
 
         {errorMessage && (
-          <div className="flex items-center gap-2.5 text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 p-3 rounded-xl">
+          <div className="flex items-center gap-2.5 text-xs text-danger bg-danger/10 border border-danger/20 p-3 rounded-xl">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{errorMessage}</span>
           </div>
@@ -378,51 +372,42 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
       {result && (
         <div className="space-y-6">
           {/* View Mode Toggle & Status Filter */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/60">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-surface p-3 rounded-2xl border border-border shadow-soft">
             <div className="flex items-center gap-1.5">
-              <button
+              <Button
+                variant={viewMode === "insights" ? "primary" : "ghost"}
+                size="sm"
                 onClick={() => setViewMode("insights")}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  viewMode === "insights"
-                    ? "bg-sky-500 text-white shadow-md shadow-sky-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-                }`}
+                leftIcon={<Sparkles className="w-3.5 h-3.5" />}
               >
-                <Sparkles className="w-3.5 h-3.5" />
                 Proactive Feed ({result.insights.length})
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={viewMode === "chart" ? "primary" : "ghost"}
+                size="sm"
                 onClick={() => setViewMode("chart")}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  viewMode === "chart"
-                    ? "bg-sky-500 text-white shadow-md shadow-sky-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-                }`}
+                leftIcon={<BarChart3 className="w-3.5 h-3.5" />}
               >
-                <BarChart3 className="w-3.5 h-3.5" />
                 Timeline & Breakdown
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={viewMode === "table" ? "primary" : "ghost"}
+                size="sm"
                 onClick={() => setViewMode("table")}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  viewMode === "table"
-                    ? "bg-sky-500 text-white shadow-md shadow-sky-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-                }`}
+                leftIcon={<TableIcon className="w-3.5 h-3.5" />}
               >
-                <TableIcon className="w-3.5 h-3.5" />
                 Evidence Table ({result.anomalies.length})
-              </button>
+              </Button>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 flex items-center gap-1">
+              <span className="text-xs text-slate flex items-center gap-1">
                 <Filter className="w-3 h-3" /> Status:
               </span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-slate-800/90 border border-slate-700/70 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none"
+                className="bg-surface border border-border rounded-xl px-2.5 py-1 text-xs text-ink focus:outline-none"
               >
                 <option value="ALL">All Alerts</option>
                 <option value="DETECTED">Detected</option>
@@ -437,49 +422,49 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
           {viewMode === "insights" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {result.insights.length === 0 ? (
-                <div className="col-span-2 text-center py-12 bg-slate-900/30 rounded-2xl border border-slate-800/50">
-                  <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                  <p className="text-sm text-slate-300 font-medium">No anomalous deviations detected</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Metrics are tracking within normal statistical tolerance.</p>
+                <div className="col-span-2 text-center py-12 bg-surface rounded-2xl border border-border shadow-soft">
+                  <CheckCircle2 className="w-8 h-8 text-teal mx-auto mb-2" />
+                  <p className="text-sm text-ink font-semibold">No anomalous deviations detected</p>
+                  <p className="text-xs text-slate mt-0.5">Metrics are tracking within normal statistical tolerance.</p>
                 </div>
               ) : (
                 result.insights.map((insight) => (
-                  <div
+                  <Card
                     key={insight.id}
-                    className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700/80 transition-all flex flex-col justify-between space-y-3"
+                    className="p-5 bg-surface border-border shadow-soft flex flex-col justify-between space-y-3"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold tracking-wide ${getSeverityBadgeClass(insight.severity)}`}>
+                        <Badge variant={getSeverityBadgeVariant(insight.severity)}>
                           {insight.severity}
-                        </span>
-                        <span className="text-[11px] text-slate-500 font-mono">
+                        </Badge>
+                        <span className="text-[11px] text-slate font-mono">
                           {new Date(insight.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </span>
                       </div>
-                      <h3 className="text-sm font-semibold text-white">{insight.title}</h3>
-                      <p className="text-xs text-slate-300 mt-1 leading-relaxed">{insight.summary}</p>
+                      <h3 className="text-sm font-bold text-ink">{insight.title}</h3>
+                      <p className="text-xs text-slate mt-1 leading-relaxed">{insight.summary}</p>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5 text-slate-400">
+                    <div className="pt-3 border-t border-border flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 text-slate">
                         <span>Feedback:</span>
                         <button
                           onClick={() => handleInsightFeedback(insight.id, "useful")}
-                          className="p-1 hover:text-emerald-400 hover:bg-slate-800 rounded transition-colors"
+                          className="p-1 hover:text-teal hover:bg-cloud rounded transition-colors"
                           title="Helpful insight"
                         >
                           <ThumbsUp className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleInsightFeedback(insight.id, "not_useful")}
-                          className="p-1 hover:text-rose-400 hover:bg-slate-800 rounded transition-colors"
+                          className="p-1 hover:text-danger hover:bg-cloud rounded transition-colors"
                           title="Not useful"
                         >
                           <ThumbsDown className="w-3.5 h-3.5" />
                         </button>
                         {feedbackSuccess === insight.id && (
-                          <span className="text-[10px] text-emerald-400 font-medium ml-1">Feedback saved!</span>
+                          <span className="text-[10px] text-teal font-medium ml-1">Feedback saved!</span>
                         )}
                       </div>
 
@@ -490,13 +475,13 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
                             if (anom) setSelectedAnomaly(anom);
                             setViewMode("chart");
                           }}
-                          className="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1"
+                          className="text-xs text-teal hover:underline font-semibold flex items-center gap-1"
                         >
                           Inspect Evidence <ChevronRight className="w-3 h-3" />
                         </button>
                       )}
                     </div>
-                  </div>
+                  </Card>
                 ))
               )}
             </div>
@@ -507,7 +492,7 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column: Anomalies list selector */}
               <div className="lg:col-span-1 space-y-3">
-                <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Detected Anomaly Points</h3>
+                <h3 className="text-xs font-semibold text-slate uppercase tracking-wider">Detected Anomaly Points</h3>
                 <div className="space-y-2 max-h-[520px] overflow-y-auto pr-1">
                   {filteredAnomalies.map((anom) => {
                     const isSelected = selectedAnomaly?.id === anom.id;
@@ -518,26 +503,26 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
                         onClick={() => setSelectedAnomaly(anom)}
                         className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
                           isSelected
-                            ? "bg-slate-800/90 border-sky-500/60 shadow-lg shadow-sky-500/10"
-                            : "bg-slate-900/40 border-slate-800/70 hover:border-slate-700/80"
+                            ? "bg-teal-soft/40 border-teal-border shadow-soft"
+                            : "bg-surface border-border hover:bg-cloud-subtle"
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${getSeverityBadgeClass(anom.severity)}`}>
+                          <Badge variant={getSeverityBadgeVariant(anom.severity)}>
                             {anom.severity}
-                          </span>
-                          <span className="text-xs text-slate-400 font-mono">{anom.period}</span>
+                          </Badge>
+                          <span className="text-xs text-slate font-mono">{anom.period}</span>
                         </div>
                         <div className="flex items-baseline justify-between mt-2">
-                          <span className="text-sm font-semibold text-white">
+                          <span className="text-sm font-bold text-ink">
                             {anom.observed_value.toLocaleString()}
                           </span>
-                          <span className={`text-xs font-medium flex items-center gap-0.5 ${isNegative ? "text-rose-400" : "text-emerald-400"}`}>
+                          <span className={`text-xs font-semibold flex items-center gap-0.5 ${isNegative ? "text-danger" : "text-teal"}`}>
                             {isNegative ? <TrendingDown className="w-3 h-3" /> : <TrendingUp className="w-3 h-3" />}
                             {anom.deviation_pct > 0 ? `+${anom.deviation_pct}%` : `${anom.deviation_pct}%`}
                           </span>
                         </div>
-                        <div className="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
+                        <div className="text-[11px] text-slate mt-1 flex items-center justify-between">
                           <span>Expected: {anom.expected_value.toLocaleString()}</span>
                           <span className="font-mono">Score: {anom.anomaly_score.toFixed(1)}</span>
                         </div>
@@ -550,68 +535,71 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
               {/* Right Column: Selected Anomaly Detail & Root Cause Breakdown */}
               <div className="lg:col-span-2 space-y-4">
                 {selectedAnomaly ? (
-                  <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800/80 space-y-6">
+                  <Card className="bg-surface p-6 rounded-2xl border border-border shadow-soft space-y-6">
                     {/* Detail Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/60">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className={`px-2.5 py-0.5 rounded-md text-xs font-bold ${getSeverityBadgeClass(selectedAnomaly.severity)}`}>
+                          <Badge variant={getSeverityBadgeVariant(selectedAnomaly.severity)}>
                             {selectedAnomaly.severity}
-                          </span>
-                          <h2 className="text-base font-semibold text-white">
+                          </Badge>
+                          <h2 className="text-base font-bold text-ink">
                             {selectedAnomaly.metric_field} ({selectedAnomaly.period})
                           </h2>
                         </div>
-                        <p className="text-xs text-slate-400 mt-1">
-                          Detected via <span className="font-medium text-slate-300">{selectedAnomaly.detection_method}</span> · Score: {selectedAnomaly.anomaly_score.toFixed(2)}
+                        <p className="text-xs text-slate mt-1">
+                          Detected via <span className="font-medium text-ink">{selectedAnomaly.detection_method}</span> · Score: {selectedAnomaly.anomaly_score.toFixed(2)}
                         </p>
                       </div>
 
                       <div className="flex items-center gap-2">
                         {selectedAnomaly.status !== "ACKNOWLEDGED" && (
-                          <button
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => handleStatusUpdate(selectedAnomaly.id, "ACKNOWLEDGED")}
-                            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
                           >
                             Acknowledge
-                          </button>
+                          </Button>
                         )}
                         {selectedAnomaly.status !== "RESOLVED" && (
-                          <button
+                          <Button
+                            variant="primary"
+                            size="sm"
                             onClick={() => handleStatusUpdate(selectedAnomaly.id, "RESOLVED")}
-                            className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-medium transition-colors"
                           >
                             Mark Resolved
-                          </button>
+                          </Button>
                         )}
                         {selectedAnomaly.status !== "DISMISSED" && (
-                          <button
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => handleStatusUpdate(selectedAnomaly.id, "DISMISSED")}
-                            className="px-3 py-1.5 rounded-lg bg-slate-800/40 hover:bg-slate-800 text-slate-400 text-xs transition-colors"
                           >
                             Dismiss
-                          </button>
+                          </Button>
                         )}
                       </div>
                     </div>
 
                     {/* Metric Cards Comparison */}
                     <div className="grid grid-cols-3 gap-3">
-                      <div className="bg-slate-800/50 p-3.5 rounded-xl border border-slate-700/40">
-                        <span className="text-[11px] text-slate-400 block">Observed Value</span>
-                        <span className="text-base font-semibold text-white mt-0.5 block">
+                      <div className="bg-cloud p-3.5 rounded-xl border border-border">
+                        <span className="text-[11px] text-slate block">Observed Value</span>
+                        <span className="text-base font-bold text-ink mt-0.5 block">
                           {selectedAnomaly.observed_value.toLocaleString()}
                         </span>
                       </div>
-                      <div className="bg-slate-800/50 p-3.5 rounded-xl border border-slate-700/40">
-                        <span className="text-[11px] text-slate-400 block">Baseline Expected</span>
-                        <span className="text-base font-semibold text-slate-300 mt-0.5 block">
+                      <div className="bg-cloud p-3.5 rounded-xl border border-border">
+                        <span className="text-[11px] text-slate block">Baseline Expected</span>
+                        <span className="text-base font-bold text-slate mt-0.5 block">
                           {selectedAnomaly.expected_value.toLocaleString()}
                         </span>
                       </div>
-                      <div className="bg-slate-800/50 p-3.5 rounded-xl border border-slate-700/40">
-                        <span className="text-[11px] text-slate-400 block">Deviation Delta</span>
-                        <span className={`text-base font-semibold mt-0.5 block ${selectedAnomaly.deviation < 0 ? "text-rose-400" : "text-emerald-400"}`}>
+                      <div className="bg-cloud p-3.5 rounded-xl border border-border">
+                        <span className="text-[11px] text-slate block">Deviation Delta</span>
+                        <span className={`text-base font-bold mt-0.5 block ${selectedAnomaly.deviation < 0 ? "text-danger" : "text-teal"}`}>
                           {selectedAnomaly.deviation > 0 ? `+${selectedAnomaly.deviation.toLocaleString()}` : selectedAnomaly.deviation.toLocaleString()} ({selectedAnomaly.deviation_pct}%)
                         </span>
                       </div>
@@ -620,42 +608,42 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
                     {/* Root Cause Subgroup Breakdown */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                        <h4 className="text-xs font-semibold text-slate uppercase tracking-wider">
                           Dimensional Breakdown (Top Contributors)
                         </h4>
-                        <span className="text-[11px] text-slate-500 italic">Non-causal variance contribution</span>
+                        <span className="text-[11px] text-slate italic">Non-causal variance contribution</span>
                       </div>
 
                       {selectedAnomaly.root_causes.length === 0 ? (
-                        <div className="text-xs text-slate-500 bg-slate-800/30 p-4 rounded-xl text-center">
+                        <div className="text-xs text-slate bg-cloud p-4 rounded-xl text-center border border-border">
                           No categorical dimension was specified for root-cause decomposition.
                         </div>
                       ) : (
                         <div className="space-y-2.5">
                           {selectedAnomaly.root_causes.map((rc, idx) => (
-                            <div key={idx} className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/40 space-y-1.5">
+                            <div key={idx} className="bg-cloud p-3.5 rounded-xl border border-border space-y-1.5">
                               <div className="flex items-center justify-between text-xs">
-                                <span className="font-semibold text-white">
-                                  {rc.dimension_field}: <span className="text-sky-400">{rc.dimension_value}</span>
+                                <span className="font-semibold text-ink">
+                                  {rc.dimension_field}: <span className="text-teal">{rc.dimension_value}</span>
                                 </span>
-                                <span className="font-mono text-slate-300">{rc.contribution_pct}% contribution</span>
+                                <span className="font-mono text-slate font-medium">{rc.contribution_pct}% contribution</span>
                               </div>
-                              <div className="w-full h-1.5 bg-slate-700/60 rounded-full overflow-hidden">
+                              <div className="w-full h-2 bg-cloud-subtle rounded-full overflow-hidden border border-border-subtle">
                                 <div
-                                  className="h-full bg-gradient-to-r from-sky-500 to-amber-500 rounded-full"
+                                  className="h-full bg-teal rounded-full transition-all"
                                   style={{ width: `${Math.min(100, rc.contribution_pct)}%` }}
                                 />
                               </div>
-                              <p className="text-[11px] text-slate-400 italic">{rc.narrative}</p>
+                              <p className="text-[11px] text-slate italic">{rc.narrative}</p>
                             </div>
                           ))}
                         </div>
                       )}
                     </div>
-                  </div>
+                  </Card>
                 ) : (
-                  <div className="text-center py-20 bg-slate-900/30 rounded-2xl border border-slate-800/50">
-                    <p className="text-sm text-slate-400">Select an anomaly point to view details</p>
+                  <div className="text-center py-20 bg-surface rounded-2xl border border-border shadow-soft">
+                    <p className="text-sm text-slate">Select an anomaly point to view details</p>
                   </div>
                 )}
               </div>
@@ -664,10 +652,10 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
 
           {/* VIEW: Table Evidence Fallback */}
           {viewMode === "table" && (
-            <div className="bg-slate-900/50 rounded-2xl border border-slate-800/80 overflow-hidden">
+            <div className="bg-surface rounded-2xl border border-border shadow-soft overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="bg-slate-800/60 text-slate-400 border-b border-slate-700/60 font-medium">
+                <table className="w-full text-left text-xs text-ink">
+                  <thead className="bg-cloud text-slate border-b border-border font-semibold">
                     <tr>
                       <th className="px-4 py-3">Severity</th>
                       <th className="px-4 py-3">Period</th>
@@ -681,27 +669,29 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
                       <th className="px-4 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-border">
                     {filteredAnomalies.map((a) => (
-                      <tr key={a.id} className="hover:bg-slate-800/40 transition-colors">
+                      <tr key={a.id} className="hover:bg-cloud-subtle transition-colors">
                         <td className="px-4 py-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${getSeverityBadgeClass(a.severity)}`}>
+                          <Badge variant={getSeverityBadgeVariant(a.severity)}>
                             {a.severity}
-                          </span>
+                          </Badge>
                         </td>
-                        <td className="px-4 py-3 font-mono text-white">{a.period}</td>
-                        <td className="px-4 py-3 font-medium text-slate-200">{a.metric_field}</td>
-                        <td className="px-4 py-3 font-mono text-white">{a.observed_value.toLocaleString()}</td>
-                        <td className="px-4 py-3 font-mono text-slate-400">{a.expected_value.toLocaleString()}</td>
+                        <td className="px-4 py-3 font-mono text-ink font-semibold">{a.period}</td>
+                        <td className="px-4 py-3 font-medium text-ink">{a.metric_field}</td>
+                        <td className="px-4 py-3 font-mono text-ink">{a.observed_value.toLocaleString()}</td>
+                        <td className="px-4 py-3 font-mono text-slate">{a.expected_value.toLocaleString()}</td>
                         <td className="px-4 py-3 font-mono">
-                          <span className={a.deviation < 0 ? "text-rose-400" : "text-emerald-400"}>
+                          <span className={a.deviation < 0 ? "text-danger font-semibold" : "text-teal font-semibold"}>
                             {a.deviation > 0 ? `+${a.deviation.toLocaleString()}` : a.deviation.toLocaleString()} ({a.deviation_pct}%)
                           </span>
                         </td>
-                        <td className="px-4 py-3 font-mono">{a.anomaly_score.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-slate-400">{a.detection_method}</td>
+                        <td className="px-4 py-3 font-mono text-ink">{a.anomaly_score.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-slate">{a.detection_method}</td>
                         <td className="px-4 py-3">
-                          <span className="text-slate-300">{a.status}</span>
+                          <Badge variant={a.status === "RESOLVED" ? "teal" : a.status === "ACKNOWLEDGED" ? "blue" : "outline"}>
+                            {a.status}
+                          </Badge>
                         </td>
                         <td className="px-4 py-3 text-right">
                           <button
@@ -709,7 +699,7 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
                               setSelectedAnomaly(a);
                               setViewMode("chart");
                             }}
-                            className="text-sky-400 hover:text-sky-300 font-medium"
+                            className="text-teal hover:underline font-semibold"
                           >
                             Inspect
                           </button>

@@ -207,14 +207,14 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
   return (
     <div className="space-y-6">
       {/* Top Header Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-gradient-to-r from-teal-900/30 via-slate-900/40 to-slate-900/20 border border-teal-500/20">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border shadow-soft">
         <div>
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-teal-400" />
-            <h3 className="font-semibold text-white text-base">Deterministic Analytics Engine</h3>
+            <Sparkles className="w-5 h-5 text-teal" />
+            <h3 className="font-semibold text-ink text-base">Deterministic Analytics Engine</h3>
             <Badge variant="teal">DuckDB Powered</Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate mt-1">
             Execute verified mathematical computations, aggregations, distributions, and statistical models.
           </p>
         </div>
@@ -222,7 +222,8 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
         <Button
           onClick={handleRunAnalysis}
           disabled={loading}
-          className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold shadow-lg shadow-teal-500/20 gap-2"
+          variant="primary"
+          className="gap-2"
         >
           {loading ? (
             <>
@@ -241,15 +242,15 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
       {/* Analytics Configuration Controls Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Step 1: Operation Selection */}
-        <Card className="bg-slate-900/60 border-slate-800">
+        <Card className="bg-surface border-border shadow-soft">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-teal-400" />
+            <CardTitle className="text-sm font-semibold text-ink flex items-center gap-2">
+              <Layers className="w-4 h-4 text-teal" />
               1. Analytical Tool
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <label className="text-xs text-slate-400 font-medium">Select Analysis Operation</label>
+            <label className="text-xs text-slate font-medium">Select Analysis Operation</label>
             <select
               value={operation}
               onChange={(e) => {
@@ -257,7 +258,7 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                 setResult(null);
                 setError(null);
               }}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+              className="w-full bg-surface border border-border rounded-xl p-2.5 text-sm text-ink focus:outline-none focus:border-teal"
             >
               <optgroup label="Aggregation & Grouping">
                 <option value="group_by">Group By & Aggregate</option>
@@ -276,7 +277,7 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
               </optgroup>
             </select>
 
-            <p className="text-[11px] text-slate-500 leading-relaxed">
+            <p className="text-[11px] text-slate leading-relaxed">
               {operation === "group_by" && "Groups records by dimension keys and computes SQL sums, averages, and counts."}
               {operation === "describe_dataset" && "Calculates quartiles, means, standard deviations, and missing counts."}
               {operation === "correlation" && "Calculates Pearson correlation coefficients and sample sizes."}
@@ -291,10 +292,10 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
         </Card>
 
         {/* Step 2: Parameter Configuration */}
-        <Card className="bg-slate-900/60 border-slate-800">
+        <Card className="bg-surface border-border shadow-soft">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-blue-400" />
+            <CardTitle className="text-sm font-semibold text-ink flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-blue" />
               2. Target Parameters
             </CardTitle>
           </CardHeader>
@@ -303,11 +304,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
             {operation === "group_by" && (
               <>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Group Dimension</label>
+                  <label className="text-xs text-slate font-medium">Group Dimension</label>
                   <select
                     value={dimension}
                     onChange={(e) => setDimension(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
                     {allColumns.map((c) => (
                       <option key={c} value={c}>
@@ -317,11 +318,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Target Metric</label>
+                  <label className="text-xs text-slate font-medium">Target Metric</label>
                   <select
                     value={metric}
                     onChange={(e) => setMetric(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
                     {numericColumns.map((c) => (
                       <option key={c} value={c}>
@@ -331,11 +332,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Aggregation Function</label>
+                  <label className="text-xs text-slate font-medium">Aggregation Function</label>
                   <select
                     value={aggregation}
                     onChange={(e) => setAggregation(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
                     <option value="SUM">SUM</option>
                     <option value="AVG">AVG (Average)</option>
@@ -351,10 +352,10 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
             {/* Correlation Parameters */}
             {operation === "correlation" && (
               <div>
-                <label className="text-xs text-slate-400 font-medium">Select Numeric Columns (2+)</label>
-                <div className="mt-1 space-y-1.5 max-h-40 overflow-y-auto p-2 bg-slate-950 border border-slate-800 rounded-lg">
+                <label className="text-xs text-slate font-medium">Select Numeric Columns (2+)</label>
+                <div className="mt-1 space-y-1.5 max-h-40 overflow-y-auto p-2 bg-cloud border border-border rounded-xl">
                   {numericColumns.map((c) => (
-                    <label key={c} className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                    <label key={c} className="flex items-center gap-2 text-xs text-ink cursor-pointer">
                       <input
                         type="checkbox"
                         checked={selectedColumns.includes(c)}
@@ -365,7 +366,7 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                             setSelectedColumns(selectedColumns.filter((col) => col !== c));
                           }
                         }}
-                        className="rounded border-slate-700 text-teal-500 focus:ring-teal-500"
+                        className="rounded border-border text-teal focus:ring-teal"
                       />
                       {c}
                     </label>
@@ -378,11 +379,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
             {operation === "distribution" && (
               <>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Numeric Column</label>
+                  <label className="text-xs text-slate font-medium">Numeric Column</label>
                   <select
                     value={metric}
                     onChange={(e) => setMetric(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
                     {numericColumns.map((c) => (
                       <option key={c} value={c}>
@@ -392,14 +393,14 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Histogram Bins ({bins})</label>
+                  <label className="text-xs text-slate font-medium">Histogram Bins ({bins})</label>
                   <input
                     type="range"
                     min="4"
                     max="30"
                     value={bins}
                     onChange={(e) => setBins(Number(e.target.value))}
-                    className="w-full mt-1 accent-teal-500"
+                    className="w-full mt-1 accent-teal"
                   />
                 </div>
               </>
@@ -409,11 +410,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
             {operation === "time_series_summary" && (
               <>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Date / Time Column</label>
+                  <label className="text-xs text-slate font-medium">Date / Time Column</label>
                   <select
                     value={dateColumn}
                     onChange={(e) => setDateColumn(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
                     {allColumns.map((c) => (
                       <option key={c} value={c}>
@@ -423,11 +424,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Period Granularity</label>
+                  <label className="text-xs text-slate font-medium">Period Granularity</label>
                   <select
                     value={period}
                     onChange={(e) => setPeriod(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
                     <option value="day">Day</option>
                     <option value="week">Week</option>
@@ -437,11 +438,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Metric (Optional)</label>
+                  <label className="text-xs text-slate font-medium">Metric (Optional)</label>
                   <select
                     value={metric}
                     onChange={(e) => setMetric(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
                     <option value="">Count Only</option>
                     {numericColumns.map((c) => (
@@ -457,11 +458,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
             {/* Frequency / Compare / Outlier Fallbacks */}
             {(operation === "frequency" || operation === "compare_groups" || operation === "outlier_analysis" || operation === "percent_change") && (
               <div>
-                <label className="text-xs text-slate-400 font-medium">Target Column</label>
+                <label className="text-xs text-slate font-medium">Target Column</label>
                 <select
                   value={operation === "frequency" ? dimension : metric}
                   onChange={(e) => (operation === "frequency" ? setDimension(e.target.value) : setMetric(e.target.value))}
-                  className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                  className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                 >
                   {(operation === "frequency" ? allColumns : numericColumns).map((c) => (
                     <option key={c} value={c}>
@@ -475,20 +476,20 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
         </Card>
 
         {/* Step 3: Optional Filter Predicate */}
-        <Card className="bg-slate-900/60 border-slate-800">
+        <Card className="bg-surface border-border shadow-soft">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-              <Filter className="w-4 h-4 text-purple-400" />
+            <CardTitle className="text-sm font-semibold text-ink flex items-center gap-2">
+              <Filter className="w-4 h-4 text-amber" />
               3. Scope Filters (Optional)
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div>
-              <label className="text-xs text-slate-400 font-medium">Filter Column</label>
+              <label className="text-xs text-slate font-medium">Filter Column</label>
               <select
                 value={filterColumn}
                 onChange={(e) => setFilterColumn(e.target.value)}
-                className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-teal-500"
+                className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
               >
                 <option value="">No Filter Applied</option>
                 {allColumns.map((c) => (
@@ -502,11 +503,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
             {filterColumn && (
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Operator</label>
+                  <label className="text-xs text-slate font-medium">Operator</label>
                   <select
                     value={filterOperator}
                     onChange={(e) => setFilterOperator(e.target.value)}
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-xs text-ink focus:outline-none"
                   >
                     <option value="=">=</option>
                     <option value="!=">!=</option>
@@ -517,13 +518,13 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Value</label>
+                  <label className="text-xs text-slate font-medium">Value</label>
                   <input
                     type="text"
                     value={filterValue}
                     onChange={(e) => setFilterValue(e.target.value)}
                     placeholder="e.g. North, 100"
-                    className="w-full mt-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-teal-500"
+                    className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-xs text-ink focus:outline-none focus:border-teal"
                   />
                 </div>
               </div>
@@ -534,11 +535,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
 
       {/* Error Display */}
       {error && (
-        <div className="p-4 rounded-xl bg-red-950/40 border border-red-500/30 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
+        <div className="p-4 rounded-xl bg-danger/10 border border-danger/20 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-danger mt-0.5 shrink-0" />
           <div>
-            <h4 className="text-sm font-semibold text-red-200">Analysis Error</h4>
-            <p className="text-xs text-red-300/90 mt-0.5">{error}</p>
+            <h4 className="text-sm font-semibold text-danger">Analysis Error</h4>
+            <p className="text-xs text-danger/90 mt-0.5">{error}</p>
           </div>
         </div>
       )}
@@ -547,19 +548,19 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
       {result && (
         <div className="space-y-6">
           {/* Metadata & Performance Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border shadow-soft">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal-400" />
+              <CheckCircle2 className="w-5 h-5 text-teal" />
               <div>
-                <span className="text-sm font-medium text-white capitalize">{result.operation.replace(/_/g, " ")} Result</span>
-                <span className="text-xs text-slate-400 ml-2">({result.row_count} rows returned)</span>
+                <span className="text-sm font-semibold text-ink capitalize">{result.operation.replace(/_/g, " ")} Result</span>
+                <span className="text-xs text-slate ml-2">({result.row_count} rows returned)</span>
               </div>
             </div>
 
             <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1.5 text-slate-300">
-                <Clock className="w-3.5 h-3.5 text-teal-400" />
-                Execution: <strong>{result.execution_time_ms} ms</strong>
+              <span className="flex items-center gap-1.5 text-slate">
+                <Clock className="w-3.5 h-3.5 text-teal" />
+                Execution: <strong className="text-ink">{result.execution_time_ms} ms</strong>
               </span>
               <Badge variant="outline" className="text-[11px] font-mono">
                 ID: {result.analysis_id.slice(0, 8)}...
@@ -573,10 +574,10 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
               {Object.entries(result.summary)
                 .slice(0, 4)
                 .map(([k, v]) => (
-                  <Card key={k} className="bg-slate-900/40 border-slate-800/80">
+                  <Card key={k} className="bg-surface border-border shadow-soft">
                     <CardContent className="p-4">
-                      <span className="text-xs text-slate-400 capitalize">{k.replace(/_/g, " ")}</span>
-                      <p className="text-lg font-semibold text-white mt-1 truncate">
+                      <span className="text-xs text-slate capitalize">{k.replace(/_/g, " ")}</span>
+                      <p className="text-lg font-bold text-ink mt-1 truncate">
                         {v !== null && v !== undefined ? String(v) : "—"}
                       </p>
                     </CardContent>
@@ -586,17 +587,17 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
           )}
 
           {/* Tabular Result View */}
-          <Card className="bg-slate-900/60 border-slate-800">
-            <CardHeader className="pb-3 border-b border-slate-800/60">
-              <CardTitle className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                <TableIcon className="w-4 h-4 text-teal-400" />
+          <Card className="bg-surface border-border shadow-soft">
+            <CardHeader className="pb-3 border-b border-border">
+              <CardTitle className="text-sm font-semibold text-ink flex items-center gap-2">
+                <TableIcon className="w-4 h-4 text-teal" />
                 Structured Dataset Result
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-950/80 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                  <thead className="bg-cloud text-xs font-semibold text-slate uppercase tracking-wider border-b border-border">
                     <tr>
                       {result.columns.map((col) => (
                         <th key={col} className="px-4 py-3">
@@ -605,21 +606,21 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-border">
                     {result.rows.length === 0 ? (
                       <tr>
-                        <td colSpan={result.columns.length} className="px-4 py-8 text-center text-slate-500">
+                        <td colSpan={result.columns.length} className="px-4 py-8 text-center text-slate">
                           No matching records returned.
                         </td>
                       </tr>
                     ) : (
                       result.rows.map((row, idx) => (
-                        <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
+                        <tr key={idx} className="hover:bg-cloud-subtle transition-colors">
                           {result.columns.map((col) => {
                             const val = row[col];
                             return (
-                              <td key={col} className="px-4 py-3 text-slate-300 font-mono text-xs">
-                                {val !== null && val !== undefined ? String(val) : <span className="text-slate-600">null</span>}
+                              <td key={col} className="px-4 py-3 text-ink font-mono text-xs">
+                                {val !== null && val !== undefined ? String(val) : <span className="text-slate/60">null</span>}
                               </td>
                             );
                           })}
@@ -634,15 +635,15 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
 
           {/* Provenance Card */}
           {result.provenance && (
-            <div className="p-3.5 rounded-lg bg-slate-950/60 border border-slate-800/60 text-xs text-slate-400 flex flex-wrap items-center justify-between gap-2">
+            <div className="p-3.5 rounded-xl bg-surface border border-border shadow-soft text-xs text-slate flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <Activity className="w-3.5 h-3.5 text-teal-400" />
+                <Activity className="w-3.5 h-3.5 text-teal" />
                 <span>Deterministic Provenance:</span>
-                <span className="font-mono text-[11px] text-slate-300">
+                <span className="font-mono text-[11px] text-ink font-medium">
                   Version {result.provenance.dataset_version_id.slice(0, 8)}... | Tool v{result.provenance.tool_version}
                 </span>
               </div>
-              <span className="text-[11px] text-slate-500">{result.provenance.timestamp}</span>
+              <span className="text-[11px] text-slate">{result.provenance.timestamp}</span>
             </div>
           )}
         </div>

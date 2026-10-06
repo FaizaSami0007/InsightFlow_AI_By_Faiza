@@ -22,6 +22,9 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ForecastWorkspaceProps {
   dataset?: Dataset;
@@ -53,10 +56,6 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
-
-  // Available numeric & datetime columns for selected dataset
-  const currentDataset =
-    initialDataset || datasets.find((d) => d.id === selectedDatasetId);
 
   useEffect(() => {
     if (initialDataset?.id) {
@@ -129,7 +128,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
 
     if (hist.length === 0 && pred.length === 0) {
       return (
-        <div className="p-8 text-center text-slate-500">
+        <div className="p-8 text-center text-slate bg-surface rounded-xl border border-border">
           No temporal observations available to render chart.
         </div>
       );
@@ -185,21 +184,25 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
     const ribbonPolygon = `${upperRibbon.join(" ")} ${lowerRibbon.join(" ")}`;
 
     return (
-      <div className="w-full bg-slate-900/60 border border-slate-800 rounded-xl p-4 backdrop-blur-md">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
-            <span className="inline-block w-3 h-3 rounded-full bg-blue-500"></span>
-            <span className="text-xs text-slate-300 font-medium">Historical Series</span>
-            <span className="inline-block w-3 h-3 rounded-full bg-emerald-400 ml-3"></span>
-            <span className="text-xs text-emerald-300 font-medium">Point Forecast</span>
-            <span className="inline-block w-3 h-3 rounded-sm bg-emerald-500/20 border border-emerald-400/40 ml-3"></span>
-            <span className="text-xs text-slate-400">
+      <div className="w-full bg-surface border border-border rounded-2xl p-5 shadow-soft">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div className="flex items-center space-x-3 text-xs">
+            <span className="flex items-center gap-1.5 font-medium text-ink">
+              <span className="inline-block w-3 h-3 rounded-full bg-blue"></span>
+              Historical Series
+            </span>
+            <span className="flex items-center gap-1.5 font-medium text-teal">
+              <span className="inline-block w-3 h-3 rounded-full bg-teal"></span>
+              Point Forecast
+            </span>
+            <span className="flex items-center gap-1.5 text-slate">
+              <span className="inline-block w-3 h-3 rounded-sm bg-teal-soft border border-teal-border"></span>
               {Math.round(forecastResult.confidence_level * 100)}% Prediction Interval
             </span>
           </div>
-          <span className="text-xs text-slate-400 font-mono">
+          <Badge variant="teal" className="font-mono text-xs">
             Model: {forecastResult.selected_model_name}
-          </span>
+          </Badge>
         </div>
 
         <svg
@@ -218,7 +221,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
                   y1={y}
                   x2={width - padding.right}
                   y2={y}
-                  stroke="rgba(148, 163, 184, 0.12)"
+                  stroke="#E3E8EF"
                   strokeDasharray="3 3"
                 />
                 <text
@@ -226,7 +229,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
                   y={y + 4}
                   textAnchor="end"
                   fontSize="10"
-                  fill="#94a3b8"
+                  fill="#536176"
                   fontFamily="monospace"
                 >
                   {val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val.toFixed(0)}
@@ -238,8 +241,8 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
           {/* Uncertainty Band Polygon */}
           <polygon
             points={ribbonPolygon}
-            fill="rgba(16, 185, 129, 0.15)"
-            stroke="rgba(16, 185, 129, 0.3)"
+            fill="rgba(15, 118, 110, 0.12)"
+            stroke="rgba(15, 118, 110, 0.3)"
             strokeDasharray="2 2"
           />
 
@@ -247,7 +250,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
           <path
             d={histPath}
             fill="none"
-            stroke="#3b82f6"
+            stroke="#2563EB"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -260,8 +263,8 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
               cx={getX(i)}
               cy={getY(pt.actual)}
               r="3.5"
-              fill="#1e293b"
-              stroke="#3b82f6"
+              fill="#FFFFFF"
+              stroke="#2563EB"
               strokeWidth="2"
             />
           ))}
@@ -270,7 +273,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
           <path
             d={forecastPath}
             fill="none"
-            stroke="#10b981"
+            stroke="#0F766E"
             strokeWidth="2.5"
             strokeDasharray="4 3"
             strokeLinecap="round"
@@ -287,8 +290,8 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
                   cx={cx}
                   cy={cy}
                   r="4"
-                  fill="#10b981"
-                  stroke="#0f172a"
+                  fill="#0F766E"
+                  stroke="#FFFFFF"
                   strokeWidth="2"
                 />
               </g>
@@ -305,7 +308,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
                 y={height - 12}
                 textAnchor="middle"
                 fontSize="10"
-                fill="#94a3b8"
+                fill="#536176"
               >
                 {h.date.substring(0, 7)}
               </text>
@@ -319,7 +322,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
               y={height - 12}
               textAnchor="middle"
               fontSize="10"
-              fill="#34d399"
+              fill="#0F766E"
               fontWeight="600"
             >
               {p.date.substring(0, 7)}
@@ -333,66 +336,51 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
   return (
     <div className="w-full space-y-6">
       {/* Header & Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
         <div>
           <div className="flex items-center space-x-2">
-            <TrendingUp className="w-6 h-6 text-emerald-400" />
-            <h2 className="text-xl font-bold text-white tracking-tight">
+            <TrendingUp className="w-6 h-6 text-teal" />
+            <h2 className="text-xl font-bold text-ink tracking-tight">
               Predictive Analytics & Forecasting Intelligence
             </h2>
           </div>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs text-slate mt-1">
             Deterministic time-series forecasting with chronological cross-validation and prediction intervals.
           </p>
         </div>
 
         <div className="flex items-center space-x-3">
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setViewMode(viewMode === "chart" ? "table" : "chart")}
-            className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition"
+            leftIcon={viewMode === "chart" ? <TableIcon className="w-3.5 h-3.5" /> : <BarChart3 className="w-3.5 h-3.5" />}
           >
-            {viewMode === "chart" ? (
-              <>
-                <TableIcon className="w-3.5 h-3.5 text-slate-400" />
-                <span>Table Fallback</span>
-              </>
-            ) : (
-              <>
-                <BarChart3 className="w-3.5 h-3.5 text-slate-400" />
-                <span>Chart View</span>
-              </>
-            )}
-          </button>
+            {viewMode === "chart" ? "Table Fallback" : "Chart View"}
+          </Button>
 
-          <button
+          <Button
+            variant="primary"
+            size="sm"
             onClick={handleRunForecast}
             disabled={isLoading || !targetField || !timeField}
-            className="flex items-center space-x-2 px-4 py-2 text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-600 text-white rounded-lg shadow-lg shadow-emerald-900/20 transition"
+            isLoading={isLoading}
+            leftIcon={<Zap className="w-4 h-4" />}
           >
-            {isLoading ? (
-              <>
-                <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                <span>Executing…</span>
-              </>
-            ) : (
-              <>
-                <Zap className="w-4 h-4 text-emerald-200" />
-                <span>Run Forecast</span>
-              </>
-            )}
-          </button>
+            Run Forecast
+          </Button>
         </div>
       </div>
 
       {/* Control Panel Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-900/40 p-4 rounded-xl border border-slate-800">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-surface p-5 rounded-2xl border border-border shadow-soft">
         {/* Dataset Selection */}
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1">Dataset</label>
+          <label className="block text-xs font-medium text-slate mb-1">Dataset</label>
           <select
             value={selectedDatasetId}
             onChange={(e) => setSelectedDatasetId(e.target.value)}
-            className="w-full bg-slate-800 text-slate-200 text-sm rounded-lg border border-slate-700 px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+            className="w-full bg-surface text-ink text-sm rounded-xl border border-border px-3 py-2 focus:ring-2 focus:ring-teal outline-none"
           >
             {datasets.map((d) => (
               <option key={d.id} value={d.id}>
@@ -404,7 +392,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
 
         {/* Target Field */}
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1">
+          <label className="block text-xs font-medium text-slate mb-1">
             Target Variable (Numeric)
           </label>
           <input
@@ -412,13 +400,13 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
             placeholder="e.g. revenue, sales, orders"
             value={targetField}
             onChange={(e) => setTargetField(e.target.value)}
-            className="w-full bg-slate-800 text-slate-200 text-sm rounded-lg border border-slate-700 px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+            className="w-full bg-surface text-ink text-sm rounded-xl border border-border px-3 py-2 focus:ring-2 focus:ring-teal outline-none"
           />
         </div>
 
         {/* Time Field */}
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1">
+          <label className="block text-xs font-medium text-slate mb-1">
             Time / Date Column
           </label>
           <input
@@ -426,13 +414,13 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
             placeholder="e.g. order_date, date, timestamp"
             value={timeField}
             onChange={(e) => setTimeField(e.target.value)}
-            className="w-full bg-slate-800 text-slate-200 text-sm rounded-lg border border-slate-700 px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+            className="w-full bg-surface text-ink text-sm rounded-xl border border-border px-3 py-2 focus:ring-2 focus:ring-teal outline-none"
           />
         </div>
 
         {/* Horizon */}
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1">
+          <label className="block text-xs font-medium text-slate mb-1">
             Forecast Horizon ({horizon} periods)
           </label>
           <input
@@ -441,7 +429,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
             max="36"
             value={horizon}
             onChange={(e) => setHorizon(parseInt(e.target.value, 10))}
-            className="w-full accent-emerald-500 mt-2"
+            className="w-full accent-teal mt-2"
           />
         </div>
       </div>
@@ -450,19 +438,19 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
       <div>
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="text-xs text-slate-400 hover:text-slate-300 font-medium flex items-center space-x-1"
+          className="text-xs text-teal hover:underline font-medium flex items-center space-x-1"
         >
           <span>{showAdvanced ? "Hide Advanced Options" : "Show Advanced Options (Model, Confidence, Frequency)"}</span>
         </button>
 
         {showAdvanced && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 bg-slate-900/30 p-4 rounded-xl border border-slate-800/80">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 bg-surface p-4 rounded-2xl border border-border shadow-soft">
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">Algorithm Strategy</label>
+              <label className="block text-xs font-medium text-slate mb-1">Algorithm Strategy</label>
               <select
                 value={modelType}
                 onChange={(e) => setModelType(e.target.value as ForecastModelType)}
-                className="w-full bg-slate-800 text-slate-200 text-sm rounded-lg border border-slate-700 px-3 py-2 outline-none"
+                className="w-full bg-surface text-ink text-sm rounded-xl border border-border px-3 py-2 outline-none"
               >
                 <option value="AUTO">AUTO (Cross-Validated Best)</option>
                 <option value="NAIVE">Naive Baseline</option>
@@ -475,11 +463,11 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">Confidence Level</label>
+              <label className="block text-xs font-medium text-slate mb-1">Confidence Level</label>
               <select
                 value={confidenceLevel}
                 onChange={(e) => setConfidenceLevel(parseFloat(e.target.value))}
-                className="w-full bg-slate-800 text-slate-200 text-sm rounded-lg border border-slate-700 px-3 py-2 outline-none"
+                className="w-full bg-surface text-ink text-sm rounded-xl border border-border px-3 py-2 outline-none"
               >
                 <option value={0.8}>80% Prediction Interval</option>
                 <option value={0.9}>90% Prediction Interval</option>
@@ -488,11 +476,11 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">Timeline Frequency</label>
+              <label className="block text-xs font-medium text-slate mb-1">Timeline Frequency</label>
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value)}
-                className="w-full bg-slate-800 text-slate-200 text-sm rounded-lg border border-slate-700 px-3 py-2 outline-none"
+                className="w-full bg-surface text-ink text-sm rounded-xl border border-border px-3 py-2 outline-none"
               >
                 <option value="D">Daily (D)</option>
                 <option value="W">Weekly (W)</option>
@@ -508,9 +496,9 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
                 id="allowNegative"
                 checked={allowNegative}
                 onChange={(e) => setAllowNegative(e.target.checked)}
-                className="accent-emerald-500 rounded"
+                className="accent-teal rounded"
               />
-              <label htmlFor="allowNegative" className="text-xs text-slate-300">
+              <label htmlFor="allowNegative" className="text-xs text-ink">
                 Allow Negative Forecast Values
               </label>
             </div>
@@ -520,20 +508,20 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
 
       {/* Loading Progress State */}
       {isLoading && (
-        <div className="p-4 bg-emerald-950/20 border border-emerald-800/40 rounded-xl flex items-center space-x-3">
-          <RefreshCw className="w-5 h-5 text-emerald-400 animate-spin flex-shrink-0" />
+        <div className="p-4 bg-teal-soft border border-teal-border rounded-xl flex items-center space-x-3">
+          <RefreshCw className="w-5 h-5 text-teal animate-spin flex-shrink-0" />
           <div>
-            <div className="text-sm font-semibold text-emerald-300">Forecasting in progress</div>
-            <div className="text-xs text-emerald-400/80">{progressStep}</div>
+            <div className="text-sm font-semibold text-teal">Forecasting in progress</div>
+            <div className="text-xs text-slate">{progressStep}</div>
           </div>
         </div>
       )}
 
       {/* Error State */}
       {errorMessage && (
-        <div className="p-4 bg-rose-950/20 border border-rose-800/40 rounded-xl flex items-center space-x-3">
-          <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0" />
-          <div className="text-sm text-rose-200">{errorMessage}</div>
+        <div className="p-4 bg-danger/10 border border-danger/20 rounded-xl flex items-center space-x-3">
+          <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
+          <div className="text-sm text-danger">{errorMessage}</div>
         </div>
       )}
 
@@ -543,27 +531,27 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
           {viewMode === "chart" ? (
             renderForecastChart()
           ) : (
-            <div className="w-full bg-slate-900/60 border border-slate-800 rounded-xl p-4 overflow-x-auto">
-              <h3 className="text-sm font-semibold text-white mb-3 flex items-center space-x-2">
-                <TableIcon className="w-4 h-4 text-emerald-400" />
+            <div className="w-full bg-surface border border-border rounded-2xl p-4 overflow-x-auto shadow-soft">
+              <h3 className="text-sm font-semibold text-ink mb-3 flex items-center space-x-2">
+                <TableIcon className="w-4 h-4 text-teal" />
                 <span>Forecast Data Points & Prediction Bounds</span>
               </h3>
-              <table className="w-full text-left text-xs text-slate-300">
+              <table className="w-full text-left text-xs text-ink">
                 <thead>
-                  <tr className="border-b border-slate-800 text-slate-400">
-                    <th className="py-2 px-3 font-semibold">Period Date</th>
-                    <th className="py-2 px-3 font-semibold">Point Forecast</th>
-                    <th className="py-2 px-3 font-semibold">Lower Bound ({Math.round(forecastResult.confidence_level * 100)}%)</th>
-                    <th className="py-2 px-3 font-semibold">Upper Bound ({Math.round(forecastResult.confidence_level * 100)}%)</th>
+                  <tr className="border-b border-border text-slate font-semibold">
+                    <th className="py-2.5 px-3">Period Date</th>
+                    <th className="py-2.5 px-3">Point Forecast</th>
+                    <th className="py-2.5 px-3">Lower Bound ({Math.round(forecastResult.confidence_level * 100)}%)</th>
+                    <th className="py-2.5 px-3">Upper Bound ({Math.round(forecastResult.confidence_level * 100)}%)</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-border">
                   {forecastResult.predictions.map((p, idx) => (
-                    <tr key={idx} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                      <td className="py-2 px-3 font-mono text-emerald-400">{p.date}</td>
-                      <td className="py-2 px-3 font-semibold text-white">{p.forecast.toFixed(2)}</td>
-                      <td className="py-2 px-3 text-slate-400">{p.lower.toFixed(2)}</td>
-                      <td className="py-2 px-3 text-slate-400">{p.upper.toFixed(2)}</td>
+                    <tr key={idx} className="hover:bg-cloud-subtle">
+                      <td className="py-2.5 px-3 font-mono text-teal font-semibold">{p.date}</td>
+                      <td className="py-2.5 px-3 font-semibold text-ink">{p.forecast.toFixed(2)}</td>
+                      <td className="py-2.5 px-3 text-slate">{p.lower.toFixed(2)}</td>
+                      <td className="py-2.5 px-3 text-slate">{p.upper.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -573,43 +561,43 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
 
           {/* Diagnostics and Model Evaluation Card */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
-              <div className="text-xs text-slate-400 font-medium">Selected Model</div>
-              <div className="text-base font-bold text-white mt-1">
+            <div className="bg-surface border border-border rounded-2xl p-4 shadow-soft">
+              <div className="text-xs text-slate font-medium">Selected Model</div>
+              <div className="text-base font-bold text-ink mt-1">
                 {forecastResult.selected_model_name}
               </div>
-              <div className="text-xs text-emerald-400 mt-2 flex items-center space-x-1">
+              <div className="text-xs text-teal mt-2 flex items-center space-x-1 font-semibold">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>{forecastResult.metrics.relative_improvement_pct >= 0 ? `+${forecastResult.metrics.relative_improvement_pct}% vs baseline` : "Baseline Selected"}</span>
               </div>
             </div>
 
-            <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
-              <div className="text-xs text-slate-400 font-medium">Holdout Backtest MAE</div>
-              <div className="text-base font-bold text-white mt-1">
+            <div className="bg-surface border border-border rounded-2xl p-4 shadow-soft">
+              <div className="text-xs text-slate font-medium">Holdout Backtest MAE</div>
+              <div className="text-base font-bold text-ink mt-1">
                 {forecastResult.metrics.mae.toFixed(2)}
               </div>
-              <div className="text-xs text-slate-400 mt-2">
+              <div className="text-xs text-slate mt-2">
                 RMSE: {forecastResult.metrics.rmse.toFixed(2)}
               </div>
             </div>
 
-            <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
-              <div className="text-xs text-slate-400 font-medium">Mean Error (MAPE / sMAPE)</div>
-              <div className="text-base font-bold text-white mt-1">
+            <div className="bg-surface border border-border rounded-2xl p-4 shadow-soft">
+              <div className="text-xs text-slate font-medium">Mean Error (MAPE / sMAPE)</div>
+              <div className="text-base font-bold text-ink mt-1">
                 {forecastResult.metrics.mape.toFixed(1)}% / {forecastResult.metrics.smape.toFixed(1)}%
               </div>
-              <div className="text-xs text-slate-400 mt-2">
+              <div className="text-xs text-slate mt-2">
                 Baseline MAE: {forecastResult.metrics.baseline_mae.toFixed(2)}
               </div>
             </div>
 
-            <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4">
-              <div className="text-xs text-slate-400 font-medium">Diagnostics</div>
-              <div className="text-sm font-semibold text-white mt-1">
+            <div className="bg-surface border border-border rounded-2xl p-4 shadow-soft">
+              <div className="text-xs text-slate font-medium">Diagnostics</div>
+              <div className="text-sm font-semibold text-ink mt-1">
                 {forecastResult.diagnostics.observations_count} Observations
               </div>
-              <div className="text-xs text-slate-400 mt-2">
+              <div className="text-xs text-slate mt-2">
                 {forecastResult.diagnostics.seasonality_detected
                   ? `Seasonality: Period ${forecastResult.diagnostics.seasonality_period || 12}`
                   : "No Seasonality Detected"}
@@ -618,15 +606,15 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
           </div>
 
           {/* Provenance Footer */}
-          <div className="p-3 bg-slate-950/50 border border-slate-800/80 rounded-lg flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
+          <div className="p-3.5 bg-surface border border-border rounded-xl flex flex-wrap items-center justify-between text-xs text-slate gap-2 shadow-soft">
             <div className="flex items-center space-x-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-teal" />
               <span>
-                Forecast Provenance: Dataset Version <code className="text-slate-300">{forecastResult.dataset_version_id.substring(0, 8)}</code>
+                Forecast Provenance: Dataset Version <code className="text-ink font-semibold">{forecastResult.dataset_version_id.substring(0, 8)}</code>
               </span>
             </div>
             <div>
-              Execution Time: <span className="text-slate-300">{forecastResult.execution_time_ms} ms</span>
+              Execution Time: <span className="text-ink font-semibold">{forecastResult.execution_time_ms} ms</span>
             </div>
           </div>
         </div>
