@@ -107,28 +107,29 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
       const colRes = await fetch(`${apiBase}/api/v1/knowledge/collections`, { headers });
       if (colRes.ok) {
         const colData = await colRes.json();
-        setCollections(colData);
+        setCollections(Array.isArray(colData) ? colData : colData?.items || colData?.collections || []);
       }
 
       // Fetch documents
       const docRes = await fetch(`${apiBase}/api/v1/knowledge/documents`, { headers });
       if (docRes.ok) {
         const docData = await docRes.json();
-        setDocuments(docData.items || docData.documents || []);
+        setDocuments(Array.isArray(docData) ? docData : docData?.items || docData?.documents || []);
       }
 
       // Fetch datasets if empty
-      if (datasets.length === 0) {
+      if (!Array.isArray(datasets) || datasets.length === 0) {
         const dsRes = await fetch(`${apiBase}/api/v1/datasets`, { headers });
         if (dsRes.ok) {
           const dsData = await dsRes.json();
-          setDatasets(dsData.datasets || dsData || []);
+          const items = Array.isArray(dsData) ? dsData : dsData?.items || dsData?.datasets || [];
+          setDatasets(items);
         }
       }
     } catch (err) {
       console.error("Failed to load knowledge data", err);
     }
-  }, [apiBase, token, datasets.length]);
+  }, [apiBase, token, datasets]);
 
   useEffect(() => {
     fetchData();
@@ -778,7 +779,7 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
                   className="w-full text-xs rounded-xl border border-border bg-background px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                 >
                   <option value="">-- Choose Dataset --</option>
-                  {datasets.map((d) => (
+                  {(Array.isArray(datasets) ? datasets : []).map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.name || d.id}
                     </option>
@@ -794,7 +795,7 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
                   className="w-full text-xs rounded-xl border border-border bg-background px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                 >
                   <option value="">-- Choose Document --</option>
-                  {documents.map((d) => (
+                  {(Array.isArray(documents) ? documents : []).map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.title} (v{d.current_version_num})
                     </option>
@@ -818,11 +819,11 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
           {/* Links View */}
           <div className="bg-surface rounded-2xl border border-border shadow-soft p-6">
             <h3 className="text-sm font-semibold text-ink mb-3">Active Dataset-Knowledge Associations</h3>
-            {links.length === 0 ? (
+            {(!Array.isArray(links) || links.length === 0) ? (
               <p className="text-xs text-slate">No manual dataset associations defined yet. Create one above.</p>
             ) : (
               <div className="space-y-2">
-                {links.map((link) => (
+                {(Array.isArray(links) ? links : []).map((link) => (
                   <div
                     key={link.id}
                     className="p-3 rounded-xl bg-cloud flex items-center justify-between text-xs"
