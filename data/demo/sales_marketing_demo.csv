@@ -1,0 +1,31 @@
+date,region,product_category,channel,sales_amount,marketing_spend,units_sold,leads_generated,conversion_rate,customer_satisfaction
+2026-01-01,North America,Enterprise AI,Digital Ads,125000.00,18500.00,25,450,0.055,4.8
+2026-01-02,North America,Cloud Analytics,Direct Sales,98000.00,12000.00,32,320,0.100,4.6
+2026-01-03,Europe,Enterprise AI,Partnerships,145000.00,22000.00,29,510,0.057,4.9
+2026-01-04,Europe,Automated BI,Digital Ads,76000.00,9500.00,45,600,0.075,4.5
+2026-01-05,Asia Pacific,Cloud Analytics,Email Marketing,89000.00,8000.00,30,410,0.073,4.7
+2026-01-06,Asia Pacific,Enterprise AI,Events,112000.00,15000.00,22,380,0.058,4.6
+2026-01-07,North America,Automated BI,Direct Sales,82000.00,11000.00,48,490,0.098,4.4
+2026-01-08,North America,Enterprise AI,Digital Ads,138000.00,19500.00,28,470,0.060,4.8
+2026-01-09,Europe,Cloud Analytics,Email Marketing,92000.00,8500.00,31,390,0.079,4.7
+2026-01-10,Europe,Enterprise AI,Direct Sales,156000.00,24000.00,31,540,0.057,4.9
+2026-01-11,Asia Pacific,Automated BI,Digital Ads,69000.00,8200.00,41,520,0.079,4.3
+2026-01-12,Asia Pacific,Enterprise AI,Partnerships,120000.00,16500.00,24,400,0.060,4.7
+2026-01-13,North America,Cloud Analytics,Events,105000.00,14000.00,35,360,0.097,4.6
+2026-01-14,North America,Enterprise AI,Direct Sales,149000.00,21000.00,30,490,0.061,4.9
+2026-01-15,Europe,Automated BI,Partnerships,84000.00,10500.00,50,580,0.086,4.5
+2026-01-16,Europe,Enterprise AI,Digital Ads,141000.00,20000.00,28,480,0.058,4.8
+2026-01-17,Asia Pacific,Cloud Analytics,Direct Sales,94000.00,9000.00,32,350,0.091,4.7
+2026-01-18,Asia Pacific,Enterprise AI,Digital Ads,118000.00,16000.00,23,390,0.059,4.6
+2026-01-19,North America,Automated BI,Email Marketing,79000.00,7500.00,47,530,0.089,4.4
+2026-01-20,North America,Enterprise AI,Events,162000.00,25000.00,32,560,0.057,5.0
+2026-01-21,Europe,Cloud Analytics,Direct Sales,101000.00,13000.00,34,340,0.100,4.8
+2026-01-22,Europe,Enterprise AI,Partnerships,148000.00,21500.00,29,500,0.058,4.9
+2026-01-23,Asia Pacific,Automated BI,Digital Ads,72000.00,8800.00,43,550,0.078,4.4
+2026-01-24,Asia Pacific,Enterprise AI,Events,126000.00,17000.00,25,420,0.060,4.8
+2026-01-25,North America,Cloud Analytics,Email Marketing,99000.00,9200.00,33,370,0.089,4.7
+2026-01-26,North America,Enterprise AI,Digital Ads,153000.00,22500.00,30,520,0.058,4.9
+2026-01-27,Europe,Automated BI,Direct Sales,88000.00,11500.00,52,590,0.088,4.6
+2026-01-28,Europe,Enterprise AI,Events,168000.00,26000.00,33,580,0.057,5.0
+2026-01-29,Asia Pacific,Cloud Analytics,Partnerships,96000.00,9800.00,33,360,0.092,4.7
+2026-01-30,Asia Pacific,Enterprise AI,Direct Sales,131000.00,18000.00,26,440,0.059,4.8

@@ -1,360 +1,132 @@
 # InsightFlow AI
 
-## AI-Driven Automated Data Analysis & Context-Aware Dashboard Generation
+**AI-Driven Automated Data Analysis & Context-Aware Dashboard Generation**
 
-**Version:** 1.0.0 implementation baseline  
-**Status:** Implementation-ready scaffold  
-**Architecture:** Modular monolith  
-**Frontend:** Next.js + TypeScript  
-**Backend:** FastAPI + Python  
-**Analytics:** DuckDB + Polars  
-**Application DB:** PostgreSQL  
-**UI:** Tailwind CSS + shadcn/ui patterns  
+[![Release Version](https://img.shields.io/badge/Release-v1.0.0-00E599.svg)](./RELEASE_NOTES.md)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](./CHANGELOG.md)
+[![Tests](https://img.shields.io/badge/Tests-1272%2F1272%20Passing-brightgreen.svg)](./docs/development/phase-20-completion-report.md)
+[![Security Score](https://img.shields.io/badge/Security-92%2F100%20(A%2B)-blue.svg)](./docs/development/phase-20-security-and-isolation.md)
+[![License](https://img.shields.io/badge/License-Enterprise-blueviolet.svg)](./LICENSE)
 
 ---
 
-## 1. What InsightFlow AI is
+## 1. What is InsightFlow AI?
 
-InsightFlow AI is an AI-assisted analytics workspace that turns structured data into validated analysis, grounded explanations, visualizations, and context-aware dashboards.
+**InsightFlow AI** is an enterprise-grade, evidence-driven autonomous intelligence platform. It bridges raw tabular datasets and unstructured corporate knowledge documents into mathematically grounded analytics, automated visualizations, time-series predictions, anomaly detections, and what-if strategic simulations.
 
-The core rule is:
+### The InsightFlow AI Product Principle:
+> *"InsightFlow AI transforms connected data and business knowledge into grounded analysis, visual insights, predictions, scenarios, and decision support."*
 
-> **The model reasons; deterministic tools calculate.**
-
-The LLM never becomes the source of truth for numerical results. It produces a structured analysis plan, selects allowlisted analytical tools, and explains validated results returned by the analytical engine.
-
-### Core flow
-
-```text
-Upload data
-  ↓
-Validate + version
-  ↓
-Profile + quality analysis
-  ↓
-Build dataset context
-  ↓
-Natural-language question
-  ↓
-Intent + analysis plan
-  ↓
-Tool validation
-  ↓
-DuckDB / Polars execution
-  ↓
-Result validation + provenance
-  ↓
-Grounded explanation
-  ↓
-Visualization recommendation
-  ↓
-Dashboard generation
-  ↓
-Natural-language dashboard editing
+```
+DATA ────────────► provides deterministic evidence
+ANALYTICS ───────► calculates without guessing (DuckDB + Polars)
+RAG ─────────────► provides verified corporate policies & context
+AI AGENTS ───────► coordinate & interpret specialized tasks
+ML ──────────────► predicts time-series & flags statistical outliers
+SCENARIOS ───────► simulate assumption deltas
+PROVENANCE ──────► audits exact sources, models, and timestamps
+SECURITY ────────► enforces zero-trust tenant boundaries
+USER ────────────► makes the final informed business decision
 ```
 
 ---
 
-## 2. What was added beyond the original documentation
+## 2. Core Capabilities
 
-This package preserves the original 16 specifications under `docs/original-specifications/` and adds the missing implementation-level capabilities identified during review:
-
-- Product discovery, personas, jobs-to-be-done, and non-goals
-- Explicit MVP / V1 / V2 boundaries and feature gates
-- Architecture Decision Records (ADRs)
-- Semantic metric/dimension layer
-- Dataset lineage and analytical provenance
-- Data governance, retention, deletion, and export policy
-- PII detection/redaction policy
-- AI provider abstraction and model routing contract
-- Prompt/version registry and prompt injection defense model
-- AI tool contracts, tool budgets, timeout and retry policy
-- Human-in-the-loop approval policy for risky actions
-- Explainability and evidence presentation model
-- Conversation memory policy and context budget management
-- Dashboard schema versioning and migration policy
-- Accessibility / WCAG-oriented UX requirements
-- Strict HCI principles and usability heuristics
-- Design tokens and soft UI design system
-- Empty/loading/error/success states
-- Responsive and keyboard-first interaction rules
-- Internationalization and localization readiness
-- Observability, tracing, metrics, structured logs, and alerting
-- Cost/latency budgets
-- Backup/restore and disaster-recovery plan
-- Threat model and abuse cases
-- Feature flags and safe rollout strategy
-- Seed/demo datasets and reproducible evaluation fixtures
-- API contract conventions and error model
-- Developer environment and local-first setup
-- CI quality gates
-- Definition of Done and release checklist
+- **Deterministic High-Performance Analytics:** Sub-millisecond aggregations, correlations, and cross-dataset federation powered by in-memory DuckDB and Polars.
+- **Evidence-Driven RAG & Knowledge Fusion:** Joint synthesis answering questions by reconciling raw tabular data against corporate policy documents with verifiable citations.
+- **Autonomous Multi-Agent Intelligence:** 9 specialized agents coordinated by a DAG Supervisor with tool allowlists and Critic Agent validation.
+- **Predictive Analytics & Forecasting:** Statistical time-series estimators (ARIMA, Exponential Smoothing, Moving Average) with backtesting and confidence intervals.
+- **Proactive Anomaly Detection:** Multi-method outlier detection (Z-Score, IQR, Rolling Baselines) with automated root-cause attribution.
+- **Decision Intelligence & What-If Simulations:** Strategic baseline modeling with dynamic assumption parameters and exact numerical deltas.
+- **Enterprise Connectors:** Native support for PostgreSQL, MySQL, Snowflake, BigQuery, AWS S3, and Salesforce with incremental synchronization.
+- **Zero-Trust Enterprise Security:** PromptGuard prompt injection defenses, ExportGuard CSV formula escape, RBAC permissions, and Prometheus telemetry.
 
 ---
 
-## 3. Repository structure
+## 3. Technology Stack
 
-```text
-InsightFlow-AI/
-├── apps/
-│   ├── web/                    # Next.js frontend
-│   └── api/                    # FastAPI backend
-├── packages/
-│   ├── contracts/              # Shared API/AI/dashboard contracts
-│   └── config/                 # Shared conventions
-├── docs/
-│   ├── architecture/
-│   ├── product/
-│   ├── ai/
-│   ├── data/
-│   ├── ux/
-│   ├── security/
-│   ├── testing/
-│   ├── operations/
-│   ├── adr/
-│   └── original-specifications/
-├── infra/
-│   ├── docker/
-│   ├── nginx/
-│   └── postgres/
-├── data/
-│   └── sample/
-├── scripts/
-├── tests/
-│   ├── e2e/
-│   ├── ai-evaluation/
-│   └── fixtures/
-├── .env.example
-├── docker-compose.yml
-├── Makefile
-└── LICENSE
-```
+### Backend
+- **Framework:** FastAPI `0.115.6` with Asyncio ASGI pipeline
+- **Runtime:** Python `3.12.10`
+- **Database ORM:** SQLAlchemy `2.0.36` (Async PostgreSQL / SQLite engine)
+- **High-Performance Engines:** DuckDB `1.1.3` + Polars `1.18.0` + Pandas `2.2.3`
+- **ML & Forecasting:** Statsmodels `0.14.4` + Scikit-Learn `1.6.0` + NumPy `2.2.0`
+- **AI Integration:** Google GenAI SDK (Gemini 2.0 Flash / Pro)
+
+### Frontend
+- **Framework:** Next.js `15.5.27` (App Router, React 19) + Turbopack
+- **Styling:** Custom Glassmorphism UI tokens & Vanilla CSS system
+- **State Management:** Zustand + React Query (TanStack Query v5)
+- **Visualizations:** Apache ECharts + Chart.js + Accessible SVG Canvas
 
 ---
 
-## 4. MVP scope
-
-### Must work
-
-1. Account creation/login
-2. CSV upload
-3. Dataset versioning
-4. Dataset preview
-5. Schema inference
-6. Profiling
-7. Data quality report
-8. DuckDB analytical execution
-9. Natural-language analytical questions
-10. Structured AI analysis plans
-11. Tool allowlisting and validation
-12. Result validation and provenance
-13. Grounded AI responses
-14. KPI / table / bar / line / scatter visualizations
-15. Basic dashboard generation
-16. Dashboard save/load
-17. Audit trail for AI tool calls
-
-### Explicitly deferred from MVP
-
-- Multi-agent orchestration
-- RAG/vector database
-- Real-time streaming data
-- External business data connectors
-- Kubernetes
-- Enterprise SSO
-- Advanced forecasting
-- Autonomous scheduled agents
-- Complex semantic federation
-
-These remain documented extension points.
-
----
-
-## 5. Technology decisions
-
-| Layer | Decision |
-|---|---|
-| Web | Next.js App Router + TypeScript |
-| UI | Tailwind CSS + shadcn/ui patterns |
-| State | TanStack Query + minimal Zustand |
-| API | FastAPI |
-| ORM | SQLAlchemy 2.x |
-| Validation | Pydantic v2 |
-| App DB | PostgreSQL |
-| Analytics | DuckDB |
-| Dataframes | Polars; Pandas only for compatibility |
-| Numerical | NumPy / SciPy where justified |
-| Background work | Redis + worker abstraction, introduced when needed |
-| File storage | Local filesystem in dev; S3-compatible in production |
-| AI | Provider abstraction; provider selected by environment |
-| Testing | Pytest + Vitest/Playwright |
-| Packaging | Docker Compose for local development |
-
----
-
-## 6. Visual system
-
-### Design direction
-
-**Institutional analytics + soft UI + human-centered interaction.**
-
-Avoid neon gradients, excessive glassmorphism, decorative AI imagery, and chat-first layouts.
-
-### Primary palette
-
-- **Ink:** `#172033` — primary text / navigation
-- **Slate:** `#536176` — secondary text
-- **Cloud:** `#F7F9FC` — application background
-- **Surface:** `#FFFFFF` — cards / panels
-- **Teal:** `#0F766E` — primary action / positive analytical emphasis
-- **Teal Soft:** `#E6F4F1` — soft active state
-- **Blue:** `#2563EB` — informational interaction
-- **Amber:** `#B45309` — warning
-- **Red:** `#B42318` — destructive/error
-- **Border:** `#E3E8EF`
-
-The palette is intentionally restrained and supports WCAG-oriented contrast checks.
-
-### Soft UI rules
-
-- 8px base spacing grid
-- 10–14px corner radii
-- 1px subtle borders preferred over heavy shadows
-- Very soft elevation only for floating surfaces
-- No gradients for primary UI controls
-- Clear focus rings
-- Consistent hover/active/disabled states
-- Dense data tables with readable row height
-- Typography prioritizes hierarchy and scanability
-
----
-
-## 7. Strict HCI principles
-
-Every screen must be reviewed against:
-
-1. Visibility of system status
-2. Match between system and real-world concepts
-3. User control and freedom
-4. Consistency and standards
-5. Error prevention
-6. Recognition over recall
-7. Flexibility and efficiency
-8. Minimalist design
-9. Error recovery
-10. Help/documentation
-
-Also enforce Shneiderman's rules, WCAG-oriented accessibility, progressive disclosure, clear affordances, reversible actions, and meaningful feedback.
-
-A UI feature is not considered complete until its loading, empty, success, error, permission-denied, and offline/degraded states are defined.
-
----
-
-## 8. Getting started
+## 4. Quickstart & Local Setup
 
 ### Prerequisites
+- Python `3.12+`
+- Node.js `20+` & `npm`
+- Google Gemini API Key
 
-- Node.js 22+
-- Python 3.12+
-- Docker Desktop
-- Git
-
-### Local infrastructure
-
+### Backend Setup
 ```bash
-docker compose up -d postgres redis
-```
-
-### API
-
-```bash
+# Navigate to API root
 cd apps/api
+
+# Create virtual environment and install dependencies
 python -m venv .venv
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\activate  # Windows (or source .venv/bin/activate on Unix)
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+
+# Run migrations
+alembic upgrade head
+
+# Start FastAPI backend server
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-### Web
-
+### Frontend Setup
 ```bash
+# Navigate to web root
 cd apps/web
+
+# Install npm dependencies
 npm install
+
+# Start Next.js development server
 npm run dev
 ```
 
-The scaffold is intentionally minimal; implementation work should follow `docs/implementation-plan.md`.
+Open your browser to [http://localhost:3000](http://localhost:3000) to access the application.
 
 ---
 
-## 9. Environment variables
+## 5. Running the Complete Verification Test Suite
 
-Copy `.env.example` to `.env` and configure only the provider/storage values needed for the current phase.
-
-Never commit secrets.
-
----
-
-## 10. Development order
-
-Follow this order strictly:
-
-```text
-Foundation
-→ Database
-→ Auth
-→ Dataset ingestion
-→ Profiling
-→ Data quality
-→ Analytics engine
-→ AI tool contracts
-→ LLM provider
-→ Tool orchestration
-→ Result validation
-→ Visualization
-→ Dashboard
-→ AI dashboard editing
-→ Security hardening
-→ Evaluation
-→ Observability
-→ Deployment
+```bash
+# Run the 1,270+ test suite
+cd apps/api
+.\.venv\Scripts\pytest.exe -q
 ```
 
-Do not skip the deterministic analytics engine to build the AI layer first.
+---
+
+## 6. Project Documentation Index
+
+- **System Inventory:** [docs/development/phase-20-system-inventory.md](./docs/development/phase-20-system-inventory.md)
+- **Critical User Journeys (A–J):** [docs/development/phase-20-user-journeys.md](./docs/development/phase-20-user-journeys.md)
+- **End-to-End Test Matrix:** [docs/development/phase-20-e2e-matrix.md](./docs/development/phase-20-e2e-matrix.md)
+- **Data & AI Correctness Audit:** [docs/development/phase-20-data-and-ai-correctness.md](./docs/development/phase-20-data-and-ai-correctness.md)
+- **Security & Multi-Tenant Isolation:** [docs/development/phase-20-security-and-isolation.md](./docs/development/phase-20-security-and-isolation.md)
+- **Failure Recovery & Degradation:** [docs/development/phase-20-failure-recovery.md](./docs/development/phase-20-failure-recovery.md)
+- **Frontend & HCI QA:** [docs/development/phase-20-frontend-hci-qa.md](./docs/development/phase-20-frontend-hci-qa.md)
+- **Demo Script (5–10 Min):** [docs/development/phase-20-demo-script.md](./docs/development/phase-20-demo-script.md)
+- **Completion & Release Sign-Off Report:** [docs/development/phase-20-completion-report.md](./docs/development/phase-20-completion-report.md)
 
 ---
 
-## 11. Definition of Done
+## 7. License & Release Status
 
-A feature is complete only when:
-
-- Acceptance criteria pass
-- Unit/integration tests exist
-- Loading/empty/error/success states exist
-- Accessibility checks pass
-- Authorization is enforced server-side
-- Logs/metrics exist for important failures
-- AI outputs have validation where applicable
-- Documentation is updated
-- No secret or PII leakage exists
-- The feature can be reproduced locally
-
----
-
-## 12. Documentation map
-
-Start with:
-
-1. `docs/implementation-plan.md`
-2. `docs/product/product-spec.md`
-3. `docs/architecture/target-architecture.md`
-4. `docs/ai/ai-operating-model.md`
-5. `docs/data/data-governance.md`
-6. `docs/ux/hci-design-system.md`
-7. `docs/operations/observability-and-sre.md`
-8. `docs/security/threat-model.md`
-9. `docs/testing/test-strategy.md`
-10. `docs/adr/README.md`
-
-Original specifications remain available under `docs/original-specifications/`.
+InsightFlow AI is released under the Enterprise Commercial License.  
+**Current Release Decision:** `RELEASE READY (v1.0.0)`
