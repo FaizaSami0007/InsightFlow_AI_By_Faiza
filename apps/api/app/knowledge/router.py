@@ -65,6 +65,7 @@ async def delete_collection(
 
 
 @router.post("/documents/upload", response_model=KnowledgeDocumentResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/documents", response_model=KnowledgeDocumentResponse, status_code=status.HTTP_201_CREATED)
 async def upload_document(
     file: UploadFile = File(...),
     title: Optional[str] = Form(None),
@@ -75,18 +76,22 @@ async def upload_document(
 ) -> KnowledgeDocumentResponse:
     """Upload, extract, chunk, and index a business knowledge document."""
     service = KnowledgeService(db)
+    clean_collection_id = collection_id.strip() if collection_id and collection_id.strip() else None
+    clean_title = title.strip() if title and title.strip() else None
     try:
         file_bytes = await file.read()
         return await service.ingest_document(
             user_id=current_user.id,
             filename=file.filename or "uploaded_document.txt",
             file_bytes=file_bytes,
-            title=title,
-            collection_id=collection_id,
+            title=clean_title,
+            collection_id=clean_collection_id,
             knowledge_type=knowledge_type,
         )
     except KnowledgeServiceError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Upload failed: {str(exc)}")
 
 
 @router.get("/documents", response_model=KnowledgeDocumentListResponse)

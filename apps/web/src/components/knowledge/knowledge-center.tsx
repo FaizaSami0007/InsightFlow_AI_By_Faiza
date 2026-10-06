@@ -162,13 +162,17 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      if (uploadCollectionId) formData.append("collection_id", uploadCollectionId);
-      if (uploadKnowledgeType) formData.append("knowledge_type", uploadKnowledgeType);
+      if (uploadCollectionId && uploadCollectionId.trim()) {
+        formData.append("collection_id", uploadCollectionId.trim());
+      }
+      if (uploadKnowledgeType) {
+        formData.append("knowledge_type", uploadKnowledgeType);
+      }
 
       const headers: Record<string, string> = {};
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
-      const res = await fetch(`${apiBase}/api/v1/knowledge/documents`, {
+      const res = await fetch(`${apiBase}/api/v1/knowledge/documents/upload`, {
         method: "POST",
         headers,
         body: formData,
@@ -180,8 +184,9 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
         setTimeout(() => setUploadStatus(""), 3000);
         fetchData();
       } else {
-        const errorData = await res.json();
-        setUploadStatus(`Upload failed: ${errorData.detail || "Server error"}`);
+        const errorData = await res.json().catch(() => ({}));
+        const errMsg = errorData.detail || errorData.error?.message || errorData.message || `Server returned ${res.status}`;
+        setUploadStatus(`Upload failed: ${errMsg}`);
       }
     } catch (err) {
       console.error("Upload error", err);

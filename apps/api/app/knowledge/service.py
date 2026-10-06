@@ -144,15 +144,16 @@ class KnowledgeService:
         checksum = hashlib.sha256(file_bytes).hexdigest()
         clean_filename = filename.strip()
         doc_title = (title or clean_filename).strip()
+        clean_collection_id = collection_id.strip() if collection_id and collection_id.strip() else None
 
         # Validate collection if specified
-        if collection_id:
+        if clean_collection_id:
             c_stmt = select(KnowledgeCollection).where(
-                KnowledgeCollection.id == collection_id, KnowledgeCollection.user_id == user_id
+                KnowledgeCollection.id == clean_collection_id, KnowledgeCollection.user_id == user_id
             )
             c_res = await self.db.execute(c_stmt)
             if not c_res.scalar_one_or_none():
-                raise KnowledgeServiceError(f"Collection {collection_id} not found or access denied.")
+                raise KnowledgeServiceError(f"Collection {clean_collection_id} not found or access denied.")
 
         # Determine file type
         ext = clean_filename.split(".")[-1].upper() if "." in clean_filename else "TXT"
