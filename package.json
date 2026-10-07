@@ -1,0 +1,17 @@
+{
+  "name": "insightflow-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "InsightFlow AI — AI-Driven Automated Data Analysis & Context-Aware Dashboard Generation",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --prefix apps/web",
+    "build": "npm run build --prefix apps/web",
+    "start": "npm run start --prefix apps/web",
+    "lint": "npm run lint --prefix apps/web",
+    "typecheck": "npm run typecheck --prefix apps/web"
+  }
+}
