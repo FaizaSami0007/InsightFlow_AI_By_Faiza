@@ -709,45 +709,45 @@ export function CollectionManagement() {
 
       {/* Create Collection Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-card border border-border rounded-xl shadow-xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95">
-            <h3 className="text-base font-semibold text-foreground">
+        <div className="fixed inset-0 bg-ink/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-border rounded-2xl shadow-soft-lg max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95">
+            <h3 className="text-base font-semibold text-ink">
               Create New Dataset Collection
             </h3>
 
             <form onSubmit={handleCreateCollection} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-foreground">Collection Name</label>
+                <label className="text-xs font-medium text-ink">Collection Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Sales Intelligence"
                   value={newColName}
                   onChange={(e) => setNewColName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-border bg-background focus:outline-hidden focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-white text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-teal"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-foreground">Description (optional)</label>
+                <label className="text-xs font-medium text-ink">Description (optional)</label>
                 <textarea
                   rows={2}
                   placeholder="e.g. Federated context for customers, orders and products"
                   value={newColDesc}
                   onChange={(e) => setNewColDesc(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-border bg-background focus:outline-hidden focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-white text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-teal"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-foreground">
+                <label className="text-xs font-medium text-ink">
                   Include Datasets ({selectedDatasetIds.length} selected)
                 </label>
-                <div className="max-h-40 overflow-y-auto space-y-1.5 p-2 rounded-lg border border-border/60 bg-muted/20">
+                <div className="max-h-40 overflow-y-auto space-y-1.5 p-2.5 rounded-xl border border-border bg-cloud">
                   {datasets.map((d) => (
                     <label
                       key={d.id}
-                      className="flex items-center gap-2 p-1.5 rounded hover:bg-muted/40 cursor-pointer text-xs"
+                      className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-white cursor-pointer text-xs transition-colors"
                     >
                       <input
                         type="checkbox"
@@ -759,26 +759,26 @@ export function CollectionManagement() {
                             setSelectedDatasetIds(selectedDatasetIds.filter((id) => id !== d.id));
                           }
                         }}
-                        className="rounded border-border"
+                        className="rounded border-border text-teal focus:ring-teal"
                       />
-                      <span className="text-foreground">{d.name}</span>
+                      <span className="text-ink font-medium">{d.name}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/40">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
+                  className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border bg-white text-slate hover:text-ink hover:bg-cloud transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading || !newColName.trim()}
-                  className="px-4 py-1.5 text-xs font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-teal text-white hover:bg-teal-hover disabled:opacity-50 transition-colors shadow-soft"
                 >
                   {actionLoading ? "Creating…" : "Create Collection"}
                 </button>
@@ -790,38 +790,42 @@ export function CollectionManagement() {
 
       {/* Add Dataset Modal */}
       {showAddDatasetModal && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-card border border-border rounded-xl shadow-xl max-w-sm w-full p-5 space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">
+        <div className="fixed inset-0 bg-ink/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-border rounded-2xl shadow-soft-lg max-w-sm w-full p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-ink">
               Add Dataset to Collection
             </h3>
 
             <div className="space-y-2">
-              <label className="text-xs text-muted-foreground">Select Dataset</label>
+              <label className="text-xs text-slate">Select Dataset</label>
               <select
                 value={datasetToAdd}
                 onChange={(e) => setDatasetToAdd(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-border bg-background focus:outline-hidden focus:ring-2 focus:ring-primary/20"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-white text-ink focus:outline-none focus:ring-2 focus:ring-teal"
               >
-                <option value="">-- Choose a dataset --</option>
-                {datasets
-                  .filter(
-                    (d) =>
-                      !selectedCollection?.items?.some((item) => item.dataset_id === d.id)
-                  )
-                  .map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {d.name}
-                    </option>
-                  ))}
+                <option value="" className="text-slate-800 bg-white font-medium">-- Choose a dataset --</option>
+                {datasets.filter((d) => !selectedCollection?.items?.some((item) => item.dataset_id === d.id)).length === 0 ? (
+                  <option value="" disabled className="text-slate-400 bg-white">No eligible datasets available</option>
+                ) : (
+                  datasets
+                    .filter(
+                      (d) =>
+                        !selectedCollection?.items?.some((item) => item.dataset_id === d.id)
+                    )
+                    .map((d) => (
+                      <option key={d.id} value={d.id} className="text-slate-800 bg-white font-medium">
+                        {d.name}
+                      </option>
+                    ))
+                )}
               </select>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/40">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
               <button
                 type="button"
                 onClick={() => setShowAddDatasetModal(false)}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted"
+                className="px-3 py-1.5 text-xs font-medium rounded-xl border border-border text-slate hover:bg-cloud transition-colors"
               >
                 Cancel
               </button>
@@ -829,7 +833,7 @@ export function CollectionManagement() {
                 type="button"
                 onClick={handleAddDataset}
                 disabled={actionLoading || !datasetToAdd}
-                className="px-4 py-1.5 text-xs font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                className="px-4 py-1.5 text-xs font-semibold rounded-xl bg-teal text-white hover:bg-teal-hover disabled:opacity-50 transition-colors shadow-soft"
               >
                 Add Dataset
               </button>

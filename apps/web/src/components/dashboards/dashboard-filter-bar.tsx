@@ -54,11 +54,11 @@ export function DashboardFilterBar({
                 value={isSet ? String(activeVal) : ""}
                 onChange={(e) => onFilterChange(f.column_name, e.target.value || null)}
                 disabled={disabled}
-                className="bg-transparent font-semibold border-none focus:outline-none cursor-pointer pr-1 text-xs"
+                className="bg-transparent font-semibold border-none focus:outline-none cursor-pointer pr-1 text-xs text-[#172033]"
               >
-                <option value="">All</option>
+                <option value="" className="text-slate-800 bg-white font-medium">All</option>
                 {f.allowed_values.map((val) => (
-                  <option key={String(val)} value={String(val)}>
+                  <option key={String(val)} value={String(val)} className="text-slate-800 bg-white font-medium">
                     {String(val)}
                   </option>
                 ))}

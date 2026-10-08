@@ -411,9 +411,9 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
                             }
                             className="w-full px-2.5 py-1.5 bg-surface border border-border rounded-lg text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                           >
-                            <option value="PERCENTAGE_CHANGE">Percentage Change (%)</option>
-                            <option value="ABSOLUTE_CHANGE">Absolute Delta (+/-)</option>
-                            <option value="DIRECT_SET">Direct Set (=)</option>
+                            <option value="PERCENTAGE_CHANGE" className="text-slate-800 bg-white font-medium">Percentage Change (%)</option>
+                            <option value="ABSOLUTE_CHANGE" className="text-slate-800 bg-white font-medium">Absolute Delta (+/-)</option>
+                            <option value="DIRECT_SET" className="text-slate-800 bg-white font-medium">Direct Set (=)</option>
                           </select>
                         </div>
                       </div>

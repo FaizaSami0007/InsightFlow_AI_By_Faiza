@@ -157,11 +157,11 @@ export function DashboardShareModal({
                 }
                 className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20"
               >
-                <option value={1}>Expires in 1 Day</option>
-                <option value={7}>Expires in 7 Days (Default)</option>
-                <option value={30}>Expires in 30 Days</option>
-                <option value={90}>Expires in 90 Days</option>
-                <option value="none">No Expiration (Indefinite)</option>
+                <option value={1} className="text-slate-800 bg-white font-medium">Expires in 1 Day</option>
+                <option value={7} className="text-slate-800 bg-white font-medium">Expires in 7 Days (Default)</option>
+                <option value={30} className="text-slate-800 bg-white font-medium">Expires in 30 Days</option>
+                <option value={90} className="text-slate-800 bg-white font-medium">Expires in 90 Days</option>
+                <option value="none" className="text-slate-800 bg-white font-medium">No Expiration (Indefinite)</option>
               </select>
             </div>
 
@@ -180,8 +180,8 @@ export function DashboardShareModal({
                 onChange={(e) => setIsSnapshot(e.target.value === "snapshot")}
                 className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20"
               >
-                <option value="live">Live Analytical Queries</option>
-                <option value="snapshot">Frozen Static Snapshot</option>
+                <option value="live" className="text-slate-800 bg-white font-medium">Live Analytical Queries</option>
+                <option value="snapshot" className="text-slate-800 bg-white font-medium">Frozen Static Snapshot</option>
               </select>
             </div>
           </div>

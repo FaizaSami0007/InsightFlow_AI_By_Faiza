@@ -102,11 +102,11 @@ export function DashboardWidgetCard({
                 className="text-xs bg-[#F7F9FC] border border-[#E3E8EF] rounded px-1.5 py-0.5 text-[#172033] cursor-pointer"
                 title="Change Column Width"
               >
-                <option value={3}>Span 3</option>
-                <option value={4}>Span 4</option>
-                <option value={6}>Span 6</option>
-                <option value={8}>Span 8</option>
-                <option value={12}>Span 12</option>
+                <option value={3} className="text-slate-800 bg-white font-medium">Span 3</option>
+                <option value={4} className="text-slate-800 bg-white font-medium">Span 4</option>
+                <option value={6} className="text-slate-800 bg-white font-medium">Span 6</option>
+                <option value={8} className="text-slate-800 bg-white font-medium">Span 8</option>
+                <option value={12} className="text-slate-800 bg-white font-medium">Span 12</option>
               </select>
 
               {/* Chart type dropdown if visual */}
@@ -119,16 +119,16 @@ export function DashboardWidgetCard({
                   className="text-xs bg-[#F7F9FC] border border-[#E3E8EF] rounded px-1.5 py-0.5 text-[#172033] cursor-pointer"
                   title="Change Visualization Type"
                 >
-                  <option value="bar">Bar</option>
-                  <option value="horizontal_bar">Horiz Bar</option>
-                  <option value="line">Line</option>
-                  <option value="area">Area</option>
-                  <option value="donut">Donut</option>
-                  <option value="pie">Pie</option>
-                  <option value="scatter">Scatter</option>
-                  <option value="histogram">Histogram</option>
-                  <option value="boxplot">Boxplot</option>
-                  <option value="table">Table</option>
+                  <option value="bar" className="text-slate-800 bg-white font-medium">Bar</option>
+                  <option value="horizontal_bar" className="text-slate-800 bg-white font-medium">Horiz Bar</option>
+                  <option value="line" className="text-slate-800 bg-white font-medium">Line</option>
+                  <option value="area" className="text-slate-800 bg-white font-medium">Area</option>
+                  <option value="donut" className="text-slate-800 bg-white font-medium">Donut</option>
+                  <option value="pie" className="text-slate-800 bg-white font-medium">Pie</option>
+                  <option value="scatter" className="text-slate-800 bg-white font-medium">Scatter</option>
+                  <option value="histogram" className="text-slate-800 bg-white font-medium">Histogram</option>
+                  <option value="boxplot" className="text-slate-800 bg-white font-medium">Boxplot</option>
+                  <option value="table" className="text-slate-800 bg-white font-medium">Table</option>
                 </select>
               )}
 

@@ -514,12 +514,16 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
                   onChange={(e) => setUploadCollectionId(e.target.value)}
                   className="w-full text-xs rounded-xl border border-border bg-background px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                 >
-                  <option value="">(No collection - Root)</option>
-                  {collections.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
+                  <option value="" className="text-slate-800 bg-white font-medium">(No collection - Root)</option>
+                  {collections.length === 0 ? (
+                    <option value="" disabled className="text-slate-400 bg-white">No custom collections created</option>
+                  ) : (
+                    collections.map((c) => (
+                      <option key={c.id} value={c.id} className="text-slate-800 bg-white font-medium">
+                        {c.name}
+                      </option>
+                    ))
+                  )}
                 </select>
               </div>
 
@@ -530,13 +534,13 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
                   onChange={(e) => setUploadKnowledgeType(e.target.value as KnowledgeType)}
                   className="w-full text-xs rounded-xl border border-border bg-background px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                 >
-                  <option value="BUSINESS_RULE">Business Rule</option>
-                  <option value="KPI_DEFINITION">KPI Definition</option>
-                  <option value="METRIC_FORMULA">Metric Formula</option>
-                  <option value="POLICY">Policy / Standard</option>
-                  <option value="GLOSSARY">Glossary Term</option>
-                  <option value="DOMAIN_GUIDE">Domain Guide</option>
-                  <option value="SOP">SOP / Process</option>
+                  <option value="BUSINESS_RULE" className="text-slate-800 bg-white font-medium">Business Rule</option>
+                  <option value="KPI_DEFINITION" className="text-slate-800 bg-white font-medium">KPI Definition</option>
+                  <option value="METRIC_FORMULA" className="text-slate-800 bg-white font-medium">Metric Formula</option>
+                  <option value="POLICY" className="text-slate-800 bg-white font-medium">Policy / Standard</option>
+                  <option value="GLOSSARY" className="text-slate-800 bg-white font-medium">Glossary Term</option>
+                  <option value="DOMAIN_GUIDE" className="text-slate-800 bg-white font-medium">Domain Guide</option>
+                  <option value="SOP" className="text-slate-800 bg-white font-medium">SOP / Process</option>
                 </select>
               </div>
 
@@ -589,9 +593,9 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
                 onChange={(e) => setSelectedCollectionId(e.target.value)}
                 className="text-xs rounded-lg border border-border bg-surface px-2.5 py-1 text-ink focus:outline-none focus:ring-1 focus:ring-teal"
               >
-                <option value="all">All Documents ({documents.length})</option>
+                <option value="all" className="text-slate-800 bg-white font-medium">All Documents ({documents.length})</option>
                 {collections.map((c) => (
-                  <option key={c.id} value={c.id}>
+                  <option key={c.id} value={c.id} className="text-slate-800 bg-white font-medium">
                     {c.name} ({documents.filter((d) => d.collection_id === c.id).length})
                   </option>
                 ))}
@@ -778,12 +782,16 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
                   onChange={(e) => setLinkDatasetId(e.target.value)}
                   className="w-full text-xs rounded-xl border border-border bg-background px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                 >
-                  <option value="">-- Choose Dataset --</option>
-                  {(Array.isArray(datasets) ? datasets : []).map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {d.name || d.id}
-                    </option>
-                  ))}
+                  <option value="" className="text-slate-800 bg-white font-medium">-- Choose Dataset --</option>
+                  {datasets.length === 0 ? (
+                    <option value="" disabled className="text-slate-400 bg-white">No datasets available</option>
+                  ) : (
+                    (Array.isArray(datasets) ? datasets : []).map((d) => (
+                      <option key={d.id} value={d.id} className="text-slate-800 bg-white font-medium">
+                        {d.name || d.id}
+                      </option>
+                    ))
+                  )}
                 </select>
               </div>
 
@@ -794,12 +802,16 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
                   onChange={(e) => setLinkDocumentId(e.target.value)}
                   className="w-full text-xs rounded-xl border border-border bg-background px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                 >
-                  <option value="">-- Choose Document --</option>
-                  {(Array.isArray(documents) ? documents : []).map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {d.title} (v{d.current_version_num})
-                    </option>
-                  ))}
+                  <option value="" className="text-slate-800 bg-white font-medium">-- Choose Document --</option>
+                  {documents.length === 0 ? (
+                    <option value="" disabled className="text-slate-400 bg-white">No documents uploaded yet</option>
+                  ) : (
+                    (Array.isArray(documents) ? documents : []).map((d) => (
+                      <option key={d.id} value={d.id} className="text-slate-800 bg-white font-medium">
+                        {d.title} (v{d.current_version_num || 1})
+                      </option>
+                    ))
+                  )}
                 </select>
               </div>
 

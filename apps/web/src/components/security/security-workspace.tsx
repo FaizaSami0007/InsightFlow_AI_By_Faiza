@@ -582,10 +582,10 @@ export function SecurityWorkspace() {
                     onChange={(e) => setStatusFilter(e.target.value)}
                     className="py-1.5 px-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none text-slate-700"
                   >
-                    <option value="all">All Statuses</option>
-                    <option value="success">Success</option>
-                    <option value="denied">Denied / Blocked</option>
-                    <option value="failed">Failed</option>
+                    <option value="all" className="text-slate-800 bg-white font-medium">All Statuses</option>
+                    <option value="success" className="text-slate-800 bg-white font-medium">Success</option>
+                    <option value="denied" className="text-slate-800 bg-white font-medium">Denied / Blocked</option>
+                    <option value="failed" className="text-slate-800 bg-white font-medium">Failed</option>
                   </select>
                 </div>
               </div>

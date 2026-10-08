@@ -231,8 +231,8 @@ export function DashboardExportModal({
                   onChange={(e) => setPageSize(e.target.value as "A4" | "Letter")}
                   className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20"
                 >
-                  <option value="A4">A4 (210 x 297 mm)</option>
-                  <option value="Letter">Letter (8.5 x 11 in)</option>
+                  <option value="A4" className="text-slate-800 bg-white font-medium">A4 (210 x 297 mm)</option>
+                  <option value="Letter" className="text-slate-800 bg-white font-medium">Letter (8.5 x 11 in)</option>
                 </select>
               </div>
               <div className="space-y-1.5">
@@ -242,8 +242,8 @@ export function DashboardExportModal({
                   onChange={(e) => setOrientation(e.target.value as "landscape" | "portrait")}
                   className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20"
                 >
-                  <option value="landscape">Landscape (Recommended)</option>
-                  <option value="portrait">Portrait</option>
+                  <option value="landscape" className="text-slate-800 bg-white font-medium">Landscape (Recommended)</option>
+                  <option value="portrait" className="text-slate-800 bg-white font-medium">Portrait</option>
                 </select>
               </div>
             </div>
@@ -258,12 +258,16 @@ export function DashboardExportModal({
                 onChange={(e) => setSelectedWidgetId(e.target.value)}
                 className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20"
               >
-                <option value="">All Available Tabular Results</option>
-                {dashboard.widgets.map((w) => (
-                  <option key={w.id} value={w.id}>
-                    {w.title} ({w.widget_type})
-                  </option>
-                ))}
+                <option value="" className="text-slate-800 bg-white font-medium">All Available Tabular Results</option>
+                {dashboard.widgets.length === 0 ? (
+                  <option value="" disabled className="text-slate-400 bg-white">No widgets in dashboard</option>
+                ) : (
+                  dashboard.widgets.map((w) => (
+                    <option key={w.id} value={w.id} className="text-slate-800 bg-white font-medium">
+                      {w.title} ({w.widget_type})
+                    </option>
+                  ))
+                )}
               </select>
             </div>
           )}

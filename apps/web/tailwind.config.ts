@@ -53,6 +53,25 @@ const config: Config = {
           subtle: "#EDF2F7",
           strong: "#CBD5E1",
         },
+        card: {
+          DEFAULT: "#FFFFFF",
+          foreground: "#172033",
+        },
+        background: {
+          DEFAULT: "#F7F9FC",
+        },
+        foreground: {
+          DEFAULT: "#172033",
+        },
+        muted: {
+          DEFAULT: "#F1F5F9",
+          foreground: "#536176",
+        },
+        primary: {
+          DEFAULT: "#0F766E",
+          foreground: "#FFFFFF",
+          hover: "#0D655E",
+        },
       },
       borderRadius: {
         lg: "10px",

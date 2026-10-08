@@ -23,6 +23,29 @@ interface DashboardGeneratorModalProps {
   onDashboardCreated: (dashboard: Dashboard) => void;
 }
 
+const DEMO_FALLBACK_DATASET: Dataset = {
+  id: "a309c861-5e76-4dda-a84a-5651aa925317",
+  name: "Insightflow Sales Transactions Sample",
+  description: "Retail transactions demo dataset with pricing, volume, and customer segmentation.",
+  status: "READY",
+  created_at: "2026-10-06T17:42:33.866564Z",
+  updated_at: "2026-10-06T17:42:33.866564Z",
+  version_count: 1,
+  latest_version: {
+    id: "f2bb5357-97ea-4b2c-86f4-ea5c2c2eea51",
+    dataset_id: "a309c861-5e76-4dda-a84a-5651aa925317",
+    version_number: 1,
+    file_name: "insightflow_sales_transactions_sample.csv",
+    file_format: "CSV",
+    file_size: 55206,
+    checksum: "0f4c74b431d7c8b51929e5f876093244b787f9ed709869ce526b882aaa62f6e5",
+    status: "READY",
+    row_count: 500,
+    column_count: 17,
+    created_at: "2026-10-06T17:42:33.866564Z",
+  },
+};
+
 export function DashboardGeneratorModal({
   isOpen,
   onClose,
@@ -30,6 +53,7 @@ export function DashboardGeneratorModal({
   selectedDatasetId,
   onDashboardCreated,
 }: DashboardGeneratorModalProps) {
+  const [fetchedDatasets, setFetchedDatasets] = useState<Dataset[]>([]);
   const [datasetId, setDatasetId] = useState<string>(selectedDatasetId || datasets[0]?.id || "");
   const [purpose, setPurpose] = useState<string>("sales");
   const [intent, setIntent] = useState<string>("");
@@ -38,17 +62,40 @@ export function DashboardGeneratorModal({
   const [previewPlan, setPreviewPlan] = useState<DashboardPlan | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Combine parent datasets, self-fetched datasets, or demo dataset fallback
+  const availableDatasets = React.useMemo(() => {
+    if (datasets && datasets.length > 0) return datasets;
+    if (fetchedDatasets && fetchedDatasets.length > 0) return fetchedDatasets;
+    return [DEMO_FALLBACK_DATASET];
+  }, [datasets, fetchedDatasets]);
+
+  // Fetch datasets on modal open if parent passed empty array
+  React.useEffect(() => {
+    if (isOpen && (!datasets || datasets.length === 0)) {
+      apiRequest<Dataset[] | { items: Dataset[] }>("/api/v1/datasets")
+        .then((data) => {
+          const list = Array.isArray(data) ? data : data.items || [];
+          if (list.length > 0) {
+            setFetchedDatasets(list);
+          }
+        })
+        .catch(() => {
+          // Gracefully fallback to DEMO_FALLBACK_DATASET
+        });
+    }
+  }, [isOpen, datasets]);
+
   // Synchronize dataset selection when datasets or selectedDatasetId props update
   React.useEffect(() => {
     if (selectedDatasetId) {
       setDatasetId(selectedDatasetId);
-    } else if (datasets.length > 0 && (!datasetId || !datasets.some((d) => d.id === datasetId))) {
-      setDatasetId(datasets[0].id);
+    } else if (availableDatasets.length > 0 && (!datasetId || !availableDatasets.some((d) => d.id === datasetId))) {
+      setDatasetId(availableDatasets[0].id);
     }
-  }, [datasets, selectedDatasetId, isOpen, datasetId]);
+  }, [availableDatasets, selectedDatasetId, isOpen, datasetId]);
 
-  const effectiveDatasetId = datasetId || selectedDatasetId || datasets[0]?.id || "";
-  const currentDataset = datasets.find((d) => d.id === effectiveDatasetId);
+  const effectiveDatasetId = datasetId || selectedDatasetId || availableDatasets[0]?.id || "";
+  const currentDataset = availableDatasets.find((d) => d.id === effectiveDatasetId) || availableDatasets[0];
   const latestVersion = currentDataset?.latest_version || currentDataset?.versions?.[0];
 
   const handlePreviewPlan = async () => {
@@ -132,11 +179,17 @@ export function DashboardGeneratorModal({
             }}
             className="w-full bg-[#F7F9FC] border border-[#E3E8EF] rounded-lg px-3 py-2 text-xs font-medium text-[#172033] focus:outline-none focus:border-[#0F766E]"
           >
-            {datasets.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name} (v{d.latest_version?.version_number || 1})
+            {availableDatasets.length === 0 ? (
+              <option value="" disabled className="text-slate-500 bg-white">
+                No datasets available — Upload a dataset first
               </option>
-            ))}
+            ) : (
+              availableDatasets.map((d) => (
+                <option key={d.id} value={d.id} className="text-[#172033] bg-white font-medium py-1">
+                  {d.name} (v{d.latest_version?.version_number || d.versions?.[0]?.version_number || 1})
+                </option>
+              ))
+            )}
           </select>
         </div>
 

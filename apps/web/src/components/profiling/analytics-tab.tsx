@@ -296,11 +296,17 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                     onChange={(e) => setDimension(e.target.value)}
                     className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
-                    {allColumns.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
+                    {allColumns.length === 0 ? (
+                      <option value="" disabled className="text-slate-500 bg-white">
+                        No columns available
                       </option>
-                    ))}
+                    ) : (
+                      allColumns.map((c) => (
+                        <option key={c} value={c} className="text-[#172033] bg-white">
+                          {c}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
                 <div>
@@ -310,11 +316,17 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                     onChange={(e) => setMetric(e.target.value)}
                     className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
-                    {numericColumns.map((c) => (
-                      <option key={c} value={c}>
-                        {c} (Numeric)
+                    {numericColumns.length === 0 ? (
+                      <option value="" disabled className="text-slate-500 bg-white">
+                        No numeric metrics found
                       </option>
-                    ))}
+                    ) : (
+                      numericColumns.map((c) => (
+                        <option key={c} value={c} className="text-[#172033] bg-white">
+                          {c} (Numeric)
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
                 <div>
@@ -324,10 +336,10 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                     onChange={(e) => setAggregation(e.target.value)}
                     className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
-                    <option value="SUM">SUM</option>
-                    <option value="AVG">AVG (Average)</option>
-                    <option value="MEDIAN">MEDIAN</option>
-                    <option value="MIN">MIN</option>
+                    <option value="SUM" className="text-[#172033] bg-white">SUM</option>
+                    <option value="AVG" className="text-[#172033] bg-white">AVG (Average)</option>
+                    <option value="MEDIAN" className="text-[#172033] bg-white">MEDIAN</option>
+                    <option value="MIN" className="text-[#172033] bg-white">MIN</option>
                     <option value="MAX">MAX</option>
                     <option value="STDDEV">STDDEV (Standard Dev)</option>
                   </select>
@@ -371,11 +383,17 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                     onChange={(e) => setMetric(e.target.value)}
                     className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
-                    {numericColumns.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
+                    {numericColumns.length === 0 ? (
+                      <option value="" disabled className="text-slate-500 bg-white">
+                        No numeric columns available
                       </option>
-                    ))}
+                    ) : (
+                      numericColumns.map((c) => (
+                        <option key={c} value={c} className="text-[#172033] bg-white">
+                          {c}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
                 <div>
@@ -402,11 +420,17 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                     onChange={(e) => setDateColumn(e.target.value)}
                     className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
-                    {allColumns.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
+                    {allColumns.length === 0 ? (
+                      <option value="" disabled className="text-slate-500 bg-white">
+                        No date columns available
                       </option>
-                    ))}
+                    ) : (
+                      allColumns.map((c) => (
+                        <option key={c} value={c} className="text-[#172033] bg-white">
+                          {c}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
                 <div>
@@ -416,11 +440,11 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                     onChange={(e) => setPeriod(e.target.value)}
                     className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
-                    <option value="day">Day</option>
-                    <option value="week">Week</option>
-                    <option value="month">Month</option>
-                    <option value="quarter">Quarter</option>
-                    <option value="year">Year</option>
+                    <option value="day" className="text-[#172033] bg-white">Day</option>
+                    <option value="week" className="text-[#172033] bg-white">Week</option>
+                    <option value="month" className="text-[#172033] bg-white">Month</option>
+                    <option value="quarter" className="text-[#172033] bg-white">Quarter</option>
+                    <option value="year" className="text-[#172033] bg-white">Year</option>
                   </select>
                 </div>
                 <div>
@@ -430,9 +454,9 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                     onChange={(e) => setMetric(e.target.value)}
                     className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                   >
-                    <option value="">Count Only</option>
+                    <option value="" className="text-[#172033] bg-white">Count Only</option>
                     {numericColumns.map((c) => (
-                      <option key={c} value={c}>
+                      <option key={c} value={c} className="text-[#172033] bg-white">
                         {c} (SUM)
                       </option>
                     ))}
@@ -450,11 +474,17 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                   onChange={(e) => (operation === "frequency" ? setDimension(e.target.value) : setMetric(e.target.value))}
                   className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
                 >
-                  {(operation === "frequency" ? allColumns : numericColumns).map((c) => (
-                    <option key={c} value={c}>
-                      {c}
+                  {(operation === "frequency" ? allColumns : numericColumns).length === 0 ? (
+                    <option value="" disabled className="text-slate-500 bg-white">
+                      No columns available
                     </option>
-                  ))}
+                  ) : (
+                    (operation === "frequency" ? allColumns : numericColumns).map((c) => (
+                      <option key={c} value={c} className="text-[#172033] bg-white">
+                        {c}
+                      </option>
+                    ))
+                  )}
                 </select>
               </div>
             )}
@@ -477,9 +507,9 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
                 onChange={(e) => setFilterColumn(e.target.value)}
                 className="w-full mt-1 bg-surface border border-border rounded-xl p-2 text-sm text-ink focus:outline-none focus:border-teal"
               >
-                <option value="">No Filter Applied</option>
+                <option value="" className="text-[#172033] bg-white">No Filter Applied</option>
                 {allColumns.map((c) => (
-                  <option key={c} value={c}>
+                  <option key={c} value={c} className="text-[#172033] bg-white">
                     {c}
                   </option>
                 ))}

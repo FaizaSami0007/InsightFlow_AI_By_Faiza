@@ -259,11 +259,15 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
               onChange={(e) => setSelectedDatasetId(e.target.value)}
               className="w-full bg-surface border border-border rounded-xl px-3.5 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-teal"
             >
-              {datasets.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
+              {datasets.length === 0 ? (
+                <option value="" disabled className="text-slate-400 bg-white">No datasets available</option>
+              ) : (
+                datasets.map((d) => (
+                  <option key={d.id} value={d.id} className="text-slate-800 bg-white font-medium">
+                    {d.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
@@ -313,12 +317,12 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
               onChange={(e) => setMethod(e.target.value as DetectionMethod)}
               className="w-full bg-surface border border-border rounded-xl px-3.5 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-teal"
             >
-              <option value="ROBUST_Z_SCORE">Robust Z-Score (Median / MAD - Recommended)</option>
-              <option value="Z_SCORE">Standard Z-Score (Mean / Std)</option>
-              <option value="IQR">Interquartile Range (Tukey Fences)</option>
-              <option value="ROLLING_BASELINE">Rolling Dynamic Moving Baseline</option>
-              <option value="SEASONAL_BASELINE">Seasonal Cycle Baseline</option>
-              <option value="FORECAST_DEVIATION">Forecast Interval Deviation</option>
+              <option value="ROBUST_Z_SCORE" className="text-slate-800 bg-white font-medium">Robust Z-Score (Median / MAD - Recommended)</option>
+              <option value="Z_SCORE" className="text-slate-800 bg-white font-medium">Standard Z-Score (Mean / Std)</option>
+              <option value="IQR" className="text-slate-800 bg-white font-medium">Interquartile Range (Tukey Fences)</option>
+              <option value="ROLLING_BASELINE" className="text-slate-800 bg-white font-medium">Rolling Dynamic Moving Baseline</option>
+              <option value="SEASONAL_BASELINE" className="text-slate-800 bg-white font-medium">Seasonal Cycle Baseline</option>
+              <option value="FORECAST_DEVIATION" className="text-slate-800 bg-white font-medium">Forecast Interval Deviation</option>
             </select>
           </div>
 
@@ -409,11 +413,11 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="bg-surface border border-border rounded-xl px-2.5 py-1 text-xs text-ink focus:outline-none"
               >
-                <option value="ALL">All Alerts</option>
-                <option value="DETECTED">Detected</option>
-                <option value="ACKNOWLEDGED">Acknowledged</option>
-                <option value="RESOLVED">Resolved</option>
-                <option value="DISMISSED">Dismissed</option>
+                <option value="ALL" className="text-slate-800 bg-white font-medium">All Alerts</option>
+                <option value="DETECTED" className="text-slate-800 bg-white font-medium">Detected</option>
+                <option value="ACKNOWLEDGED" className="text-slate-800 bg-white font-medium">Acknowledged</option>
+                <option value="RESOLVED" className="text-slate-800 bg-white font-medium">Resolved</option>
+                <option value="DISMISSED" className="text-slate-800 bg-white font-medium">Dismissed</option>
               </select>
             </div>
           </div>

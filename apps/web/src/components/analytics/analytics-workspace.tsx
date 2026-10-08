@@ -187,11 +187,17 @@ export function AnalyticsWorkspace() {
                 onChange={(e) => handleDatasetChange(e.target.value)}
                 className="bg-surface text-ink text-xs rounded-xl border border-border px-3 py-1.5 focus:ring-2 focus:ring-teal outline-none font-medium flex-1 sm:w-auto max-w-xs truncate"
               >
-                {datasets.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name} (v{d.version_count})
+                {datasets.length === 0 ? (
+                  <option value="" disabled className="text-slate-500 bg-white">
+                    No datasets available
                   </option>
-                ))}
+                ) : (
+                  datasets.map((d) => (
+                    <option key={d.id} value={d.id} className="text-[#172033] bg-white">
+                      {d.name} (v{d.version_count})
+                    </option>
+                  ))
+                )}
               </select>
             </div>
 

@@ -382,11 +382,17 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
             onChange={(e) => setSelectedDatasetId(e.target.value)}
             className="w-full bg-surface text-ink text-sm rounded-xl border border-border px-3 py-2 focus:ring-2 focus:ring-teal outline-none"
           >
-            {datasets.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
+            {datasets.length === 0 ? (
+              <option value="" disabled className="text-slate-500 bg-white">
+                No datasets available
               </option>
-            ))}
+            ) : (
+              datasets.map((d) => (
+                <option key={d.id} value={d.id} className="text-[#172033] bg-white">
+                  {d.name}
+                </option>
+              ))
+            )}
           </select>
         </div>
 

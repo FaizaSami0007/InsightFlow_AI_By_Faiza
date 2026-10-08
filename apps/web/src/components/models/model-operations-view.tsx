@@ -741,12 +741,12 @@ export function ModelOperationsView() {
                   onChange={(e) => setPromotionTarget(e.target.value as MLModelVersionStatus)}
                   className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink"
                 >
-                  <option value="VALIDATING">VALIDATING</option>
-                  <option value="VALIDATED">VALIDATED</option>
-                  <option value="STAGED">STAGED</option>
-                  <option value="PRODUCTION">PRODUCTION</option>
-                  <option value="DEPRECATED">DEPRECATED</option>
-                  <option value="RETIRED">RETIRED</option>
+                  <option value="VALIDATING" className="text-slate-800 bg-white font-medium">VALIDATING</option>
+                  <option value="VALIDATED" className="text-slate-800 bg-white font-medium">VALIDATED</option>
+                  <option value="STAGED" className="text-slate-800 bg-white font-medium">STAGED</option>
+                  <option value="PRODUCTION" className="text-slate-800 bg-white font-medium">PRODUCTION</option>
+                  <option value="DEPRECATED" className="text-slate-800 bg-white font-medium">DEPRECATED</option>
+                  <option value="RETIRED" className="text-slate-800 bg-white font-medium">RETIRED</option>
                 </select>
               </div>
 

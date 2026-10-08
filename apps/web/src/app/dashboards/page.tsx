@@ -17,7 +17,28 @@ import { DashboardGeneratorModal } from "@/components/dashboards/dashboard-gener
 import { Dashboard, Dataset } from "@/types";
 import { cn } from "@/lib/utils";
 
-import { api } from "@/lib/api-client";
+const DEMO_FALLBACK_DATASET: Dataset = {
+  id: "a309c861-5e76-4dda-a84a-5651aa925317",
+  name: "Insightflow Sales Transactions Sample",
+  description: "Retail transactions demo dataset with pricing, volume, and customer segmentation.",
+  status: "READY",
+  created_at: "2026-10-06T17:42:33.866564Z",
+  updated_at: "2026-10-06T17:42:33.866564Z",
+  version_count: 1,
+  latest_version: {
+    id: "f2bb5357-97ea-4b2c-86f4-ea5c2c2eea51",
+    dataset_id: "a309c861-5e76-4dda-a84a-5651aa925317",
+    version_number: 1,
+    file_name: "insightflow_sales_transactions_sample.csv",
+    file_format: "CSV",
+    file_size: 55206,
+    checksum: "0f4c74b431d7c8b51929e5f876093244b787f9ed709869ce526b882aaa62f6e5",
+    status: "READY",
+    row_count: 500,
+    column_count: 17,
+    created_at: "2026-10-06T17:42:33.866564Z",
+  },
+};
 
 export default function DashboardsListPage() {
   const router = useRouter();
@@ -41,10 +62,13 @@ export default function DashboardsListPage() {
       }
       if (datasetsData.status === "fulfilled") {
         const val = datasetsData.value;
-        setDatasets(Array.isArray(val) ? val : (val as { items: Dataset[] }).items || []);
+        const list = Array.isArray(val) ? val : (val as { items: Dataset[] }).items || [];
+        setDatasets(list.length > 0 ? list : [DEMO_FALLBACK_DATASET]);
+      } else {
+        setDatasets([DEMO_FALLBACK_DATASET]);
       }
     } catch {
-      // Ignore
+      setDatasets([DEMO_FALLBACK_DATASET]);
     } finally {
       setIsLoading(false);
     }

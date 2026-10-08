@@ -459,15 +459,15 @@ export function ConnectionWorkspace() {
         /* Catalog Grid */
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-foreground">Available Connector Catalog</h2>
+            <h2 className="text-base font-bold text-ink">Available Connector Catalog</h2>
             <div className="relative w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate" />
               <input
                 type="text"
                 placeholder="Search connector types..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-border bg-card pl-9 pr-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                className="w-full rounded-xl border border-border bg-white pl-9 pr-3 py-1.5 text-xs text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-teal"
               />
             </div>
           </div>
@@ -483,27 +483,27 @@ export function ConnectionWorkspace() {
               .map((item) => (
                 <div
                   key={item.connector_type}
-                  className="rounded-2xl border border-border bg-card p-5 shadow-soft hover:shadow-card-hover transition-all duration-200 flex flex-col justify-between"
+                  className="rounded-2xl border border-border bg-white p-5 shadow-soft hover:shadow-soft-lg transition-all duration-200 flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <div className="p-2.5 rounded-xl bg-teal/10 border border-teal/20 text-teal">
+                      <div className="p-2.5 rounded-xl bg-teal-soft border border-teal-border text-teal">
                         {getConnectorIcon(item.connector_type)}
                       </div>
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-cloud text-slate">
                         {item.category}
                       </span>
                     </div>
-                    <h3 className="text-base font-bold text-foreground">{item.name}</h3>
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
+                    <h3 className="text-sm font-bold text-ink">{item.name}</h3>
+                    <p className="text-xs text-slate mt-1 line-clamp-2">{item.description}</p>
 
                     <div className="mt-4 space-y-2">
-                      <div className="text-[11px] font-medium text-muted-foreground">Capabilities:</div>
+                      <div className="text-[11px] font-medium text-slate">Capabilities:</div>
                       <div className="flex flex-wrap gap-1.5">
                         {item.capabilities.map((cap) => (
                           <span
                             key={cap}
-                            className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-teal/5 text-teal border border-teal/20"
+                            className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-teal-soft/60 text-teal border border-teal-border"
                           >
                             {cap}
                           </span>
@@ -513,7 +513,7 @@ export function ConnectionWorkspace() {
                   </div>
 
                   <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
-                    <span className="text-xs text-emerald flex items-center gap-1 font-medium">
+                    <span className="text-xs text-teal flex items-center gap-1 font-semibold">
                       <CheckCircle2 className="h-3.5 w-3.5" /> Production Ready
                     </span>
                     <Button
@@ -538,7 +538,7 @@ export function ConnectionWorkspace() {
           {/* Left Connection List (4 cols) */}
           <div className="lg:col-span-4 space-y-3">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate">
                 Connected Sources ({connections.length})
               </span>
             </div>
@@ -552,35 +552,35 @@ export function ConnectionWorkspace() {
                     onClick={() => setSelectedConnection(conn)}
                     className={`w-full text-left p-4 rounded-2xl border transition-all duration-200 ${
                       isSelected
-                        ? "border-teal bg-teal/5 shadow-soft ring-1 ring-teal/30"
-                        : "border-border bg-card hover:border-teal/50 hover:bg-card/80"
+                        ? "border-teal bg-teal-soft/40 shadow-soft ring-1 ring-teal/30"
+                        : "border-border bg-white hover:border-teal/50 hover:bg-cloud"
                     }`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-xl bg-muted/60 border border-border">
+                        <div className="p-2 rounded-xl bg-cloud border border-border">
                           {getConnectorIcon(conn.connector_type)}
                         </div>
                         <div>
-                          <div className="font-semibold text-sm text-foreground">{conn.name}</div>
-                          <div className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                          <div className="font-semibold text-xs text-ink">{conn.name}</div>
+                          <div className="text-xs text-slate flex items-center gap-1.5 mt-0.5">
                             <span className="font-mono text-[11px] uppercase">{conn.connector_type}</span>
                             <span>•</span>
-                            <span className="flex items-center gap-1 text-emerald font-medium">
-                              <span className="h-1.5 w-1.5 rounded-full bg-emerald"></span> Active
+                            <span className="flex items-center gap-1 text-teal font-medium">
+                              <span className="h-1.5 w-1.5 rounded-full bg-teal"></span> Active
                             </span>
                           </div>
                         </div>
                       </div>
-                      <ChevronRight className={`h-4 w-4 mt-1 transition-transform ${isSelected ? "text-teal rotate-90" : "text-muted-foreground"}`} />
+                      <ChevronRight className={`h-4 w-4 mt-1 transition-transform ${isSelected ? "text-teal rotate-90" : "text-slate"}`} />
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground pt-2 border-t border-border/60">
+                    <div className="mt-3 flex items-center justify-between text-[11px] text-slate pt-2 border-t border-border">
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {conn.last_sync_at ? "Synced 2h ago" : "Not synced"}
                       </span>
-                      <span className="font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                      <span className="font-mono text-[10px] bg-cloud px-1.5 py-0.5 rounded border border-border">
                         {conn.sync_schedule || "Manual"}
                       </span>
                     </div>
@@ -595,20 +595,20 @@ export function ConnectionWorkspace() {
             {selectedConnection ? (
               <div className="space-y-6">
                 {/* Connection Header & Health Summary Card */}
-                <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+                <div className="rounded-2xl border border-border bg-white p-6 shadow-soft">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-3.5">
-                      <div className="p-3 rounded-2xl bg-teal/10 border border-teal/20 text-teal">
+                      <div className="p-3 rounded-2xl bg-teal-soft border border-teal-border text-teal">
                         {getConnectorIcon(selectedConnection.connector_type)}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h2 className="text-xl font-bold text-foreground">{selectedConnection.name}</h2>
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald/10 text-emerald border border-emerald/20">
+                          <h2 className="text-lg font-bold text-ink">{selectedConnection.name}</h2>
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-soft text-teal border border-teal-border">
                             {selectedConnection.health_status}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">{selectedConnection.description}</p>
+                        <p className="text-xs text-slate mt-0.5">{selectedConnection.description}</p>
                       </div>
                     </div>
 
@@ -617,7 +617,7 @@ export function ConnectionWorkspace() {
                         variant="outline"
                         onClick={handleTriggerSync}
                         disabled={isSyncing}
-                        className="text-xs h-9 flex items-center gap-1.5 border-teal/40 text-teal hover:bg-teal/10"
+                        className="text-xs h-9 flex items-center gap-1.5 border-teal/40 text-teal hover:bg-teal-soft"
                       >
                         <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? "animate-spin" : ""}`} />
                         {isSyncing ? "Syncing..." : "Sync Now"}
@@ -627,42 +627,42 @@ export function ConnectionWorkspace() {
 
                   {/* Health & Freshness Indicators */}
                   <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-border">
-                    <div className="p-3 rounded-xl bg-muted/40 border border-border flex items-center gap-3">
+                    <div className="p-3 rounded-xl bg-cloud border border-border flex items-center gap-3">
                       <Activity className="h-5 w-5 text-teal shrink-0" />
                       <div>
-                        <div className="text-[11px] text-muted-foreground">Health Score</div>
-                        <div className="text-sm font-bold text-foreground">
+                        <div className="text-[11px] text-slate">Health Score</div>
+                        <div className="text-sm font-bold text-ink">
                           {connectionHealth?.health_score || 95.0} / 100
                         </div>
                       </div>
                     </div>
-                    <div className="p-3 rounded-xl bg-muted/40 border border-border flex items-center gap-3">
-                      <Clock className="h-5 w-5 text-indigo shrink-0" />
+                    <div className="p-3 rounded-xl bg-cloud border border-border flex items-center gap-3">
+                      <Clock className="h-5 w-5 text-blue shrink-0" />
                       <div>
-                        <div className="text-[11px] text-muted-foreground">Freshness Status</div>
-                        <div className="text-sm font-bold text-emerald">
+                        <div className="text-[11px] text-slate">Freshness Status</div>
+                        <div className="text-sm font-bold text-teal">
                           {connectionHealth?.freshness.freshness_status || "FRESH"}
                         </div>
                       </div>
                     </div>
-                    <div className="p-3 rounded-xl bg-muted/40 border border-border flex items-center gap-3">
-                      <Shield className="h-5 w-5 text-emerald shrink-0" />
+                    <div className="p-3 rounded-xl bg-cloud border border-border flex items-center gap-3">
+                      <Shield className="h-5 w-5 text-teal shrink-0" />
                       <div>
-                        <div className="text-[11px] text-muted-foreground">Security Guard</div>
-                        <div className="text-sm font-bold text-foreground">SSRF & Read-Only Safe</div>
+                        <div className="text-[11px] text-slate">Security Guard</div>
+                        <div className="text-sm font-bold text-ink">SSRF & Read-Only Safe</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Resource Browser & Live Table Preview */}
-                <div className="rounded-2xl border border-border bg-card p-6 shadow-soft space-y-4">
+                <div className="rounded-2xl border border-border bg-white p-6 shadow-soft space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                      <h3 className="text-base font-bold text-ink flex items-center gap-2">
                         <Layers className="h-4 w-4 text-teal" /> Discovered Resources
                       </h3>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="text-xs text-slate mt-0.5">
                         Schema discovered via safe introspection with zero remote mutations.
                       </p>
                     </div>
@@ -673,8 +673,8 @@ export function ConnectionWorkspace() {
                           onClick={() => setSelectedResource(res.resource_id)}
                           className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
                             selectedResource === res.resource_id
-                              ? "border-teal bg-teal/10 text-teal"
-                              : "border-border bg-muted/40 text-muted-foreground hover:bg-muted"
+                              ? "border-teal bg-teal-soft text-teal"
+                              : "border-border bg-cloud text-slate hover:bg-white"
                           }`}
                         >
                           {res.name} ({res.estimated_rows?.toLocaleString()} rows)
@@ -686,17 +686,17 @@ export function ConnectionWorkspace() {
                   {/* Schema Columns & Data Preview Tabs */}
                   {previewData && (
                     <div className="space-y-3">
-                      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      <div className="text-xs font-semibold text-slate uppercase tracking-wider">
                         Live Preview ({previewData.total_preview_rows} rows sampled)
                       </div>
-                      <div className="overflow-x-auto rounded-xl border border-border bg-muted/10">
+                      <div className="overflow-x-auto rounded-xl border border-border bg-cloud">
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="border-b border-border bg-muted/50 text-muted-foreground font-semibold">
+                            <tr className="border-b border-border bg-white text-slate font-semibold">
                               {previewData.columns.map((col) => (
                                 <th key={col} className="px-3 py-2.5 font-medium whitespace-nowrap">
                                   <div className="flex items-center gap-1.5">
-                                    <span>{col}</span>
+                                    <span className="text-ink font-semibold">{col}</span>
                                     <span className="text-[10px] font-mono text-teal font-normal">
                                       {previewData.data_types[col] || "TEXT"}
                                     </span>
@@ -705,11 +705,11 @@ export function ConnectionWorkspace() {
                               ))}
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-border">
+                          <tbody className="divide-y divide-border bg-white">
                             {previewData.rows.map((row, idx) => (
-                              <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                              <tr key={idx} className="hover:bg-cloud transition-colors">
                                 {previewData.columns.map((col) => (
-                                  <td key={col} className="px-3 py-2 text-foreground font-mono text-[11px] whitespace-nowrap">
+                                  <td key={col} className="px-3 py-2 text-ink font-mono text-[11px] whitespace-nowrap">
                                     {String(row[col] ?? "")}
                                   </td>
                                 ))}
@@ -723,28 +723,28 @@ export function ConnectionWorkspace() {
                 </div>
 
                 {/* Synchronization Job History */}
-                <div className="rounded-2xl border border-border bg-card p-6 shadow-soft space-y-3">
-                  <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                <div className="rounded-2xl border border-border bg-white p-6 shadow-soft space-y-3">
+                  <h3 className="text-base font-bold text-ink flex items-center gap-2">
                     <RefreshCw className="h-4 w-4 text-teal" /> Synchronization Audit History
                   </h3>
                   <div className="space-y-2">
                     {syncJobs.map((job) => (
                       <div
                         key={job.id}
-                        className="p-3.5 rounded-xl border border-border bg-muted/20 flex items-center justify-between text-xs"
+                        className="p-3.5 rounded-xl border border-border bg-cloud flex items-center justify-between text-xs"
                       >
                         <div className="flex items-center gap-3">
-                          <CheckCircle2 className="h-4 w-4 text-emerald" />
+                          <CheckCircle2 className="h-4 w-4 text-teal" />
                           <div>
-                            <div className="font-semibold text-foreground">
+                            <div className="font-semibold text-ink">
                               {job.source_resource} ({job.rows_processed.toLocaleString()} records)
                             </div>
-                            <div className="text-[11px] text-muted-foreground mt-0.5">
+                            <div className="text-[11px] text-slate mt-0.5">
                               Ingested to Dataset Version <span className="font-mono text-teal">{job.dataset_version_id}</span> • {job.started_at ? new Date(job.started_at).toLocaleTimeString() : ""}
                             </div>
                           </div>
                         </div>
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald/10 text-emerald border border-emerald/20">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-teal-soft text-teal border border-teal-border">
                           {job.status}
                         </span>
                       </div>
@@ -753,10 +753,10 @@ export function ConnectionWorkspace() {
                 </div>
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-border p-12 text-center">
-                <Database className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                <h3 className="text-base font-semibold text-foreground">No Connection Selected</h3>
-                <p className="text-xs text-muted-foreground mt-1">Select an existing data connection or create a new one.</p>
+              <div className="rounded-2xl border border-dashed border-border bg-white p-12 text-center">
+                <Database className="h-10 w-10 text-slate/50 mx-auto mb-3" />
+                <h3 className="text-base font-semibold text-ink">No Connection Selected</h3>
+                <p className="text-xs text-slate mt-1">Select an existing data connection or create a new one.</p>
               </div>
             )}
           </div>
@@ -765,21 +765,21 @@ export function ConnectionWorkspace() {
 
       {/* Modal: Connection Wizard */}
       {isWizardOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-xl rounded-3xl border border-border bg-card p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 backdrop-blur-sm p-4">
+          <div className="w-full max-w-xl rounded-3xl border border-border bg-white p-6 shadow-soft-lg space-y-6 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-teal/10 text-teal">
+                <div className="p-2 rounded-xl bg-teal-soft text-teal">
                   <Shield className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-foreground">Connect Enterprise Data Source</h3>
-                  <p className="text-xs text-muted-foreground">Step {wizardStep} of 3</p>
+                  <h3 className="text-base font-bold text-ink">Connect Enterprise Data Source</h3>
+                  <p className="text-xs text-slate">Step {wizardStep} of 3</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsWizardOpen(false)}
-                className="text-muted-foreground hover:text-foreground text-sm font-semibold p-1"
+                className="text-slate hover:text-ink text-sm font-semibold p-1 transition-colors"
               >
                 ✕
               </button>
@@ -788,7 +788,7 @@ export function ConnectionWorkspace() {
             {/* Step 1: Select Type */}
             {wizardStep === 1 && (
               <div className="space-y-3">
-                <label className="text-xs font-semibold text-muted-foreground uppercase">Choose Connector Type</label>
+                <label className="text-xs font-semibold text-slate uppercase">Choose Connector Type</label>
                 <div className="grid grid-cols-2 gap-3">
                   {catalog.map((cat) => (
                     <button
@@ -799,16 +799,16 @@ export function ConnectionWorkspace() {
                       }}
                       className={`p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all ${
                         selectedConnectorType === cat.connector_type
-                          ? "border-teal bg-teal/10"
-                          : "border-border hover:border-teal/50 hover:bg-muted/30"
+                          ? "border-teal bg-teal-soft/60"
+                          : "border-border bg-white hover:border-teal/50 hover:bg-cloud"
                       }`}
                     >
-                      <div className="p-2 rounded-xl bg-card border border-border text-teal">
+                      <div className="p-2 rounded-xl bg-white border border-border text-teal">
                         {getConnectorIcon(cat.connector_type)}
                       </div>
                       <div>
-                        <div className="font-bold text-xs text-foreground">{cat.name}</div>
-                        <div className="text-[11px] text-muted-foreground mt-0.5">{cat.category}</div>
+                        <div className="font-bold text-xs text-ink">{cat.name}</div>
+                        <div className="text-[11px] text-slate mt-0.5">{cat.category}</div>
                       </div>
                     </button>
                   ))}
@@ -821,81 +821,81 @@ export function ConnectionWorkspace() {
               <div className="space-y-4">
                 <div className="space-y-3">
                   <div>
-                    <label className="text-xs font-semibold text-muted-foreground">Connection Display Name</label>
+                    <label className="text-xs font-semibold text-slate">Connection Display Name</label>
                     <input
                       type="text"
                       placeholder="e.g. Production Analytics Warehouse"
                       value={connName}
                       onChange={(e) => setConnName(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                      className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-sm text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-teal"
                     />
                   </div>
 
                   {selectedConnectorType === "POSTGRESQL" || selectedConnectorType === "MYSQL" ? (
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs font-semibold text-muted-foreground">Host</label>
+                        <label className="text-xs font-semibold text-slate">Host</label>
                         <input
                           type="text"
                           value={configFields.host || ""}
                           onChange={(e) => setConfigFields({ ...configFields, host: e.target.value })}
-                          className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                          className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-semibold text-muted-foreground">Port</label>
+                        <label className="text-xs font-semibold text-slate">Port</label>
                         <input
                           type="number"
                           value={configFields.port || 5432}
                           onChange={(e) => setConfigFields({ ...configFields, port: Number(e.target.value) })}
-                          className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                          className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-semibold text-muted-foreground">Database Name</label>
+                        <label className="text-xs font-semibold text-slate">Database Name</label>
                         <input
                           type="text"
                           value={configFields.database || ""}
                           onChange={(e) => setConfigFields({ ...configFields, database: e.target.value })}
-                          className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                          className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-semibold text-muted-foreground">Username</label>
+                        <label className="text-xs font-semibold text-slate">Username</label>
                         <input
                           type="text"
                           value={configFields.username || ""}
                           onChange={(e) => setConfigFields({ ...configFields, username: e.target.value })}
-                          className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                          className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                         />
                       </div>
                     </div>
                   ) : selectedConnectorType === "REST_API" ? (
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Base Endpoint URL</label>
+                      <label className="text-xs font-semibold text-slate">Base Endpoint URL</label>
                       <input
                         type="text"
                         placeholder="https://api.service.com/v1"
                         value={configFields.base_url || ""}
                         onChange={(e) => setConfigFields({ ...configFields, base_url: e.target.value })}
-                        className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                        className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                       />
                     </div>
                   ) : (
                     <div>
-                      <label className="text-xs font-semibold text-muted-foreground">Database Path / URI</label>
+                      <label className="text-xs font-semibold text-slate">Database Path / URI</label>
                       <input
                         type="text"
                         placeholder=":memory: or local.db"
                         value={configFields.database_path || ""}
                         onChange={(e) => setConfigFields({ ...configFields, database_path: e.target.value })}
-                        className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                        className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                       />
                     </div>
                   )}
 
                   <div>
-                    <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
+                    <label className="text-xs font-semibold text-slate flex items-center gap-1.5">
                       <KeyRound className="h-3.5 w-3.5 text-teal" /> Secret Credentials (Encrypted via Fernet)
                     </label>
                     <input
@@ -903,7 +903,7 @@ export function ConnectionWorkspace() {
                       placeholder="••••••••••••••••"
                       value={credFields.password || ""}
                       onChange={(e) => setCredFields({ ...credFields, password: e.target.value })}
-                      className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                      className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                     />
                   </div>
                 </div>
@@ -914,7 +914,7 @@ export function ConnectionWorkspace() {
                     variant="outline"
                     onClick={handleTestConnection}
                     disabled={isTesting}
-                    className="w-full text-xs py-2 flex items-center justify-center gap-2 border-border hover:bg-muted"
+                    className="w-full text-xs py-2 flex items-center justify-center gap-2 border-border hover:bg-cloud"
                   >
                     <RefreshCw className={`h-3.5 w-3.5 ${isTesting ? "animate-spin" : ""}`} />
                     {isTesting ? "Testing Handshake & Safety..." : "Test Connection"}
@@ -924,8 +924,8 @@ export function ConnectionWorkspace() {
                     <div
                       className={`mt-2.5 p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
                         testResult.success
-                          ? "bg-emerald/10 border-emerald/20 text-emerald"
-                          : "bg-destructive/10 border-destructive/20 text-destructive"
+                          ? "bg-teal-soft border-teal-border text-teal"
+                          : "bg-danger/10 border-danger/20 text-danger"
                       }`}
                     >
                       {testResult.success ? (
@@ -949,25 +949,25 @@ export function ConnectionWorkspace() {
             {wizardStep === 3 && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-semibold text-muted-foreground">Automated Sync Cadence</label>
+                  <label className="text-xs font-semibold text-slate">Automated Sync Cadence</label>
                   <select
                     value={syncSchedule}
                     onChange={(e) => setSyncSchedule(e.target.value)}
-                    className="mt-1 w-full rounded-xl border border-border bg-muted/20 px-3.5 py-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-teal"
+                    className="mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-teal"
                   >
-                    <option value="0 * * * *">Hourly (Every 1 Hour)</option>
-                    <option value="0 */6 * * *">Every 6 Hours (Recommended)</option>
-                    <option value="0 */12 * * *">Every 12 Hours</option>
-                    <option value="0 0 * * *">Daily at Midnight (UTC)</option>
-                    <option value="MANUAL">Manual On-Demand Only</option>
+                    <option value="0 * * * *" className="text-slate-800 bg-white font-medium">Hourly (Every 1 Hour)</option>
+                    <option value="0 */6 * * *" className="text-slate-800 bg-white font-medium">Every 6 Hours (Recommended)</option>
+                    <option value="0 */12 * * *" className="text-slate-800 bg-white font-medium">Every 12 Hours</option>
+                    <option value="0 0 * * *" className="text-slate-800 bg-white font-medium">Daily at Midnight (UTC)</option>
+                    <option value="MANUAL" className="text-slate-800 bg-white font-medium">Manual On-Demand Only</option>
                   </select>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-teal/5 border border-teal/20 space-y-2">
+                <div className="p-4 rounded-2xl bg-teal-soft/50 border border-teal-border space-y-2">
                   <div className="text-xs font-bold text-teal flex items-center gap-1.5">
                     <Shield className="h-4 w-4" /> Enterprise Security Assurances
                   </div>
-                  <ul className="text-[11px] text-muted-foreground space-y-1 pl-4 list-disc">
+                  <ul className="text-[11px] text-slate space-y-1 pl-4 list-disc">
                     <li>SSRF Guard strictly prohibits internal RFC-1918 subnets & cloud metadata access.</li>
                     <li>External databases default to read-only execution; all DDL/DML mutations are blocked.</li>
                     <li>Credentials are stored with symmetric Fernet encryption and never returned in API payloads.</li>
@@ -982,7 +982,7 @@ export function ConnectionWorkspace() {
                 <Button
                   variant="outline"
                   onClick={() => setWizardStep(wizardStep - 1)}
-                  className="text-xs"
+                  className="text-xs font-semibold"
                 >
                   Back
                 </Button>
@@ -994,7 +994,7 @@ export function ConnectionWorkspace() {
                 <Button
                   variant="primary"
                   onClick={() => setWizardStep(wizardStep + 1)}
-                  className="bg-teal text-white text-xs px-4"
+                  className="bg-teal text-white text-xs px-4 hover:bg-teal-hover shadow-soft"
                 >
                   Next <ChevronRight className="h-3.5 w-3.5 ml-1" />
                 </Button>
@@ -1003,7 +1003,7 @@ export function ConnectionWorkspace() {
                   variant="primary"
                   onClick={handleSaveConnection}
                   disabled={isSaving}
-                  className="bg-teal text-white text-xs px-5 shadow-soft"
+                  className="bg-teal text-white text-xs px-5 shadow-soft hover:bg-teal-hover"
                 >
                   {isSaving ? "Saving Connection..." : "Register Connection"}
                 </Button>
