@@ -380,115 +380,115 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
   return (
     <div className="space-y-6 max-w-7xl mx-auto p-4 md:p-6 text-ink">
       {/* Header Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-6 shadow-soft-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
+      <div className="rounded-2xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-5 sm:p-6 shadow-soft-lg flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-xs font-semibold uppercase tracking-wider border border-teal-400/30">
               Phase 14 Active
             </span>
             <span className="text-xs text-teal-200/80">Deterministic Hybrid RAG</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white mt-1.5">
             Knowledge Intelligence & Context-Aware RAG
           </h1>
-          <p className="text-sm text-slate-300 max-w-2xl mt-1">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-1">
             Ingest, extract, chunk, embed, and cite enterprise business knowledge. Provides grounded domain context to analytical AI without hallucinations.
           </p>
         </div>
-        <div className="flex items-center gap-3 self-start md:self-auto">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur border border-white/15 text-xs text-teal-100">
-            <ShieldCheck className="w-4 h-4 text-teal-300" />
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur border border-white/15 text-xs text-teal-100 whitespace-nowrap">
+            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
             <span>Passive Untrusted Data Policy</span>
           </div>
         </div>
       </div>
 
       {/* Metrics Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-surface rounded-xl p-4 border border-border shadow-soft flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-teal-soft text-teal">
-            <BookOpen className="w-5 h-5" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-surface rounded-xl p-3.5 sm:p-4 border border-border shadow-soft flex items-center gap-3 min-w-0">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-teal-soft text-teal shrink-0">
+            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
-            <p className="text-xs text-slate font-medium">Documents</p>
-            <p className="text-lg font-bold text-ink">{documents.length}</p>
-          </div>
-        </div>
-        <div className="bg-surface rounded-xl p-4 border border-border shadow-soft flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-teal-soft text-teal">
-            <Layers className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="text-xs text-slate font-medium">Collections</p>
-            <p className="text-lg font-bold text-ink">{collections.length}</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-slate font-medium truncate">Documents</p>
+            <p className="text-base sm:text-lg font-bold text-ink truncate">{documents.length}</p>
           </div>
         </div>
-        <div className="bg-surface rounded-xl p-4 border border-border shadow-soft flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-emerald-50 text-emerald-600">
-            <FileCode className="w-5 h-5" />
+        <div className="bg-surface rounded-xl p-3.5 sm:p-4 border border-border shadow-soft flex items-center gap-3 min-w-0">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-teal-soft text-teal shrink-0">
+            <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
-            <p className="text-xs text-slate font-medium">Total Chunks</p>
-            <p className="text-lg font-bold text-ink">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-slate font-medium truncate">Collections</p>
+            <p className="text-base sm:text-lg font-bold text-ink truncate">{collections.length}</p>
+          </div>
+        </div>
+        <div className="bg-surface rounded-xl p-3.5 sm:p-4 border border-border shadow-soft flex items-center gap-3 min-w-0">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-emerald-50 text-emerald-600 shrink-0">
+            <FileCode className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-slate font-medium truncate">Total Chunks</p>
+            <p className="text-base sm:text-lg font-bold text-ink truncate">
               {documents.reduce((acc, d) => acc + (d.chunk_count || 0), 0)}
             </p>
           </div>
         </div>
-        <div className="bg-surface rounded-xl p-4 border border-border shadow-soft flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-amber-50 text-amber-600">
-            <Link2 className="w-5 h-5" />
+        <div className="bg-surface rounded-xl p-3.5 sm:p-4 border border-border shadow-soft flex items-center gap-3 min-w-0">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-amber-50 text-amber-600 shrink-0">
+            <Link2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
-            <p className="text-xs text-slate font-medium">Dataset Links</p>
-            <p className="text-lg font-bold text-ink">{links.length}</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-slate font-medium truncate">Dataset Links</p>
+            <p className="text-base sm:text-lg font-bold text-ink truncate">{links.length}</p>
           </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-border space-x-4">
+      <div className="flex border-b border-border space-x-2 sm:space-x-4 overflow-x-auto scrollbar-none flex-nowrap pb-px">
         <button
           onClick={() => setActiveTab("documents")}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-2.5 sm:pb-3 text-xs sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 border-b-2 whitespace-nowrap shrink-0 transition-colors ${
             activeTab === "documents"
               ? "border-teal text-teal"
               : "border-transparent text-slate hover:text-ink"
           }`}
         >
-          <FileText className="w-4 h-4" />
+          <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
           Documents & Ingestion
         </button>
         <button
           onClick={() => setActiveTab("collections")}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-2.5 sm:pb-3 text-xs sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 border-b-2 whitespace-nowrap shrink-0 transition-colors ${
             activeTab === "collections"
               ? "border-teal text-teal"
               : "border-transparent text-slate hover:text-ink"
           }`}
         >
-          <Layers className="w-4 h-4" />
+          <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
           Collections ({collections.length})
         </button>
         <button
           onClick={() => setActiveTab("links")}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-2.5 sm:pb-3 text-xs sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 border-b-2 whitespace-nowrap shrink-0 transition-colors ${
             activeTab === "links"
               ? "border-teal text-teal"
               : "border-transparent text-slate hover:text-ink"
           }`}
         >
-          <Link2 className="w-4 h-4" />
+          <Link2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
           Dataset ↔ Knowledge
         </button>
         <button
           onClick={() => setActiveTab("search")}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-2.5 sm:pb-3 text-xs sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 border-b-2 whitespace-nowrap shrink-0 transition-colors ${
             activeTab === "search"
               ? "border-teal text-teal"
               : "border-transparent text-slate hover:text-ink"
           }`}
         >
-          <Search className="w-4 h-4" />
+          <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
           Hybrid Search & Citations
         </button>
       </div>
@@ -497,7 +497,7 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
       {activeTab === "documents" && (
         <div className="space-y-6">
           {/* Upload Card */}
-          <div className="bg-surface rounded-2xl p-6 border border-border shadow-soft">
+          <div className="bg-surface rounded-2xl p-5 sm:p-6 border border-border shadow-soft">
             <h2 className="text-base font-semibold text-ink flex items-center gap-2">
               <Upload className="w-4 h-4 text-teal" />
               Ingest Business Document
@@ -506,7 +506,7 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
               Securely upload PDF, DOCX, TXT, Markdown, or reference CSV files. Files are parsed, chunked, and embedded into deterministic vector storage.
             </p>
 
-            <form onSubmit={handleUploadDocument} className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <form onSubmit={handleUploadDocument} className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-end">
               <div className="md:col-span-1">
                 <label className="block text-xs font-medium text-slate mb-1">Knowledge Collection</label>
                 <select

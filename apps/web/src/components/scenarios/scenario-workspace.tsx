@@ -240,7 +240,7 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-surface p-6 rounded-2xl border border-border shadow-soft">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-surface p-5 sm:p-6 rounded-2xl border border-border shadow-soft">
         <div>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal border border-teal-border">

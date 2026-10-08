@@ -373,7 +373,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
       </div>
 
       {/* Control Panel Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-surface p-5 rounded-2xl border border-border shadow-soft">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-surface p-5 rounded-2xl border border-border shadow-soft">
         {/* Dataset Selection */}
         <div>
           <label className="block text-xs font-medium text-slate mb-1">Dataset</label>
@@ -450,7 +450,7 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
         </button>
 
         {showAdvanced && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 bg-surface p-4 rounded-2xl border border-border shadow-soft">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3 bg-surface p-4 rounded-2xl border border-border shadow-soft">
             <div>
               <label className="block text-xs font-medium text-slate mb-1">Algorithm Strategy</label>
               <select
