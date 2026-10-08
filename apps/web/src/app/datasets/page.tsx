@@ -249,17 +249,18 @@ export default function DatasetsPage() {
       <div className="space-y-6">
         {/* Top Header & Actions Bar */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-ink">Datasets & Versioning</h1>
-            <p className="text-xs text-slate mt-0.5">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink">Datasets & Versioning</h1>
+            <p className="text-xs sm:text-sm text-slate mt-0.5">
               Manage uploaded structured datasets, inspect version lineage, and prepare files for deterministic analytics.
             </p>
           </div>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
             <Link href="/collections">
               <Button
                 variant="outline"
                 size="sm"
+                className="whitespace-nowrap"
                 leftIcon={<Layers className="h-3.5 w-3.5" />}
               >
                 Collections & Federation
@@ -270,6 +271,7 @@ export default function DatasetsPage() {
               size="sm"
               onClick={fetchDatasets}
               isLoading={isLoading}
+              className="whitespace-nowrap"
               leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
               aria-label="Refresh datasets list"
             >
@@ -279,6 +281,7 @@ export default function DatasetsPage() {
               variant="primary"
               size="sm"
               onClick={handleOpenUploadNew}
+              className="whitespace-nowrap"
               leftIcon={<Plus className="h-4 w-4" />}
             >
               Upload Dataset

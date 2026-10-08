@@ -52,6 +52,13 @@ class AIConversation(Base):
         order_by="AIMessage.created_at",
         lazy="selectin",
     )
+    tasks = relationship(
+        "AITask",
+        back_populates="conversation",
+        cascade="all, delete-orphan",
+        order_by="AITask.created_at",
+        lazy="selectin",
+    )
 
 
 class AIMessage(Base):
@@ -157,5 +164,5 @@ class AITask(Base):
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
     # Relationships
-    conversation = relationship("AIConversation", backref="tasks")
+    conversation = relationship("AIConversation", back_populates="tasks")
     user = relationship("User", backref="ai_tasks")

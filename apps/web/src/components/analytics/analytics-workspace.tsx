@@ -167,30 +167,30 @@ export function AnalyticsWorkspace() {
   return (
     <div className="space-y-6">
       {/* Top Header & Dataset Switcher */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-surface border border-border shadow-soft">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
-              <LineChart className="h-6 w-6 text-teal" />
-              Deterministic Analytics Engine
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-surface border border-border shadow-soft">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
+              <LineChart className="h-5 w-5 sm:h-6 sm:w-6 text-teal shrink-0" />
+              <span>Deterministic Analytics Engine</span>
             </h1>
-            <Badge variant="teal" dot>
+            <Badge variant="teal" dot className="text-[10px] sm:text-xs">
               DuckDB + Polars
             </Badge>
           </div>
-          <p className="text-xs text-slate mt-0.5">
+          <p className="text-xs sm:text-sm text-slate mt-0.5">
             Verified statistical calculations, multidimensional group-bys, percent-changes, and Tukey outlier filters.
           </p>
         </div>
 
         {/* Dataset & Version Selector */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            <label className="text-xs font-semibold text-slate">Active Dataset:</label>
+        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap shrink-0">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <label className="text-xs font-semibold text-slate whitespace-nowrap">Active Dataset:</label>
             <select
               value={selectedDatasetId}
               onChange={(e) => handleDatasetChange(e.target.value)}
-              className="bg-surface text-ink text-xs rounded-xl border border-border px-3 py-2 focus:ring-2 focus:ring-teal outline-none font-medium"
+              className="bg-surface text-ink text-xs rounded-xl border border-border px-3 py-1.5 sm:py-2 focus:ring-2 focus:ring-teal outline-none font-medium flex-1 sm:w-auto max-w-xs truncate"
             >
               {datasets.map((d) => (
                 <option key={d.id} value={d.id}>
@@ -202,7 +202,7 @@ export function AnalyticsWorkspace() {
 
           {selectedDataset && (
             <Link href={`/datasets/${selectedDataset.id}`}>
-              <Button variant="outline" size="sm" className="text-xs">
+              <Button variant="outline" size="sm" className="text-xs whitespace-nowrap">
                 View Schema Lineage &rarr;
               </Button>
             </Link>

@@ -55,16 +55,26 @@ export function CollectionManagement() {
     try {
       setLoading(true);
       const [colRes, dataRes] = await Promise.all([
-        api.get<DatasetCollection[]>("/api/v1/collections"),
-        api.get<{ items: Dataset[] }>("/api/v1/datasets"),
+        api.get<DatasetCollection[] | { items: DatasetCollection[]; total: number }>("/api/v1/collections"),
+        api.get<{ items: Dataset[] } | Dataset[]>("/api/v1/datasets"),
       ]);
-      setCollections(colRes);
-      setDatasets(dataRes.items || []);
-      if (colRes.length > 0 && !selectedCollection) {
-        setSelectedCollection(colRes[0]);
+      const collectionList: DatasetCollection[] = Array.isArray(colRes)
+        ? colRes
+        : (colRes && typeof colRes === "object" && "items" in colRes && Array.isArray((colRes as { items: DatasetCollection[] }).items))
+        ? (colRes as { items: DatasetCollection[] }).items
+        : [];
+      const datasetList: Dataset[] = Array.isArray(dataRes)
+        ? dataRes
+        : (dataRes && typeof dataRes === "object" && "items" in dataRes && Array.isArray((dataRes as { items: Dataset[] }).items))
+        ? (dataRes as { items: Dataset[] }).items
+        : [];
+      setCollections(collectionList);
+      setDatasets(datasetList);
+      if (collectionList.length > 0 && !selectedCollection) {
+        setSelectedCollection(collectionList[0]);
       } else if (selectedCollection) {
-        const updated = colRes.find((c: DatasetCollection) => c.id === selectedCollection.id);
-        setSelectedCollection(updated || (colRes[0] ?? null));
+        const updated = collectionList.find((c: DatasetCollection) => c.id === selectedCollection.id);
+        setSelectedCollection(updated || (collectionList[0] ?? null));
       }
       setError(null);
     } catch (err: unknown) {
@@ -255,28 +265,28 @@ export function CollectionManagement() {
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card border border-border/60 rounded-xl p-5 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
-            <Layers className="h-6 w-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card border border-border/60 rounded-xl p-4 sm:p-5 shadow-xs">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="p-2.5 rounded-lg bg-primary/10 text-primary shrink-0">
+            <Layers className="h-5 w-5 sm:h-6 sm:w-6" />
           </div>
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-semibold text-foreground truncate">
               Dataset Collections & Federation
             </h1>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Group datasets logically and define validated referential relationships for cross-dataset AI analytics.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs whitespace-nowrap"
           >
-            <Plus className="h-4 w-4" />
-            New Collection
+            <Plus className="h-4 w-4 shrink-0" />
+            <span>New Collection</span>
           </button>
         </div>
       </div>

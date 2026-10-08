@@ -128,3 +128,79 @@ def test_provider_factory():
     settings_gemini_withkey = Settings(llm_provider="gemini", llm_api_key="test_api_key_123")
     prov_gemini = get_llm_provider(settings_gemini_withkey)
     assert isinstance(prov_gemini, GeminiProvider)
+
+
+@pytest.mark.asyncio
+async def test_intent_routing_metadata_questions_do_not_call_group_by():
+    """Verify that schema and dataset metadata queries do not call group_by."""
+    provider = MockLLMProvider()
+    
+    # 1. Dataset description
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="What type of data is it?")])
+    assert len(resp.tool_calls) == 0
+    assert resp.finish_reason == "stop"
+    assert "records" in resp.message.lower() or "dataset" in resp.message.lower()
+
+    # 2. Schema column count
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="How many columns are there in this data?")])
+    assert len(resp.tool_calls) == 0
+    assert resp.finish_reason == "stop"
+    assert "columns" in resp.message.lower()
+
+    # 3. Column listing
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="What columns are in this dataset?")])
+    assert len(resp.tool_calls) == 0
+    assert resp.finish_reason == "stop"
+    assert "schema" in resp.message.lower() or "role" in resp.message.lower()
+
+    # 4. Row count
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="How many rows are there?")])
+    assert len(resp.tool_calls) == 0
+    assert resp.finish_reason == "stop"
+    assert "records" in resp.message.lower() or "rows" in resp.message.lower()
+
+    # 5. Data quality / nulls
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="Are there missing values?")])
+    assert len(resp.tool_calls) == 0
+    assert resp.finish_reason == "stop"
+    assert "missing" in resp.message.lower() or "quality" in resp.message.lower()
+
+
+@pytest.mark.asyncio
+async def test_intent_routing_analytical_questions_call_proper_tools():
+    """Verify analytical queries route to group_by or describe_dataset with matched schema columns."""
+    provider = MockLLMProvider()
+
+    # Highest cost by channel
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="What channel has the highest cost?")])
+    assert len(resp.tool_calls) == 1
+    call = resp.tool_calls[0]
+    assert call.name == "group_by"
+    assert "channel" in call.arguments.get("dimensions", [])
+    assert any(agg.get("column") == "cost" for agg in call.arguments.get("aggregations", []))
+
+    # Highest profit by product
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="Which product has the highest profit?")])
+    assert len(resp.tool_calls) == 1
+    call = resp.tool_calls[0]
+    assert call.name == "group_by"
+    assert "product" in call.arguments.get("dimensions", [])
+    assert any(agg.get("column") == "profit" for agg in call.arguments.get("aggregations", []))
+
+    # Total revenue
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="What is the total revenue?")])
+    assert len(resp.tool_calls) == 1
+    call = resp.tool_calls[0]
+    assert call.name == "describe_dataset"
+    assert call.arguments.get("columns") == ["revenue"]
+
+
+@pytest.mark.asyncio
+async def test_no_generic_group_by_fallback_for_unrelated_queries():
+    """Verify that uninterpretable queries do not trigger arbitrary group_by(transaction_id, quantity)."""
+    provider = MockLLMProvider()
+    resp = await provider.generate(messages=[LLMMessage(role="user", content="Can you bake a chocolate cake?")])
+    assert len(resp.tool_calls) == 0
+    assert resp.finish_reason == "stop"
+    assert "could not identify" in resp.message.lower()
+

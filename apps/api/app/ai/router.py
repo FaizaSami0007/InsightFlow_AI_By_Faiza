@@ -240,23 +240,40 @@ async def get_conversation_tasks(
     res = await db.execute(stmt)
     tasks = res.scalars().all()
 
-    return [
-        {
-            "id": t.id,
-            "conversation_id": t.conversation_id,
-            "parent_task_id": t.parent_task_id,
-            "agent_id": t.agent_id,
-            "task_type": t.task_type,
-            "status": t.status,
-            "priority": t.priority,
-            "dependencies": t.dependencies_json,
-            "input": t.input_json,
-            "output": t.output_json,
-            "evidence": t.evidence_json,
-            "error_message": t.error_message,
-            "execution_time_ms": t.execution_time_ms,
-            "created_at": t.created_at.isoformat() if t.created_at else None,
-            "completed_at": t.completed_at.isoformat() if t.completed_at else None,
-        }
-        for t in tasks
-    ]
+    result_items = []
+    for idx, t in enumerate(tasks):
+        input_data = t.input_json or {}
+        output_data = t.output_json or {}
+        exec_order = input_data.get("execution_order", idx)
+        task_name = input_data.get("task_name") or t.agent_id.replace("_", " ").title()
+        objective = input_data.get("objective") or f"Execute {t.task_type} with {t.agent_id}"
+        val_report = output_data.get("validation_report")
+
+        result_items.append(
+            {
+                "id": t.id,
+                "conversation_id": t.conversation_id,
+                "parent_task_id": t.parent_task_id,
+                "agent_id": t.agent_id,
+                "task_type": t.task_type,
+                "task_name": task_name,
+                "objective": objective,
+                "status": t.status,
+                "priority": t.priority,
+                "execution_order": exec_order,
+                "depends_on_task_ids": t.dependencies_json or ([] if not t.parent_task_id else [t.parent_task_id]),
+                "dependencies": t.dependencies_json,
+                "duration_ms": t.execution_time_ms,
+                "execution_time_ms": t.execution_time_ms,
+                "tokens_used": output_data.get("tokens_used", 0),
+                "validation_report": val_report,
+                "input": input_data,
+                "output": output_data,
+                "evidence": t.evidence_json,
+                "error_message": t.error_message,
+                "created_at": t.created_at.isoformat() if t.created_at else None,
+                "completed_at": t.completed_at.isoformat() if t.completed_at else None,
+            }
+        )
+
+    return result_items

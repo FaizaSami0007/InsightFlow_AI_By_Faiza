@@ -32,7 +32,7 @@ export function Header() {
     : "US";
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 w-full items-center justify-between border-b border-border bg-surface/90 px-4 backdrop-blur-sm sm:px-6">
+    <header className="sticky top-0 z-20 flex h-14 w-full items-center justify-between border-b border-border bg-surface/90 px-3 sm:px-6 backdrop-blur-sm gap-2 sm:gap-4">
       <div className="flex items-center gap-3">
         {/* Mobile menu trigger */}
         <button

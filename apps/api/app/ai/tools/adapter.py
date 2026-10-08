@@ -469,6 +469,29 @@ class AIToolAdapter:
         offset = args.pop("offset", 0)
         sort_by = args.pop("sort_by", None)
 
+        parsed_sort_by = None
+        if sort_by:
+            from app.analytics.engine.contracts import SortOrder, SortSpecification
+            if isinstance(sort_by, list):
+                parsed_sort_by = []
+                for s in sort_by:
+                    if isinstance(s, dict):
+                        ord_val = s.get("order", "ASC")
+                        ord_enum = SortOrder.DESC if str(ord_val).upper() == "DESC" else SortOrder.ASC
+                        parsed_sort_by.append(SortSpecification(column=s.get("column", ""), order=ord_enum))
+                    elif isinstance(s, SortSpecification):
+                        parsed_sort_by.append(s)
+            elif isinstance(sort_by, dict):
+                ord_val = sort_by.get("order", "ASC")
+                ord_enum = SortOrder.DESC if str(ord_val).upper() == "DESC" else SortOrder.ASC
+                parsed_sort_by = [SortSpecification(column=sort_by.get("column", ""), order=ord_enum)]
+            elif isinstance(sort_by, str):
+                parts = sort_by.strip().split()
+                col = parts[0]
+                ord_str = parts[1].upper() if len(parts) > 1 else "ASC"
+                ord_enum = SortOrder.DESC if ord_str == "DESC" else SortOrder.ASC
+                parsed_sort_by = [SortSpecification(column=col, order=ord_enum)]
+
         run_req = AnalysisRunRequest(
             dataset_id=dataset_id,
             dataset_version_id=dataset_version_id,
@@ -477,7 +500,7 @@ class AIToolAdapter:
             filters=filters,
             limit=limit,
             offset=offset,
-            sort_by=sort_by,
+            sort_by=parsed_sort_by,
         )
 
         response = await analytics_service.run_analysis(

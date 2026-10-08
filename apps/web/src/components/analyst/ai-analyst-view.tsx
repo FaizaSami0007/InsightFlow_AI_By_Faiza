@@ -112,6 +112,63 @@ function MessageVisualizationCard({ spec }: { spec: VisualizationSpec }) {
   return <VisualizationRenderer spec={spec} data={data} columns={columns} />;
 }
 
+function renderInlineFormatting(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, idx) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={idx} className="font-semibold text-ink">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+}
+
+function FormattedMessageContent({ content }: { content: string }) {
+  const paragraphs = content.split("\n\n");
+
+  return (
+    <div className="space-y-2">
+      {paragraphs.map((para, pIdx) => {
+        const lines = para.split("\n");
+        const isBulletList = lines.every(
+          (l) => l.trim().startsWith("- ") || l.trim().startsWith("* ") || l.trim() === ""
+        );
+
+        if (isBulletList && lines.some((l) => l.trim().startsWith("- ") || l.trim().startsWith("* "))) {
+          return (
+            <ul key={pIdx} className="list-disc list-inside space-y-1 my-1">
+              {lines
+                .filter((l) => l.trim().length > 0)
+                .map((line, lIdx) => {
+                  const itemText = line.replace(/^[-*]\s+/, "");
+                  return (
+                    <li key={lIdx} className="text-xs">
+                      {renderInlineFormatting(itemText)}
+                    </li>
+                  );
+                })}
+            </ul>
+          );
+        }
+
+        return (
+          <p key={pIdx} className="text-xs leading-relaxed">
+            {lines.map((l, lIdx) => (
+              <React.Fragment key={lIdx}>
+                {lIdx > 0 && <br />}
+                {renderInlineFormatting(l)}
+              </React.Fragment>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystViewProps) {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [selectedDatasetId, setSelectedDatasetId] = useState<string>(initialDatasetId || "");
@@ -385,22 +442,22 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
       : [];
 
   return (
-    <div className="flex h-[calc(100vh-7.5rem)] max-w-7xl mx-auto rounded-2xl border border-border bg-surface overflow-hidden shadow-soft">
+    <div className="flex h-[calc(100vh-6.5rem)] sm:h-[calc(100vh-7.5rem)] max-w-7xl mx-auto rounded-2xl border border-border bg-surface overflow-hidden shadow-soft w-full min-w-0">
       {/* ─── LEFT SIDEBAR: CONVERSATION SESSIONS ─── */}
-      <aside className="w-72 border-r border-border bg-cloud/40 flex flex-col shrink-0 hidden md:flex">
+      <aside className="w-56 lg:w-64 border-r border-border bg-cloud/40 flex flex-col shrink-0 hidden md:flex min-h-0">
         {/* New Session Button */}
-        <div className="p-3 border-b border-border">
+        <div className="p-3 border-b border-border shrink-0">
           <Button
             onClick={handleNewConversation}
-            className="w-full flex items-center justify-center gap-2 rounded-xl text-xs py-2"
+            className="w-full flex items-center justify-center gap-2 rounded-xl text-xs py-2 whitespace-nowrap"
           >
-            <Plus className="h-3.5 w-3.5" />
+            <Plus className="h-3.5 w-3.5 shrink-0" />
             <span>New Analysis Session</span>
           </Button>
         </div>
 
         {/* Conversation List */}
-        <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        <div className="flex-1 overflow-y-auto p-2 space-y-1 min-h-0">
           <p className="px-2 py-1 text-[10px] font-semibold text-slate uppercase tracking-wider">
             Past Conversations
           </p>
@@ -421,7 +478,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                       : "text-ink hover:bg-cloud border border-transparent"
                   }`}
                 >
-                  <div className="flex items-center gap-2 overflow-hidden flex-1">
+                  <div className="flex items-center gap-2 overflow-hidden flex-1 min-w-0">
                     <MessageSquare className="h-3.5 w-3.5 shrink-0 text-slate" />
                     <span className="truncate text-xs">{conv.title || "Untitled Session"}</span>
                   </div>
@@ -430,7 +487,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                       e.stopPropagation();
                       setConversationToDelete(conv.id);
                     }}
-                    className="opacity-0 group-hover:opacity-100 p-1 rounded-lg text-slate hover:text-danger hover:bg-danger-soft transition-all"
+                    className="opacity-0 group-hover:opacity-100 p-1 rounded-lg text-slate hover:text-danger hover:bg-danger-soft transition-all shrink-0"
                     title="Delete Conversation"
                     aria-label="Delete conversation"
                   >
@@ -444,32 +501,32 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
       </aside>
 
       {/* ─── MAIN ANALYST CHAT WORKSPACE ─── */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden bg-surface">
+      <div className="flex-1 flex flex-col h-full overflow-hidden bg-surface min-w-0">
         {/* Header Bar: Dataset & Version Selector */}
-        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-3 sm:px-6 py-3.5 border-b border-border bg-cloud/30">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
+        <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 sm:gap-3 px-3 sm:px-5 py-3 border-b border-border bg-cloud/30 shrink-0">
+          <div className="flex items-center justify-between gap-2 min-w-0 flex-1">
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
               <div className="flex h-8 sm:h-9 w-8 sm:w-9 items-center justify-center rounded-xl bg-teal text-white shadow-soft shrink-0">
                 <Sparkles className="h-4 w-4" />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xs sm:text-sm font-bold text-ink">Conversational AI Analyst</h2>
-                  <Badge variant="teal" className="text-[10px] hidden sm:inline-flex">Multi-Agent DAG</Badge>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <h2 className="text-xs sm:text-sm font-bold text-ink truncate">Conversational AI Analyst</h2>
+                  <Badge variant="teal" className="text-[10px] hidden sm:inline-flex shrink-0">Multi-Agent DAG</Badge>
                 </div>
-                <p className="text-[10px] sm:text-[11px] text-slate truncate max-w-[200px] sm:max-w-none">
+                <p className="text-[10px] sm:text-[11px] text-slate truncate max-w-[180px] sm:max-w-xs lg:max-w-none">
                   Governed 9-agent DAG orchestrator with deterministic tools &amp; Critic validation
                 </p>
               </div>
             </div>
 
             {/* Mobile Session Toggle */}
-            <div className="flex items-center gap-1 md:hidden">
+            <div className="flex items-center gap-1 md:hidden shrink-0">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowMobileSessions(!showMobileSessions)}
-                className="text-xs h-7 px-2 gap-1 border-border"
+                className="text-xs h-7 px-2 gap-1 border-border whitespace-nowrap"
                 title="Toggle Past Sessions"
               >
                 <MessageSquare className="h-3 w-3 text-teal" />
@@ -488,7 +545,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
           </div>
 
           {/* Dataset & Version Selectors + Task Graph Trigger */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0 w-full md:w-auto">
             {activeConversationId && (
               <Button
                 variant="outline"
@@ -496,7 +553,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                   loadConversationTasks(activeConversationId);
                   setShowTaskModal(true);
                 }}
-                className="text-xs h-8 px-2.5 flex items-center gap-1.5 border-teal-border text-teal-dark bg-teal-soft/40 hover:bg-teal-soft"
+                className="text-xs h-8 px-2.5 flex items-center gap-1.5 border-teal-border text-teal-dark bg-teal-soft/40 hover:bg-teal-soft whitespace-nowrap"
                 title="View Multi-Agent Task Execution Graph"
               >
                 <Network className="h-3.5 w-3.5 text-teal" />
@@ -504,7 +561,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
               </Button>
             )}
 
-            <div className="flex-1 sm:w-44 min-w-[120px]">
+            <div className="flex-1 sm:w-40 md:w-44 min-w-[110px]">
               <Select
                 options={datasets.map((d) => ({ value: d.id, label: d.name }))}
                 value={selectedDatasetId}
@@ -513,7 +570,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
               />
             </div>
             {versionOptions.length > 0 && (
-              <div className="flex-1 sm:w-36 min-w-[100px]">
+              <div className="flex-1 sm:w-32 md:w-36 min-w-[90px]">
                 <Select
                   options={versionOptions}
                   value={selectedVersionId}
@@ -687,7 +744,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                   )}
 
                   {/* Message Body */}
-                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                  <FormattedMessageContent content={msg.content} />
 
                   {/* Grounded Interactive Visualization */}
                   {msg.visualization && (
@@ -779,39 +836,39 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
 
         {/* ─── SUGGESTED FOLLOW-UP QUESTION CHIPS ─── */}
         {activeSuggestions.length > 0 && !isLoading && (
-          <div className="px-6 py-2 border-t border-border/40 bg-cloud/20 flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] font-semibold text-slate uppercase tracking-wider mr-1">
+          <div className="px-3 sm:px-5 py-2 border-t border-border/40 bg-cloud/20 flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+            <span className="text-[10px] font-semibold text-slate uppercase tracking-wider whitespace-nowrap mr-1 shrink-0">
               Suggested next:
             </span>
             {activeSuggestions.map((s, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSendMessage(s)}
-                className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface px-2.5 py-1 text-[11px] text-ink hover:bg-teal-soft hover:border-teal-border hover:text-teal-dark transition-all"
+                className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface px-2.5 py-1 text-[11px] text-ink hover:bg-teal-soft hover:border-teal-border hover:text-teal-dark transition-all whitespace-nowrap shrink-0"
               >
                 <span>{s}</span>
-                <ArrowRight className="h-2.5 w-2.5 text-slate" />
+                <ArrowRight className="h-2.5 w-2.5 text-slate shrink-0" />
               </button>
             ))}
           </div>
         )}
 
         {/* ─── INPUT AREA ─── */}
-        <footer className="p-4 border-t border-border bg-surface">
+        <footer className="p-3 sm:p-4 border-t border-border bg-surface shrink-0">
           <div className="flex items-end gap-2">
             <textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`Ask anything about ${selectedDataset?.name || "the dataset"} (e.g. "What region has highest revenue?")`}
+              placeholder={`Ask anything about ${selectedDataset?.name || "the dataset"} (e.g. "What channel has highest cost?")`}
               rows={2}
-              className="flex-1 resize-none rounded-xl border border-border bg-cloud px-3 py-2 text-xs text-ink placeholder:text-slate focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
+              className="flex-1 resize-none rounded-xl border border-border bg-cloud px-3 py-2 text-xs text-ink placeholder:text-slate focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal min-h-[44px]"
               aria-label="Analytical query input"
             />
             <Button
               onClick={() => handleSendMessage()}
               disabled={!inputValue.trim() || isLoading}
-              className="h-10 px-4 rounded-xl flex items-center gap-1.5"
+              className="h-10 px-3.5 sm:px-4 rounded-xl flex items-center gap-1.5 whitespace-nowrap shrink-0"
             >
               <Send className="h-3.5 w-3.5" />
               <span>Send</span>
