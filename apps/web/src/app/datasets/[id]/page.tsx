@@ -148,9 +148,9 @@ export default function DatasetDetailPage() {
               <span>/</span>
               <span className="text-ink font-semibold truncate max-w-xs">{dataset.name}</span>
             </nav>
-            <h1 className="text-2xl font-bold tracking-tight text-ink">{dataset.name}</h1>
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink">{dataset.name}</h1>
             {dataset.description && (
-              <p className="text-sm text-slate max-w-3xl">{dataset.description}</p>
+              <p className="text-xs sm:text-sm text-slate max-w-3xl">{dataset.description}</p>
             )}
           </div>
 

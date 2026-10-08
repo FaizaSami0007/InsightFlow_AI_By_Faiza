@@ -74,10 +74,10 @@ export default function Home() {
                 <Sparkles className="h-3.5 w-3.5" />
                 Phase 1 Foundation Ready
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink">
                 InsightFlow AI Analytics Platform
               </h1>
-              <p className="text-sm text-slate leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate leading-relaxed">
                 Automated data analysis and context-aware dashboard generation. The LLM reasons over analytical plans;
                 deterministic tools calculate truth with complete provenance.
               </p>

@@ -94,10 +94,10 @@ export default function DashboardsListPage() {
               <Sparkles className="h-3.5 w-3.5" />
               <span>Phase 8 Context-Aware Dashboard Intelligence</span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-ink mt-1">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink mt-1">
               Analytics Dashboards
             </h1>
-            <p className="text-xs md:text-sm text-slate mt-1">
+            <p className="text-xs text-slate mt-1">
               AI-generated, grounded, deterministic analytical dashboards with structured provenance.
             </p>
           </div>

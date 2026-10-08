@@ -260,8 +260,8 @@ export function ObservabilityWorkspace() {
             <Card className="border-slate-200">
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">P50 Latency (Median)</CardDescription>
-                <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Clock className="h-5 w-5 text-sky-600 shrink-0" />
+                <CardTitle className="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-1.5">
+                  <Clock className="h-4 w-4 text-sky-600 shrink-0" />
                   {telemetry?.latency_ms?.p50 || 18.4} ms
                 </CardTitle>
               </CardHeader>
@@ -275,8 +275,8 @@ export function ObservabilityWorkspace() {
             <Card className="border-slate-200">
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">P95 Latency (SLA Bound)</CardDescription>
-                <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Clock className="h-5 w-5 text-indigo-600 shrink-0" />
+                <CardTitle className="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-1.5">
+                  <Clock className="h-4 w-4 text-indigo-600 shrink-0" />
                   {telemetry?.latency_ms?.p95 || 68.1} ms
                 </CardTitle>
               </CardHeader>
@@ -288,8 +288,8 @@ export function ObservabilityWorkspace() {
             <Card className="border-slate-200">
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">Throughput (RPS)</CardDescription>
-                <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Zap className="h-5 w-5 text-amber-500 shrink-0" />
+                <CardTitle className="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-1.5">
+                  <Zap className="h-4 w-4 text-amber-500 shrink-0" />
                   {telemetry?.requests_per_second || 42.5} req/s
                 </CardTitle>
               </CardHeader>
@@ -303,8 +303,8 @@ export function ObservabilityWorkspace() {
             <Card className="border-slate-200">
               <CardHeader className="pb-1">
                 <CardDescription className="text-xs font-medium text-slate-500">Memory RSS & CPU</CardDescription>
-                <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-1.5">
-                  <Cpu className="h-5 w-5 text-purple-600 shrink-0" />
+                <CardTitle className="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-1.5">
+                  <Cpu className="h-4 w-4 text-purple-600 shrink-0" />
                   {telemetry?.memory_usage_mb || 185} MB
                 </CardTitle>
               </CardHeader>
@@ -368,7 +368,7 @@ export function ObservabilityWorkspace() {
             <Card className="border-teal-200/70 bg-teal-50/40">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs font-medium text-teal-800">Cache Hit Ratio</CardDescription>
-                <CardTitle className="text-3xl font-extrabold text-teal-900 flex items-center gap-2">
+                <CardTitle className="text-lg sm:text-xl font-bold text-teal-900 flex items-center gap-2">
                   {cacheStats?.hit_ratio_percent || 93.5}%
                 </CardTitle>
               </CardHeader>
@@ -382,7 +382,7 @@ export function ObservabilityWorkspace() {
             <Card className="border-slate-200">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs font-medium text-slate-500">Cached Key Capacity</CardDescription>
-                <CardTitle className="text-3xl font-bold text-slate-800">
+                <CardTitle className="text-lg sm:text-xl font-bold text-slate-800">
                   {cacheStats?.total_keys || 48} / {cacheStats?.max_capacity || 2000}
                 </CardTitle>
               </CardHeader>

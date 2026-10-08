@@ -79,15 +79,15 @@ export const PageHero = React.forwardRef<HTMLDivElement, PageHeroProps>(
                 {icon}
               </div>
             )}
-            <div className="space-y-1 min-w-0 flex-1">
+            <div className="space-y-0.5 min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink break-words">
+                <h1 className="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-ink break-words">
                   {title}
                 </h1>
                 {badge}
               </div>
               {description && (
-                <p className="text-xs sm:text-sm text-slate leading-relaxed break-words">
+                <p className="text-xs text-slate leading-relaxed break-words">
                   {description}
                 </p>
               )}
@@ -99,13 +99,13 @@ export const PageHero = React.forwardRef<HTMLDivElement, PageHeroProps>(
             <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 sm:gap-4 pt-3 xl:pt-0 border-t xl:border-t-0 border-border/70 shrink-0">
               {metric && (
                 <div className="text-left sm:text-right shrink-0 pr-1">
-                  <span className="text-[11px] text-slate block font-medium uppercase tracking-wider">
+                  <span className="text-[10px] sm:text-[11px] text-slate block font-medium uppercase tracking-wider">
                     {metric.label}
                   </span>
                   <div className="flex items-baseline gap-1 sm:justify-end">
                     <span
                       className={cn(
-                        "text-xl sm:text-2xl font-black font-mono tracking-tight",
+                        "text-lg sm:text-xl font-bold font-mono tracking-tight",
                         metricColors[metric.variant || "teal"]
                       )}
                     >

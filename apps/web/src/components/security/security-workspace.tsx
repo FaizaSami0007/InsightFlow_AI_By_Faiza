@@ -395,8 +395,8 @@ export function SecurityWorkspace() {
             <Card className="border-teal-200/70 bg-teal-50/40">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs font-medium text-teal-800">Overall Technical Posture</CardDescription>
-                <CardTitle className="text-2xl font-bold text-teal-900 flex items-center gap-2">
-                  <CheckCircle2 className="h-6 w-6 text-teal-600" />
+                <CardTitle className="text-lg sm:text-xl font-bold text-teal-900 flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-teal-600 shrink-0" />
                   {scorecard?.overall_status || "PASS"} — Enterprise Ready
                 </CardTitle>
               </CardHeader>
@@ -410,7 +410,7 @@ export function SecurityWorkspace() {
             <Card className="border-slate-200">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs font-medium text-slate-500">Evaluated Dimensions</CardDescription>
-                <CardTitle className="text-2xl font-bold text-slate-800">
+                <CardTitle className="text-lg sm:text-xl font-bold text-slate-800">
                   {scorecard?.passed_dimensions || 15} / {scorecard?.total_dimensions || 15} Passed
                 </CardTitle>
               </CardHeader>
@@ -424,8 +424,8 @@ export function SecurityWorkspace() {
             <Card className="border-slate-200">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs font-medium text-slate-500">Runtime Isolation</CardDescription>
-                <CardTitle className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                  <Lock className="h-5 w-5 text-indigo-600" />
+                <CardTitle className="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2">
+                  <Lock className="h-4 w-4 text-indigo-600 shrink-0" />
                   Zero-Trust Enforced
                 </CardTitle>
               </CardHeader>
