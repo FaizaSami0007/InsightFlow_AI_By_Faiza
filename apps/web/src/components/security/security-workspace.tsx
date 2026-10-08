@@ -31,6 +31,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageHero } from "@/components/ui/page-hero";
+import { api } from "@/lib/api-client";
 import {
   ScorecardDimension,
   SecurityAuditLogResponse,
@@ -38,11 +40,6 @@ import {
   ThreatModelResponse,
   ThreatVectorItem,
 } from "@/types";
-
-const API_BASE =
-  process.env.API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== "undefined" ? "" : "http://127.0.0.1:8000");
 
 export function SecurityWorkspace() {
   const [activeTab, setActiveTab] = React.useState<string>("scorecard");
@@ -74,229 +71,223 @@ export function SecurityWorkspace() {
   const fetchSecurityData = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    try {
-      // Mock / Default fallback state if server is offline
-      const mockScorecard: SecurityScorecardResponse = {
-        overall_status: "PASS",
-        overall_score: 93.5,
+    // Mock / Default fallback state if server is offline
+    const mockScorecard: SecurityScorecardResponse = {
+      overall_status: "PASS",
+      overall_score: 93.5,
+      environment: "production",
+      config_audit: {
         environment: "production",
-        config_audit: {
-          environment: "production",
-          is_production_ready: true,
-          issues: [],
-          passed_checks: [
-            "Debug mode is disabled.",
-            "JWT Secret meets entropy and length requirements (>=32 chars).",
-            "CORS origins restricted to trusted origins.",
-            "Database SQL echoing is disabled.",
-            "Access token expiration configured safely (30 min).",
-          ],
-          total_checks: 5,
-        },
-        dimensions: [
-          {
-            id: "identity",
-            name: "Identity & Authentication",
-            status: "PASS",
-            score: 95,
-            controls_enforced: ["Bcrypt Password Hashing", "Enterprise Password Policy", "JWT Expiration & JTI Tracking", "Auth Rate Limiting"],
-            summary: "Centralized identity provider with strict complexity checks and token signing.",
-          },
-          {
-            id: "authorization",
-            name: "Authorization & RBAC",
-            status: "PASS",
-            score: 95,
-            controls_enforced: ["5-Tier Role Hierarchy", "Deterministic Permission Matrix", "FastAPI Dependency Enforcement", "Zero Implicit Trust"],
-            summary: "Explicit server-side role and permission enforcement on every resource.",
-          },
-          {
-            id: "tenant_isolation",
-            name: "Multi-Tenant Isolation & IDOR",
-            status: "PASS",
-            score: 92,
-            controls_enforced: ["Workspace ID Scoping", "Owner ID Verification on CRUD", "Cross-Tenant Query Blocking", "Isolated Storage Paths"],
-            summary: "Strict tenant boundary enforcement at both the API layer and database queries.",
-          },
-          {
-            id: "database_security",
-            name: "Database Security & Injection Defense",
-            status: "PASS",
-            score: 95,
-            controls_enforced: ["SQLAlchemy Parameterized Queries", "SQLSafetyValidator Read-Only Parsing", "Zero Arbitrary SQL Execution", "ORM Model Abstraction"],
-            summary: "Parameterized statements with dedicated AST validator blocking mutation statements.",
-          },
-          {
-            id: "api_security",
-            name: "API Security & Rate Limiting",
-            status: "PASS",
-            score: 90,
-            controls_enforced: ["Sliding Window Rate Limiter", "Strong Pydantic V2 Schemas", "X-Request-ID Tracing", "Standardized Error Handlers"],
-            summary: "Typed request parsing, correlation tracing, and per-endpoint sliding rate limits.",
-          },
-          {
-            id: "file_security",
-            name: "File Upload & Document Security",
-            status: "PASS",
-            score: 92,
-            controls_enforced: ["Magic Byte Header Validation", "Dangerous Binary/PE/ELF Blocking", "Path Traversal Sanitization", "Zip Bomb Ratio Thresholds"],
-            summary: "Multi-stage file validation inspecting real binary signatures before ingestion.",
-          },
-          {
-            id: "connector_security",
-            name: "Enterprise Connectors & SSRF",
-            status: "PASS",
-            score: 95,
-            controls_enforced: ["SSRFGuard RFC1918 / Cloud Metadata Blocking", "DNS Resolution Inspection", "Fernet Credential Encryption", "Strict Read-Only Enforcement"],
-            summary: "External connectors run within hardened network and credential isolation boundaries.",
-          },
-          {
-            id: "ai_prompt_security",
-            name: "AI Prompt Injection & Jailbreak Defense",
-            status: "PASS",
-            score: 90,
-            controls_enforced: ["PromptGuard Direct Injection Filters", "System Prompt Probe Detection", "Untrusted Context Boundary Delimiters", "Control Token Neutralization"],
-            summary: "Direct and indirect prompt injection filtering with structured context encapsulation.",
-          },
-          {
-            id: "tool_security",
-            name: "AI Tool Security & Policy Boundaries",
-            status: "PASS",
-            score: 92,
-            controls_enforced: ["Explicit Tool Permission Mapping", "Tool Escalation Prevention", "Strict Input/Output Validation", "Caller Role Verification"],
-            summary: "AI agents can only invoke authorized tools within the caller's explicit permission scope.",
-          },
-          {
-            id: "agent_guardrails",
-            name: "Multi-Agent Orchestration Guardrails",
-            status: "PASS",
-            score: 90,
-            controls_enforced: ["Max Recursion Depth Limits", "Max Tool Calls per Turn", "Loop Detection Breaker", "Immutable User Context Propagation"],
-            summary: "Resource-bounded multi-agent task execution preventing runaway loops and DoS.",
-          },
-          {
-            id: "mlops_security",
-            name: "MLOps & Model Lifecycle Security",
-            status: "PASS",
-            score: 92,
-            controls_enforced: ["Artifact Integrity Verification", "Version Immutability", "Gated Promotion Workflows", "Safe Model Serialization"],
-            summary: "Model registry and training jobs operate with strict artifact versioning and provenance.",
-          },
-          {
-            id: "secret_management",
-            name: "Secret Management & Encryption",
-            status: "PASS",
-            score: 92,
-            controls_enforced: ["Fernet Symmetric Encryption", "Credential Masking in API/Logs", "Environment Variable Isolation", "Zero Plaintext Storage"],
-            summary: "Secrets are encrypted at rest with automatic redaction from all public responses.",
-          },
-          {
-            id: "audit_trail",
-            name: "Audit Logging & Immutability",
-            status: "PASS",
-            score: 95,
-            controls_enforced: ["Structured SecurityAuditLog Table", "Action / Actor / Resource Tracking", "Tamper-Resistant Log Recording", "Admin-Only Log Query API"],
-            summary: "Comprehensive security event trail tracking authentication, CRUD, and blocked attacks.",
-          },
-          {
-            id: "headers_and_cors",
-            name: "Security Headers & CORS",
-            status: "PASS",
-            score: 95,
-            controls_enforced: ["Content-Security-Policy (CSP)", "X-Content-Type-Options: nosniff", "X-Frame-Options: DENY", "Strict Referrer-Policy", "Restricted CORS Origins"],
-            summary: "OWASP-compliant HTTP security headers and strictly bounded origin access.",
-          },
-          {
-            id: "export_security",
-            name: "Export Security & CSV Injection Defense",
-            status: "PASS",
-            score: 94,
-            controls_enforced: ["Spreadsheet Formula Neutralization", "Dangerous Prefix Escaping (=, +, -, @, \\t, \\r)", "Filename Sanitization", "Export Role Authorization"],
-            summary: "Dynamic neutralization of spreadsheet formula injection vectors across all exports.",
-          },
+        is_production_ready: true,
+        issues: [],
+        passed_checks: [
+          "Debug mode is disabled.",
+          "JWT Secret meets entropy and length requirements (>=32 chars).",
+          "CORS origins restricted to trusted origins.",
+          "Database SQL echoing is disabled.",
+          "Access token expiration configured safely (30 min).",
         ],
-        total_dimensions: 15,
-        passed_dimensions: 15,
-      };
+        total_checks: 5,
+      },
+      dimensions: [
+        {
+          id: "identity",
+          name: "Identity & Authentication",
+          status: "PASS",
+          score: 95,
+          controls_enforced: ["Bcrypt Password Hashing", "Enterprise Password Policy", "JWT Expiration & JTI Tracking", "Auth Rate Limiting"],
+          summary: "Centralized identity provider with strict complexity checks and token signing.",
+        },
+        {
+          id: "authorization",
+          name: "Authorization & RBAC",
+          status: "PASS",
+          score: 95,
+          controls_enforced: ["5-Tier Role Hierarchy", "Deterministic Permission Matrix", "FastAPI Dependency Enforcement", "Zero Implicit Trust"],
+          summary: "Explicit server-side role and permission enforcement on every resource.",
+        },
+        {
+          id: "tenant_isolation",
+          name: "Multi-Tenant Isolation & IDOR",
+          status: "PASS",
+          score: 92,
+          controls_enforced: ["Workspace ID Scoping", "Owner ID Verification on CRUD", "Cross-Tenant Query Blocking", "Isolated Storage Paths"],
+          summary: "Strict tenant boundary enforcement at both the API layer and database queries.",
+        },
+        {
+          id: "database_security",
+          name: "Database Security & Injection Defense",
+          status: "PASS",
+          score: 95,
+          controls_enforced: ["SQLAlchemy Parameterized Queries", "SQLSafetyValidator Read-Only Parsing", "Zero Arbitrary SQL Execution", "ORM Model Abstraction"],
+          summary: "Parameterized statements with dedicated AST validator blocking mutation statements.",
+        },
+        {
+          id: "api_security",
+          name: "API Security & Rate Limiting",
+          status: "PASS",
+          score: 90,
+          controls_enforced: ["Sliding Window Rate Limiter", "Strong Pydantic V2 Schemas", "X-Request-ID Tracing", "Standardized Error Handlers"],
+          summary: "Typed request parsing, correlation tracing, and per-endpoint sliding rate limits.",
+        },
+        {
+          id: "file_security",
+          name: "File Upload & Document Security",
+          status: "PASS",
+          score: 92,
+          controls_enforced: ["Magic Byte Header Validation", "Dangerous Binary/PE/ELF Blocking", "Path Traversal Sanitization", "Zip Bomb Ratio Thresholds"],
+          summary: "Multi-stage file validation inspecting real binary signatures before ingestion.",
+        },
+        {
+          id: "connector_security",
+          name: "Enterprise Connectors & SSRF",
+          status: "PASS",
+          score: 95,
+          controls_enforced: ["SSRFGuard RFC1918 / Cloud Metadata Blocking", "DNS Resolution Inspection", "Fernet Credential Encryption", "Strict Read-Only Enforcement"],
+          summary: "External connectors run within hardened network and credential isolation boundaries.",
+        },
+        {
+          id: "ai_prompt_security",
+          name: "AI Prompt Injection & Jailbreak Defense",
+          status: "PASS",
+          score: 90,
+          controls_enforced: ["PromptGuard Direct Injection Filters", "System Prompt Probe Detection", "Untrusted Context Boundary Delimiters", "Control Token Neutralization"],
+          summary: "Direct and indirect prompt injection filtering with structured context encapsulation.",
+        },
+        {
+          id: "tool_security",
+          name: "AI Tool Security & Policy Boundaries",
+          status: "PASS",
+          score: 92,
+          controls_enforced: ["Explicit Tool Permission Mapping", "Tool Escalation Prevention", "Strict Input/Output Validation", "Caller Role Verification"],
+          summary: "AI agents can only invoke authorized tools within the caller's explicit permission scope.",
+        },
+        {
+          id: "agent_guardrails",
+          name: "Multi-Agent Orchestration Guardrails",
+          status: "PASS",
+          score: 90,
+          controls_enforced: ["Max Recursion Depth Limits", "Max Tool Calls per Turn", "Loop Detection Breaker", "Immutable User Context Propagation"],
+          summary: "Resource-bounded multi-agent task execution preventing runaway loops and DoS.",
+        },
+        {
+          id: "mlops_security",
+          name: "MLOps & Model Lifecycle Security",
+          status: "PASS",
+          score: 92,
+          controls_enforced: ["Artifact Integrity Verification", "Version Immutability", "Gated Promotion Workflows", "Safe Model Serialization"],
+          summary: "Model registry and training jobs operate with strict artifact versioning and provenance.",
+        },
+        {
+          id: "secret_management",
+          name: "Secret Management & Encryption",
+          status: "PASS",
+          score: 92,
+          controls_enforced: ["Fernet Symmetric Encryption", "Credential Masking in API/Logs", "Environment Variable Isolation", "Zero Plaintext Storage"],
+          summary: "Secrets are encrypted at rest with automatic redaction from all public responses.",
+        },
+        {
+          id: "audit_trail",
+          name: "Audit Logging & Immutability",
+          status: "PASS",
+          score: 95,
+          controls_enforced: ["Structured SecurityAuditLog Table", "Action / Actor / Resource Tracking", "Tamper-Resistant Log Recording", "Admin-Only Log Query API"],
+          summary: "Comprehensive security event trail tracking authentication, CRUD, and blocked attacks.",
+        },
+        {
+          id: "headers_and_cors",
+          name: "Security Headers & CORS",
+          status: "PASS",
+          score: 95,
+          controls_enforced: ["Content-Security-Policy (CSP)", "X-Content-Type-Options: nosniff", "X-Frame-Options: DENY", "Strict Referrer-Policy", "Restricted CORS Origins"],
+          summary: "OWASP-compliant HTTP security headers and strictly bounded origin access.",
+        },
+        {
+          id: "export_security",
+          name: "Export Security & CSV Injection Defense",
+          status: "PASS",
+          score: 94,
+          controls_enforced: ["Spreadsheet Formula Neutralization", "Dangerous Prefix Escaping (=, +, -, @, \\t, \\r)", "Filename Sanitization", "Export Role Authorization"],
+          summary: "Dynamic neutralization of spreadsheet formula injection vectors across all exports.",
+        },
+      ],
+      total_dimensions: 15,
+      passed_dimensions: 15,
+    };
 
-      try {
-        const [scorecardRes, threatRes] = await Promise.all([
-          fetch(`${API_BASE}/api/v1/security/scorecard`).then((r) => (r.ok ? r.json() : null)),
-          fetch(`${API_BASE}/api/v1/security/threat-model`).then((r) => (r.ok ? r.json() : null)),
-        ]);
-        if (scorecardRes) setScorecard(scorecardRes);
-        else setScorecard(mockScorecard);
-
-        if (threatRes) setThreatModel(threatRes);
-      } catch {
-        setScorecard(mockScorecard);
-      }
-
-      // Seed audit logs
-      setAuditLogs([
-        {
-          id: "audit-001",
-          timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-          actor_email: "security-admin@insightflow.ai",
-          actor_role: "admin",
-          action: "identity.login_success",
-          resource_type: "auth",
-          status: "success",
-          ip_address: "127.0.0.1",
-          details: { method: "bcrypt_jwt", session_duration: "30m" },
-        },
-        {
-          id: "audit-002",
-          timestamp: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
-          actor_email: "analyst@insightflow.ai",
-          actor_role: "analyst",
-          action: "dataset.created",
-          resource_type: "dataset",
-          resource_id: "ds-sales-q3",
-          status: "success",
-          ip_address: "192.168.1.45",
-          details: { rows: 25000, format: "parquet" },
-        },
-        {
-          id: "audit-003",
-          timestamp: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
-          actor_email: "untrusted_client",
-          actor_role: "guest",
-          action: "security.prompt_injection_blocked",
-          resource_type: "ai_analyst",
-          status: "denied",
-          ip_address: "203.0.113.195",
-          details: { pattern: "ignore previous instructions", rule: "PromptGuard" },
-        },
-        {
-          id: "audit-004",
-          timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-          actor_email: "connector_sync_daemon",
-          actor_role: "system",
-          action: "sync.started",
-          resource_type: "connector",
-          resource_id: "conn-pg-warehouse",
-          status: "success",
-          ip_address: "127.0.0.1",
-          details: { connector_type: "postgres", mode: "incremental" },
-        },
-        {
-          id: "audit-005",
-          timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
-          actor_email: "untrusted_upload",
-          actor_role: "member",
-          action: "security.malicious_file_blocked",
-          resource_type: "knowledge_upload",
-          status: "denied",
-          ip_address: "198.51.100.12",
-          details: { signature: "MZ (Windows Executable PE Header)", filename: "report.csv" },
-        },
+    try {
+      const [scorecardRes, threatRes] = await Promise.all([
+        api.get<SecurityScorecardResponse>("/api/v1/security/scorecard").catch(() => null),
+        api.get<ThreatModelResponse>("/api/v1/security/threat-model").catch(() => null),
       ]);
-    } catch (err: any) {
-      setError(err?.message || "Failed to load security configurations.");
+      setScorecard(scorecardRes || mockScorecard);
+      if (threatRes) setThreatModel(threatRes);
+    } catch {
+      setScorecard(mockScorecard);
     } finally {
       setIsLoading(false);
     }
+
+    // Seed audit logs
+    setAuditLogs([
+      {
+        id: "audit-001",
+        timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+        actor_email: "security-admin@insightflow.ai",
+        actor_role: "admin",
+        action: "identity.login_success",
+        resource_type: "auth",
+        status: "success",
+        ip_address: "127.0.0.1",
+        details: { method: "bcrypt_jwt", session_duration: "30m" },
+      },
+      {
+        id: "audit-002",
+        timestamp: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+        actor_email: "analyst@insightflow.ai",
+        actor_role: "analyst",
+        action: "dataset.created",
+        resource_type: "dataset",
+        resource_id: "ds-sales-q3",
+        status: "success",
+        ip_address: "192.168.1.45",
+        details: { rows: 25000, format: "parquet" },
+      },
+      {
+        id: "audit-003",
+        timestamp: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
+        actor_email: "untrusted_client",
+        actor_role: "guest",
+        action: "security.prompt_injection_blocked",
+        resource_type: "ai_analyst",
+        status: "denied",
+        ip_address: "203.0.113.195",
+        details: { pattern: "ignore previous instructions", rule: "PromptGuard" },
+      },
+      {
+        id: "audit-004",
+        timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
+        actor_email: "connector_sync_daemon",
+        actor_role: "system",
+        action: "sync.started",
+        resource_type: "connector",
+        resource_id: "conn-pg-warehouse",
+        status: "success",
+        ip_address: "127.0.0.1",
+        details: { connector_type: "postgres", mode: "incremental" },
+      },
+      {
+        id: "audit-005",
+        timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
+        actor_email: "untrusted_upload",
+        actor_role: "member",
+        action: "security.malicious_file_blocked",
+        resource_type: "knowledge_upload",
+        status: "denied",
+        ip_address: "198.51.100.12",
+        details: { signature: "MZ (Windows Executable PE Header)", filename: "report.csv" },
+      },
+    ]);
   }, []);
 
   React.useEffect(() => {
@@ -306,16 +297,11 @@ export function SecurityWorkspace() {
   const handleRunPromptTest = async () => {
     setIsTestingPrompt(true);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/security/test-prompt`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: testPrompt }),
-      });
-      if (res.ok) {
-        setPromptTestResult(await res.json());
+      const res = await api.post<any>("/api/v1/security/test-prompt", { prompt: testPrompt }).catch(() => null);
+      if (res) {
+        setPromptTestResult(res);
       } else {
-        // Fallback local evaluation
-        const isInjection = testPrompt.toLowerCase().includes("ignore") || testPrompt.toLowerCase().includes("system");
+        const isInjection = testPrompt.toLowerCase().includes("ignore") || testPrompt.toLowerCase().includes("system") || testPrompt.toLowerCase().includes("credentials");
         setPromptTestResult({
           is_safe: !isInjection,
           threat_category: isInjection ? "PROMPT_INJECTION" : null,
@@ -323,13 +309,6 @@ export function SecurityWorkspace() {
           sanitized_context_preview: `<untrusted_context source="diagnostic_test">\n${testPrompt}\n</untrusted_context>`,
         });
       }
-    } catch {
-      setPromptTestResult({
-        is_safe: false,
-        threat_category: "PROMPT_INJECTION",
-        reason: "Matched direct injection signature (Local fallback check)",
-        sanitized_context_preview: `<untrusted_context source="diagnostic_test">\n${testPrompt}\n</untrusted_context>`,
-      });
     } finally {
       setIsTestingPrompt(false);
     }
@@ -359,67 +338,54 @@ export function SecurityWorkspace() {
 
   return (
     <div className="space-y-6">
-      {/* Top Banner Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl bg-surface p-6 text-ink shadow-soft border border-border">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal border border-teal-border">
-              <ShieldCheck className="h-6 w-6" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight text-ink flex items-center gap-2">
-                Production Security & Enterprise Compliance
-              </h1>
-              <p className="text-xs text-slate">
-                15-Dimension Technical Scorecard • Zero-Trust Identity • Prompt Injection Defense • Immutable Audit Trail
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="text-right hidden sm:block">
-            <span className="text-[11px] text-slate block font-medium">Security Posture Score</span>
-            <span className="text-2xl font-black text-teal">
-              {scorecard?.overall_score || 93.5}<span className="text-sm font-normal text-slate">/100</span>
-            </span>
-          </div>
-
+      {/* Top Banner Header via Shared Responsive PageHero */}
+      <PageHero
+        icon={<ShieldCheck className="h-6 w-6" />}
+        iconVariant="teal"
+        title="Production Security & Enterprise Compliance"
+        description="15-Dimension Technical Scorecard • Zero-Trust Identity • Prompt Injection Defense • Immutable Audit Trail"
+        metric={{
+          label: "Security Posture Score",
+          value: scorecard?.overall_score || 93.5,
+          unit: "/100",
+          variant: "teal",
+        }}
+        actions={
           <Button
             variant="outline"
             size="sm"
             onClick={fetchSecurityData}
             disabled={isLoading}
-            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5"
+            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5 whitespace-nowrap"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Re-Audit Posture
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Main Tabs Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-cloud p-1 border border-border rounded-xl flex flex-wrap sm:grid sm:grid-cols-2 lg:grid-cols-5 w-full gap-1">
-          <TabsTrigger value="scorecard" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
-            <ShieldCheck className="h-4 w-4 text-teal" />
-            <span>Scorecard (15)</span>
+        <TabsList className="bg-cloud p-1.5 border border-border rounded-xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 w-full h-auto">
+          <TabsTrigger value="scorecard" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
+            <ShieldCheck className="h-4 w-4 text-teal shrink-0" />
+            <span className="truncate">Scorecard (15)</span>
           </TabsTrigger>
-          <TabsTrigger value="threat_model" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
-            <Layers className="h-4 w-4 text-teal" />
-            <span>Threat Model (13)</span>
+          <TabsTrigger value="threat_model" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
+            <Layers className="h-4 w-4 text-teal shrink-0" />
+            <span className="truncate">Threat Model (13)</span>
           </TabsTrigger>
-          <TabsTrigger value="audit_logs" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
-            <FileCheck className="h-4 w-4 text-blue" />
-            <span>Audit Trail</span>
+          <TabsTrigger value="audit_logs" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
+            <FileCheck className="h-4 w-4 text-blue shrink-0" />
+            <span className="truncate">Audit Trail</span>
           </TabsTrigger>
-          <TabsTrigger value="ai_sandbox" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
-            <Sparkles className="h-4 w-4 text-amber" />
-            <span>AI Sandbox</span>
+          <TabsTrigger value="ai_sandbox" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
+            <Sparkles className="h-4 w-4 text-amber shrink-0" />
+            <span className="truncate">AI Sandbox</span>
           </TabsTrigger>
-          <TabsTrigger value="config_verifier" className="flex-1 min-w-[140px] sm:min-w-0 gap-1.5 text-xs font-semibold">
-            <Server className="h-4 w-4 text-teal" />
-            <span>Config Verifier</span>
+          <TabsTrigger value="config_verifier" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate col-span-2 sm:col-span-1">
+            <Server className="h-4 w-4 text-teal shrink-0" />
+            <span className="truncate">Config Verifier</span>
           </TabsTrigger>
         </TabsList>
 
@@ -625,8 +591,8 @@ export function SecurityWorkspace() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="rounded-xl border border-slate-200 overflow-hidden">
-                <table className="w-full text-left text-xs border-collapse">
+              <div className="rounded-xl border border-slate-200 overflow-x-auto w-full">
+                <table className="w-full min-w-[620px] text-left text-xs border-collapse">
                   <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
                     <tr>
                       <th className="p-3">Timestamp</th>

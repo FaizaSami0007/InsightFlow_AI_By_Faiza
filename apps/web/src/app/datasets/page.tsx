@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import {
   Clock,
+  Database,
   Download,
   FileSpreadsheet,
   History,
@@ -23,6 +24,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PageHero } from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingState } from "@/components/states/loading-state";
@@ -247,47 +249,47 @@ export default function DatasetsPage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        {/* Top Header & Actions Bar */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink">Datasets & Versioning</h1>
-            <p className="text-xs sm:text-sm text-slate mt-0.5">
-              Manage uploaded structured datasets, inspect version lineage, and prepare files for deterministic analytics.
-            </p>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
-            <Link href="/collections">
+        {/* Top Header & Actions Bar via PageHero */}
+        <PageHero
+          icon={<Database className="h-6 w-6" />}
+          iconVariant="teal"
+          title="Datasets & Versioning"
+          description="Manage uploaded structured datasets, inspect version lineage, and prepare files for deterministic analytics."
+          actions={
+            <>
+              <Link href="/collections">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="whitespace-nowrap"
+                  leftIcon={<Layers className="h-3.5 w-3.5" />}
+                >
+                  Collections & Federation
+                </Button>
+              </Link>
               <Button
                 variant="outline"
                 size="sm"
+                onClick={fetchDatasets}
+                isLoading={isLoading}
                 className="whitespace-nowrap"
-                leftIcon={<Layers className="h-3.5 w-3.5" />}
+                leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
+                aria-label="Refresh datasets list"
               >
-                Collections & Federation
+                Refresh
               </Button>
-            </Link>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={fetchDatasets}
-              isLoading={isLoading}
-              className="whitespace-nowrap"
-              leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
-              aria-label="Refresh datasets list"
-            >
-              Refresh
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={handleOpenUploadNew}
-              className="whitespace-nowrap"
-              leftIcon={<Plus className="h-4 w-4" />}
-            >
-              Upload Dataset
-            </Button>
-          </div>
-        </div>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleOpenUploadNew}
+                className="whitespace-nowrap"
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                Upload Dataset
+              </Button>
+            </>
+          }
+        />
 
         {/* Content Area with Global States */}
         {isLoading && datasets.length === 0 ? (

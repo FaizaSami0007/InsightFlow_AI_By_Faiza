@@ -24,9 +24,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main
           id="main-content"
           tabIndex={-1}
-          className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 focus:outline-none"
+          className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 focus:outline-none min-w-0"
         >
-          <div className="mx-auto max-w-7xl w-full">{children}</div>
+          <div className="mx-auto max-w-7xl w-full min-w-0">{children}</div>
         </main>
       </div>
     </div>

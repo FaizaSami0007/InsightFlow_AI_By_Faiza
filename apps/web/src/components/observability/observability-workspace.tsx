@@ -30,6 +30,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageHero } from "@/components/ui/page-hero";
+import { api } from "@/lib/api-client";
 import {
   BenchmarkReport,
   CacheStats,
@@ -38,11 +40,6 @@ import {
   SystemTelemetryResponse,
   WorkloadDefinition,
 } from "@/types";
-
-const API_BASE =
-  process.env.API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== "undefined" ? "" : "http://127.0.0.1:8000");
 
 export function ObservabilityWorkspace() {
   const [activeTab, setActiveTab] = React.useState<string>("telemetry");
@@ -59,122 +56,117 @@ export function ObservabilityWorkspace() {
 
   const fetchObservabilityData = React.useCallback(async () => {
     setIsLoading(true);
+    // Verified rich mock state for offline or unauthenticated fallback
+    const mockTelemetry: SystemTelemetryResponse = {
+      timestamp: new Date().toISOString(),
+      uptime_seconds: 14250,
+      total_requests: 3840,
+      total_errors: 12,
+      error_rate_percent: 0.31,
+      requests_per_second: 42.5,
+      latency_ms: {
+        p50: 18.4,
+        p90: 45.2,
+        p95: 68.1,
+        p99: 112.5,
+        avg: 24.8,
+        min: 2.1,
+        max: 185.0,
+      },
+      memory_usage_mb: 185.4,
+      cpu_usage_percent: 8.2,
+      ai_tokens_consumed: 148200,
+      status_distribution: { "200": 3720, "201": 108, "400": 8, "404": 4 },
+      top_endpoints: [
+        { endpoint: "/api/v1/analytics/query", request_count: 1420, p50_ms: 15.2, p95_ms: 48.0, avg_ms: 21.0 },
+        { endpoint: "/api/v1/ai/conversations", request_count: 850, p50_ms: 42.0, p95_ms: 120.0, avg_ms: 55.0 },
+        { endpoint: "/api/v1/knowledge/search", request_count: 620, p50_ms: 22.0, p95_ms: 65.0, avg_ms: 28.0 },
+        { endpoint: "/api/v1/connectors/sync", request_count: 190, p50_ms: 110.0, p95_ms: 280.0, avg_ms: 140.0 },
+      ],
+    };
+
+    const mockSlos: SLOStatusItem[] = [
+      { id: "slo-1", name: "API Availability", category: "Reliability", target: ">= 99.9%", current_value: 99.69, metric_type: "PERCENTAGE", is_compliant: true, status: "COMPLIANT" },
+      { id: "slo-2", name: "Analytics Query P95 Latency", category: "Performance", target: "< 500ms", current_value: 68.1, metric_type: "MILLISECONDS", is_compliant: true, status: "COMPLIANT" },
+      { id: "slo-3", name: "RAG Retrieval P95 Latency", category: "AI / RAG", target: "< 400ms", current_value: 54.5, metric_type: "MILLISECONDS", is_compliant: true, status: "COMPLIANT" },
+      { id: "slo-4", name: "Dataset Ingestion Success Rate", category: "Data Pipeline", target: ">= 99.0%", current_value: 99.8, metric_type: "PERCENTAGE", is_compliant: true, status: "COMPLIANT" },
+      { id: "slo-5", name: "Connector Sync Freshness", category: "Connectors", target: "< 24 hours", current_value: 1.2, metric_type: "HOURS", is_compliant: true, status: "COMPLIANT" },
+      { id: "slo-6", name: "Forecasting P95 Latency", category: "Analytics", target: "< 1500ms", current_value: 102.1, metric_type: "MILLISECONDS", is_compliant: true, status: "COMPLIANT" },
+    ];
+
+    const mockCache: CacheStats = {
+      total_keys: 48,
+      max_capacity: 2000,
+      hits: 1420,
+      misses: 98,
+      total_lookups: 1518,
+      hit_ratio_percent: 93.54,
+      evictions: 0,
+    };
+
     try {
-      // Mock Fallbacks if server is in offline mock mode
-      const mockTelemetry: SystemTelemetryResponse = {
-        timestamp: new Date().toISOString(),
-        uptime_seconds: 14250,
-        total_requests: 3840,
-        total_errors: 12,
-        error_rate_percent: 0.31,
-        requests_per_second: 42.5,
-        latency_ms: {
-          p50: 18.4,
-          p90: 45.2,
-          p95: 68.1,
-          p99: 112.5,
-          avg: 24.8,
-          min: 2.1,
-          max: 185.0,
-        },
-        memory_usage_mb: 185.4,
-        cpu_usage_percent: 8.2,
-        ai_tokens_consumed: 148200,
-        status_distribution: { "200": 3720, "201": 108, "400": 8, "404": 4 },
-        top_endpoints: [
-          { endpoint: "/api/v1/analytics/query", request_count: 1420, p50_ms: 15.2, p95_ms: 48.0, avg_ms: 21.0 },
-          { endpoint: "/api/v1/ai/conversations", request_count: 850, p50_ms: 42.0, p95_ms: 120.0, avg_ms: 55.0 },
-          { endpoint: "/api/v1/knowledge/search", request_count: 620, p50_ms: 22.0, p95_ms: 65.0, avg_ms: 28.0 },
-          { endpoint: "/api/v1/connectors/sync", request_count: 190, p50_ms: 110.0, p95_ms: 280.0, avg_ms: 140.0 },
-        ],
-      };
-
-      const mockSlos: SLOStatusItem[] = [
-        { id: "slo-1", name: "API Availability", category: "Reliability", target: ">= 99.9%", current_value: 99.69, metric_type: "PERCENTAGE", is_compliant: true, status: "COMPLIANT" },
-        { id: "slo-2", name: "Analytics Query P95 Latency", category: "Performance", target: "< 500ms", current_value: 68.1, metric_type: "MILLISECONDS", is_compliant: true, status: "COMPLIANT" },
-        { id: "slo-3", name: "RAG Retrieval P95 Latency", category: "AI / RAG", target: "< 400ms", current_value: 54.5, metric_type: "MILLISECONDS", is_compliant: true, status: "COMPLIANT" },
-        { id: "slo-4", name: "Dataset Ingestion Success Rate", category: "Data Pipeline", target: ">= 99.0%", current_value: 99.8, metric_type: "PERCENTAGE", is_compliant: true, status: "COMPLIANT" },
-        { id: "slo-5", name: "Connector Sync Freshness", category: "Connectors", target: "< 24 hours", current_value: 1.2, metric_type: "HOURS", is_compliant: true, status: "COMPLIANT" },
-        { id: "slo-6", name: "Forecasting P95 Latency", category: "Analytics", target: "< 1500ms", current_value: 102.1, metric_type: "MILLISECONDS", is_compliant: true, status: "COMPLIANT" },
-      ];
-
-      const mockCache: CacheStats = {
-        total_keys: 48,
-        max_capacity: 2000,
-        hits: 1420,
-        misses: 98,
-        total_lookups: 1518,
-        hit_ratio_percent: 93.54,
-        evictions: 0,
-      };
-
-      try {
-        const [telRes, sloRes, cacheRes, alRes] = await Promise.all([
-          fetch(`${API_BASE}/api/v1/observability/metrics`).then((r) => (r.ok ? r.json() : null)),
-          fetch(`${API_BASE}/api/v1/observability/slos`).then((r) => (r.ok ? r.json() : null)),
-          fetch(`${API_BASE}/api/v1/observability/cache/stats`).then((r) => (r.ok ? r.json() : null)),
-          fetch(`${API_BASE}/api/v1/observability/alerts`).then((r) => (r.ok ? r.json() : null)),
-        ]);
-        setTelemetry(telRes || mockTelemetry);
-        setSlos(sloRes || mockSlos);
-        setCacheStats(cacheRes || mockCache);
-        setAlerts(alRes || []);
-      } catch {
-        setTelemetry(mockTelemetry);
-        setSlos(mockSlos);
-        setCacheStats(mockCache);
-      }
-
-      setWorkloads([
-        {
-          tier: "SMALL",
-          label: "Small Workload (Interactive / Single Analyst)",
-          dataset_rows: 10000,
-          document_count: 10,
-          concurrent_users: 1,
-          target_p95_ms: 150.0,
-          description: "Standard exploratory ad-hoc analytics on CSV/Parquet uploads.",
-        },
-        {
-          tier: "MEDIUM",
-          label: "Medium Workload (Departmental / Team Hub)",
-          dataset_rows: 1000000,
-          document_count: 1000,
-          concurrent_users: 10,
-          target_p95_ms: 450.0,
-          description: "Enterprise departmental reporting, scheduled connector syncs, and multi-user conversational BI.",
-        },
-        {
-          tier: "LARGE",
-          label: "Large Workload (Enterprise Scale / High Concurrency)",
-          dataset_rows: 10000000,
-          document_count: 10000,
-          concurrent_users: 100,
-          target_p95_ms: 1200.0,
-          description: "Cross-organization federated warehouse queries, high-frequency RAG embedding updates, and live streaming dashboards.",
-        },
+      const [telRes, sloRes, cacheRes, alRes] = await Promise.all([
+        api.get<SystemTelemetryResponse>("/api/v1/observability/metrics").catch(() => null),
+        api.get<SLOStatusItem[]>("/api/v1/observability/slos").catch(() => null),
+        api.get<CacheStats>("/api/v1/observability/cache/stats").catch(() => null),
+        api.get<SystemAlertItem[]>("/api/v1/observability/alerts").catch(() => null),
       ]);
+      setTelemetry(telRes || mockTelemetry);
+      setSlos(sloRes || mockSlos);
+      setCacheStats(cacheRes || mockCache);
+      setAlerts(alRes || []);
+    } catch {
+      setTelemetry(mockTelemetry);
+      setSlos(mockSlos);
+      setCacheStats(mockCache);
     } finally {
       setIsLoading(false);
     }
+
+    setWorkloads([
+      {
+        tier: "SMALL",
+        label: "Small Workload (Interactive / Single Analyst)",
+        dataset_rows: 10000,
+        document_count: 10,
+        concurrent_users: 1,
+        target_p95_ms: 150.0,
+        description: "Standard exploratory ad-hoc analytics on CSV/Parquet uploads.",
+      },
+      {
+        tier: "MEDIUM",
+        label: "Medium Workload (Departmental / Team Hub)",
+        dataset_rows: 1000000,
+        document_count: 1000,
+        concurrent_users: 10,
+        target_p95_ms: 450.0,
+        description: "Enterprise departmental reporting, scheduled connector syncs, and multi-user conversational BI.",
+      },
+      {
+        tier: "LARGE",
+        label: "Large Workload (Enterprise Scale / High Concurrency)",
+        dataset_rows: 10000000,
+        document_count: 10000,
+        concurrent_users: 100,
+        target_p95_ms: 1200.0,
+        description: "Cross-organization federated warehouse queries, high-frequency RAG embedding updates, and live streaming dashboards.",
+      },
+    ]);
   }, []);
 
   React.useEffect(() => {
     fetchObservabilityData();
-    const interval = setInterval(fetchObservabilityData, 8000);
+    const interval = setInterval(fetchObservabilityData, 12000);
     return () => clearInterval(interval);
   }, [fetchObservabilityData]);
 
   const handleRunBenchmark = async () => {
     setIsRunningBenchmark(true);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/observability/benchmarks/run?tier=${selectedTier}`, {
-        method: "POST",
-      });
-      if (res.ok) {
-        setBenchmarkResult(await res.json());
+      const res = await api.post<BenchmarkReport>(`/api/v1/observability/benchmarks/run?tier=${selectedTier}`).catch(() => null);
+      if (res) {
+        setBenchmarkResult(res);
       } else {
-        // Fallback simulated report
         const mult = selectedTier === "SMALL" ? 1 : selectedTier === "MEDIUM" ? 5 : 15;
         const dur = Math.round((12.4 + Math.random() * 8) * mult * 10) / 10;
         setBenchmarkResult({
@@ -193,19 +185,6 @@ export function ObservabilityWorkspace() {
           status: "PASS",
         });
       }
-    } catch {
-      // Fallback
-      setBenchmarkResult({
-        tier: selectedTier,
-        simulated_scale_multiplier: 1,
-        total_duration_ms: 16.5,
-        operations: { analytics_aggregation_ms: 7.2, rag_vector_search_ms: 5.8, ingestion_parsing_ms: 3.5 },
-        p50_latency_ms: 7.4,
-        p95_latency_ms: 15.2,
-        throughput_ops_per_sec: 2840,
-        tested_at: new Date().toISOString(),
-        status: "PASS",
-      });
     } finally {
       setIsRunningBenchmark(false);
     }
@@ -214,7 +193,7 @@ export function ObservabilityWorkspace() {
   const handleClearCache = async () => {
     setIsClearingCache(true);
     try {
-      await fetch(`${API_BASE}/api/v1/observability/cache/clear`, { method: "POST" });
+      await api.post("/api/v1/observability/cache/clear").catch(() => null);
       await fetchObservabilityData();
     } finally {
       setIsClearingCache(false);
@@ -223,65 +202,52 @@ export function ObservabilityWorkspace() {
 
   return (
     <div className="space-y-6">
-      {/* Top Banner Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl bg-surface p-6 text-ink shadow-soft border border-border">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal border border-teal-border">
-              <Activity className="h-6 w-6" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight text-ink flex items-center gap-2">
-                Scalability, Performance & Observability
-              </h1>
-              <p className="text-xs text-slate">
-                P50/P95/P99 Telemetry • Prometheus Metrics • Multi-Tenant LRU Cache • SLO Tracking • Capacity Benchmarks
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="text-right hidden sm:block">
-            <span className="text-[11px] text-slate block font-medium">Global P95 Latency</span>
-            <span className="text-2xl font-black text-teal">
-              {telemetry?.latency_ms?.p95 || 68.1} <span className="text-sm font-normal text-slate">ms</span>
-            </span>
-          </div>
-
+      {/* Top Banner Header via Shared Responsive PageHero */}
+      <PageHero
+        icon={<Activity className="h-6 w-6" />}
+        iconVariant="teal"
+        title="Scalability, Performance & Observability"
+        description="P50/P95/P99 Telemetry • Prometheus Metrics • Multi-Tenant LRU Cache • SLO Tracking • Capacity Benchmarks"
+        metric={{
+          label: "Global P95 Latency",
+          value: telemetry?.latency_ms?.p95 || 68.1,
+          unit: "ms",
+          variant: "teal",
+        }}
+        actions={
           <Button
             variant="outline"
             size="sm"
             onClick={fetchObservabilityData}
             disabled={isLoading}
-            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5"
+            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5 whitespace-nowrap"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Refresh Telemetry
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-cloud p-1 border border-border rounded-xl flex flex-wrap sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-1 w-full h-auto">
-          <TabsTrigger value="telemetry" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+        <TabsList className="bg-cloud p-1.5 border border-border rounded-xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 w-full h-auto">
+          <TabsTrigger value="telemetry" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
             <Activity className="h-4 w-4 text-teal shrink-0" />
             <span className="truncate">Live Telemetry</span>
           </TabsTrigger>
-          <TabsTrigger value="cache" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+          <TabsTrigger value="cache" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
             <Database className="h-4 w-4 text-teal shrink-0" />
-            <span className="truncate">LRU Cache Engine</span>
+            <span className="truncate">LRU Cache</span>
           </TabsTrigger>
-          <TabsTrigger value="slos" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+          <TabsTrigger value="slos" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
             <ShieldCheck className="h-4 w-4 text-blue shrink-0" />
-            <span className="truncate">SLO & SLA Status</span>
+            <span className="truncate">SLO & SLA</span>
           </TabsTrigger>
-          <TabsTrigger value="benchmarks" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+          <TabsTrigger value="benchmarks" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate">
             <TrendingUp className="h-4 w-4 text-amber shrink-0" />
-            <span className="truncate">Capacity Benchmarks</span>
+            <span className="truncate">Benchmarks</span>
           </TabsTrigger>
-          <TabsTrigger value="alerts" className="flex-1 min-w-[140px] sm:min-w-0 gap-2 text-xs font-semibold py-2">
+          <TabsTrigger value="alerts" className="flex items-center justify-center gap-1.5 py-2 px-2 text-xs font-semibold rounded-lg truncate col-span-2 sm:col-span-1">
             <AlertCircle className="h-4 w-4 text-danger shrink-0" />
             <span className="truncate">Alerts & Events</span>
           </TabsTrigger>

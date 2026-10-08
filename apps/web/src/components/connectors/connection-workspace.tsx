@@ -35,6 +35,7 @@ import {
   ConnectionHealthResponse,
 } from "@/types";
 import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/ui/page-hero";
 
 export function ConnectionWorkspace() {
   const [activeTab, setActiveTab] = useState<"connections" | "catalog" | "sync_history">("connections");
@@ -421,40 +422,37 @@ export function ConnectionWorkspace() {
 
   return (
     <div className="space-y-6">
-      {/* Top Header & Actions */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0 flex-1">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
-            <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-teal shrink-0" />
-            <span className="truncate">Enterprise Data Connectors</span>
-          </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Secure, encrypted real-world integrations for SQL databases, REST APIs, cloud object storage, and spreadsheets.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setActiveTab(activeTab === "catalog" ? "connections" : "catalog")}
-            className="border-border text-foreground hover:bg-muted text-xs whitespace-nowrap"
-          >
-            {activeTab === "catalog" ? "View Active Connections" : "Browse Connector Catalog"}
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => {
-              setIsWizardOpen(true);
-              setWizardStep(1);
-            }}
-            className="bg-teal text-white hover:bg-teal-hover shadow-soft flex items-center gap-1.5 sm:gap-2 text-xs whitespace-nowrap"
-          >
-            <Plus className="h-4 w-4 shrink-0" />
-            <span>New Connection</span>
-          </Button>
-        </div>
-      </div>
+      {/* Top Header & Actions via Shared PageHero */}
+      <PageHero
+        icon={<Shield className="h-6 w-6" />}
+        iconVariant="teal"
+        title="Enterprise Data Connectors"
+        description="Secure, encrypted real-world integrations for SQL databases, REST APIs, cloud object storage, and spreadsheets."
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveTab(activeTab === "catalog" ? "connections" : "catalog")}
+              className="border-border text-foreground hover:bg-muted text-xs whitespace-nowrap"
+            >
+              {activeTab === "catalog" ? "View Active Connections" : "Browse Connector Catalog"}
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => {
+                setIsWizardOpen(true);
+                setWizardStep(1);
+              }}
+              className="bg-teal text-white hover:bg-teal-hover shadow-soft flex items-center gap-1.5 text-xs whitespace-nowrap"
+            >
+              <Plus className="h-4 w-4 shrink-0" />
+              <span>New Connection</span>
+            </Button>
+          </>
+        }
+      />
 
       {/* Main Workspace Layout */}
       {activeTab === "catalog" ? (
