@@ -26,6 +26,7 @@ import { DashboardExportModal } from "./dashboard-export-modal";
 import { DashboardShareModal } from "./dashboard-share-modal";
 import { Dialog } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api-client";
 
 interface DashboardViewProps {
   initialDashboard: Dashboard;
@@ -74,20 +75,11 @@ export function DashboardView({
       if (onRefresh) {
         await onRefresh(dashboard.id);
       } else {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`/api/v1/dashboards/${dashboard.id}/refresh`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ filter_values: activeFilters }),
+        const updated = await api.post<Dashboard>(`/api/v1/dashboards/${dashboard.id}/refresh`, {
+          filter_values: activeFilters,
         });
-        if (res.ok) {
-          const updated: Dashboard = await res.json();
-          setDashboard(updated);
-          setFeedbackMessage({ text: "Dashboard refreshed with latest analytical results.", type: "success" });
-        }
+        setDashboard(updated);
+        setFeedbackMessage({ text: "Dashboard refreshed with latest analytical results.", type: "success" });
       }
     } catch {
       setFeedbackMessage({ text: "Failed to refresh dashboard.", type: "error" });
@@ -172,23 +164,11 @@ export function DashboardView({
         setDashboard(updated);
         if (successMsg) setFeedbackMessage({ text: successMsg, type: "success" });
       } else {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`/api/v1/dashboards/${dashboard.id}/patches`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ patches: [patch] }),
+        const updated = await api.patch<Dashboard>(`/api/v1/dashboards/${dashboard.id}/patches`, {
+          patches: [patch],
         });
-        if (res.ok) {
-          const updated: Dashboard = await res.json();
-          setDashboard(updated);
-          if (successMsg) setFeedbackMessage({ text: successMsg, type: "success" });
-        } else {
-          const errData = await res.json();
-          setFeedbackMessage({ text: errData.detail || "Failed to update widget layout.", type: "error" });
-        }
+        setDashboard(updated);
+        if (successMsg) setFeedbackMessage({ text: successMsg, type: "success" });
       }
     } catch (err: any) {
       setFeedbackMessage({ text: err.message || "Failed to apply patch.", type: "error" });
@@ -207,24 +187,12 @@ export function DashboardView({
         setRefinePrompt("");
         setFeedbackMessage({ text: "Dashboard refined successfully with AI instructions.", type: "success" });
       } else {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`/api/v1/dashboards/${dashboard.id}/refine`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ refinement_prompt: refinePrompt }),
+        const updated = await api.post<Dashboard>(`/api/v1/dashboards/${dashboard.id}/refine`, {
+          refinement_prompt: refinePrompt,
         });
-        if (res.ok) {
-          const updated: Dashboard = await res.json();
-          setDashboard(updated);
-          setRefinePrompt("");
-          setFeedbackMessage({ text: "Dashboard refined successfully with AI instructions.", type: "success" });
-        } else {
-          const errData = await res.json();
-          setFeedbackMessage({ text: errData.detail || "Failed to refine dashboard.", type: "error" });
-        }
+        setDashboard(updated);
+        setRefinePrompt("");
+        setFeedbackMessage({ text: "Dashboard refined successfully with AI instructions.", type: "success" });
       }
     } catch (err: any) {
       setFeedbackMessage({ text: err.message || "Refinement failed.", type: "error" });
@@ -237,16 +205,8 @@ export function DashboardView({
     setIsLoadingQuality(true);
     setQualityModalOpen(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/v1/dashboards/${dashboard.id}/quality`, {
-        headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
-      if (res.ok) {
-        const data: DashboardQualityReport = await res.json();
-        setQualityReport(data);
-      }
+      const data = await api.get<DashboardQualityReport>(`/api/v1/dashboards/${dashboard.id}/quality`);
+      setQualityReport(data);
     } catch {
       // Ignore
     } finally {

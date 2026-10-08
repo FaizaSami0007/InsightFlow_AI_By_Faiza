@@ -38,12 +38,22 @@ export function DashboardGeneratorModal({
   const [previewPlan, setPreviewPlan] = useState<DashboardPlan | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const currentDataset = datasets.find((d) => d.id === datasetId);
-  const latestVersion = currentDataset?.latest_version;
+  // Synchronize dataset selection when datasets or selectedDatasetId props update
+  React.useEffect(() => {
+    if (selectedDatasetId) {
+      setDatasetId(selectedDatasetId);
+    } else if (datasets.length > 0 && (!datasetId || !datasets.some((d) => d.id === datasetId))) {
+      setDatasetId(datasets[0].id);
+    }
+  }, [datasets, selectedDatasetId, isOpen, datasetId]);
+
+  const effectiveDatasetId = datasetId || selectedDatasetId || datasets[0]?.id || "";
+  const currentDataset = datasets.find((d) => d.id === effectiveDatasetId);
+  const latestVersion = currentDataset?.latest_version || currentDataset?.versions?.[0];
 
   const handlePreviewPlan = async () => {
-    if (!datasetId || !latestVersion) {
-      setErrorMessage("Please select a valid dataset version.");
+    if (!effectiveDatasetId || !latestVersion) {
+      setErrorMessage("Please select a valid dataset version with profiled semantics.");
       return;
     }
 
@@ -54,7 +64,7 @@ export function DashboardGeneratorModal({
       const plan = await apiRequest<DashboardPlan>("/api/v1/dashboards/plan-preview", {
         method: "POST",
         body: JSON.stringify({
-          dataset_id: datasetId,
+          dataset_id: effectiveDatasetId,
           dataset_version_id: latestVersion.id,
           purpose: purpose || undefined,
           intent: intent || undefined,
@@ -69,7 +79,10 @@ export function DashboardGeneratorModal({
   };
 
   const handleCommitGeneration = async () => {
-    if (!datasetId || !latestVersion) return;
+    if (!effectiveDatasetId || !latestVersion) {
+      setErrorMessage("Please select a valid dataset with an active version.");
+      return;
+    }
 
     setIsGenerating(true);
     setErrorMessage(null);
@@ -78,7 +91,7 @@ export function DashboardGeneratorModal({
       const dashboard = await apiRequest<Dashboard>("/api/v1/dashboards/generate", {
         method: "POST",
         body: JSON.stringify({
-          dataset_id: datasetId,
+          dataset_id: effectiveDatasetId,
           dataset_version_id: latestVersion.id,
           purpose: purpose || undefined,
           intent: intent || undefined,
@@ -112,7 +125,7 @@ export function DashboardGeneratorModal({
         <div>
           <label className="block font-semibold mb-1 text-[#172033]">1. Select Dataset</label>
           <select
-            value={datasetId}
+            value={effectiveDatasetId}
             onChange={(e) => {
               setDatasetId(e.target.value);
               setPreviewPlan(null);
@@ -229,7 +242,7 @@ export function DashboardGeneratorModal({
             <button
               type="button"
               onClick={handlePreviewPlan}
-              disabled={isPreviewing || !datasetId}
+              disabled={isPreviewing || !effectiveDatasetId || !latestVersion}
               className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-[#F7F9FC] text-[#172033] border border-[#E3E8EF] hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
             >
               {isPreviewing ? (
@@ -249,7 +262,7 @@ export function DashboardGeneratorModal({
           <button
             type="button"
             onClick={handleCommitGeneration}
-            disabled={isGenerating || !datasetId}
+            disabled={isGenerating || !effectiveDatasetId || !latestVersion}
             className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-[#0F766E] text-white hover:bg-[#0d655e] rounded-lg transition-colors shadow-sm disabled:opacity-50"
           >
             {isGenerating ? (

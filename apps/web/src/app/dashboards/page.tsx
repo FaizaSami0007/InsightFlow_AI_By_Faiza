@@ -17,6 +17,8 @@ import { DashboardGeneratorModal } from "@/components/dashboards/dashboard-gener
 import { Dashboard, Dataset } from "@/types";
 import { cn } from "@/lib/utils";
 
+import { api } from "@/lib/api-client";
+
 export default function DashboardsListPage() {
   const router = useRouter();
   const [dashboards, setDashboards] = React.useState<Dashboard[]>([]);
@@ -28,26 +30,18 @@ export default function DashboardsListPage() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("insightflow_auth_token") : null;
-      if (!token) {
-        setDashboards([]);
-        setDatasets([]);
-        return;
-      }
-      const headers: HeadersInit = { Authorization: `Bearer ${token}` };
-
-      const [dashboardsRes, datasetsRes] = await Promise.all([
-        fetch("/api/v1/dashboards", { headers }),
-        fetch("/api/v1/datasets", { headers }),
+      const [dashboardsData, datasetsData] = await Promise.allSettled([
+        api.get<Dashboard[] | { items: Dashboard[] }>("/api/v1/dashboards"),
+        api.get<Dataset[] | { items: Dataset[] }>("/api/v1/datasets"),
       ]);
 
-      if (dashboardsRes.ok) {
-        const data = await dashboardsRes.json();
-        setDashboards(Array.isArray(data) ? data : data.items || []);
+      if (dashboardsData.status === "fulfilled") {
+        const val = dashboardsData.value;
+        setDashboards(Array.isArray(val) ? val : (val as { items: Dashboard[] }).items || []);
       }
-      if (datasetsRes.ok) {
-        const data = await datasetsRes.json();
-        setDatasets(Array.isArray(data) ? data : data.items || []);
+      if (datasetsData.status === "fulfilled") {
+        const val = datasetsData.value;
+        setDatasets(Array.isArray(val) ? val : (val as { items: Dataset[] }).items || []);
       }
     } catch {
       // Ignore
@@ -66,14 +60,8 @@ export default function DashboardsListPage() {
     if (!confirm("Are you sure you want to delete this dashboard?")) return;
 
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/v1/dashboards/${id}`, {
-        method: "DELETE",
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
-      if (res.ok) {
-        setDashboards((prev) => prev.filter((d) => d.id !== id));
-      }
+      await api.delete(`/api/v1/dashboards/${id}`);
+      setDashboards((prev) => prev.filter((d) => d.id !== id));
     } catch {
       // Ignore
     }

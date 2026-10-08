@@ -8,6 +8,7 @@ import { AppShell } from "@/components/shell/app-shell";
 import { DashboardView } from "@/components/dashboards/dashboard-view";
 import { LoadingState } from "@/components/states/loading-state";
 import { ErrorState } from "@/components/states/error-state";
+import { api } from "@/lib/api-client";
 import { Dashboard } from "@/types";
 
 export default function DashboardDetailPage() {
@@ -23,16 +24,7 @@ export default function DashboardDetailPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/v1/dashboards/${dashboardId}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
-      if (!res.ok) {
-        if (res.status === 404) throw new Error("Dashboard not found.");
-        if (res.status === 403) throw new Error("Access denied to this dashboard.");
-        throw new Error("Failed to load dashboard.");
-      }
-      const data: Dashboard = await res.json();
+      const data = await api.get<Dashboard>(`/api/v1/dashboards/${dashboardId}`);
       setDashboard(data);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.");
@@ -48,13 +40,11 @@ export default function DashboardDetailPage() {
   }, [dashboardId, fetchDashboard]);
 
   const handleDelete = async (id: string) => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`/api/v1/dashboards/${id}`, {
-      method: "DELETE",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-    if (res.ok) {
+    try {
+      await api.delete(`/api/v1/dashboards/${id}`);
       router.push("/dashboards");
+    } catch {
+      // Ignore
     }
   };
 

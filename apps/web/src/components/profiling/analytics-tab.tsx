@@ -10,6 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { api } from "@/lib/api-client";
 import {
   Play,
   RotateCcw,
@@ -117,7 +118,6 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
     setLoading(true);
     setError(null);
 
-    const token = localStorage.getItem("token");
     let parameters: Record<string, unknown> = {};
 
     if (operation === "group_by") {
@@ -175,31 +175,13 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
     }
 
     try {
-      const apiBase =
-        process.env.API_URL ||
-        process.env.NEXT_PUBLIC_API_URL ||
-        (typeof window !== "undefined" ? "" : "http://127.0.0.1:8000");
-      const res = await fetch(`${apiBase}/api/v1/analytics/run`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          dataset_id: datasetId,
-          dataset_version_id: versionId,
-          operation,
-          parameters,
-          filters: filterPayload,
-        }),
+      const data = await api.post<AnalysisResponse>("/api/v1/analytics/run", {
+        dataset_id: datasetId,
+        dataset_version_id: versionId,
+        operation,
+        parameters,
+        filters: filterPayload,
       });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData?.detail || errData?.error?.message || "Analysis execution failed");
-      }
-
-      const data: AnalysisResponse = await res.json();
       setResult(data);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Analysis failed");
