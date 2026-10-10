@@ -41,6 +41,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHero } from "@/components/ui/page-hero";
 
 interface AnomalyWorkspaceProps {
   dataset?: Dataset;
@@ -204,49 +205,49 @@ export const AnomalyWorkspace: React.FC<AnomalyWorkspaceProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* 1. Header & Quick Metrics */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-surface p-6 rounded-2xl border border-border shadow-soft">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-teal-soft border border-teal-border text-teal">
-              <Zap className="w-5 h-5" />
+      {/* 1. Header Banner via Shared PageHero */}
+      <PageHero
+        variant="gradient"
+        phaseBadge="Phase 10 Active"
+        subtitle="Deterministic Statistical Detection & Root-Cause"
+        icon={<Zap className="w-5 h-5" />}
+        title="Anomaly Intelligence & Proactive Insights"
+        description="Deterministic statistical detection, materiality scoring, and explainable dimensional root-cause analysis with zero AI hallucinations."
+        statusBadge={
+          <>
+            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
+            <span>Zero Hallucination Scoring</span>
+          </>
+        }
+        actions={
+          result ? (
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur border border-white/15 text-xs text-white font-medium">
+                Total: <span className="font-bold text-white font-mono">{result.total_anomalies_count}</span>
+              </div>
+              {result.critical_count > 0 && (
+                <span className="px-2.5 py-1 rounded-xl bg-rose/20 text-rose-300 border border-rose-400/30 text-xs font-semibold">
+                  {result.critical_count} Critical
+                </span>
+              )}
+              {result.high_count > 0 && (
+                <span className="px-2.5 py-1 rounded-xl bg-amber/20 text-amber-300 border border-amber-400/30 text-xs font-semibold">
+                  {result.high_count} High
+                </span>
+              )}
+              {result.medium_count > 0 && (
+                <span className="px-2.5 py-1 rounded-xl bg-blue/20 text-blue-300 border border-blue-400/30 text-xs font-semibold">
+                  {result.medium_count} Medium
+                </span>
+              )}
+              <div className="px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs text-teal-100 flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-teal-300" />
+                {result.execution_time_ms.toFixed(1)}ms
+              </div>
             </div>
-            <h1 className="text-xl font-bold text-ink tracking-tight">
-              Anomaly Intelligence & Proactive Insights
-            </h1>
-          </div>
-          <p className="text-xs text-slate mt-1 max-w-2xl">
-            Deterministic statistical detection, materiality scoring, and explainable dimensional root-cause analysis with zero AI hallucinations.
-          </p>
-        </div>
-
-        {result && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="px-3 py-1.5 rounded-xl bg-cloud border border-border text-xs text-ink font-medium">
-              Total: <span className="font-bold text-ink">{result.total_anomalies_count}</span>
-            </div>
-            {result.critical_count > 0 && (
-              <Badge variant="danger">
-                {result.critical_count} Critical
-              </Badge>
-            )}
-            {result.high_count > 0 && (
-              <Badge variant="amber">
-                {result.high_count} High
-              </Badge>
-            )}
-            {result.medium_count > 0 && (
-              <Badge variant="blue">
-                {result.medium_count} Medium
-              </Badge>
-            )}
-            <div className="px-3 py-1.5 rounded-xl bg-cloud border border-border text-xs text-slate flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-teal" />
-              {result.execution_time_ms.toFixed(1)}ms
-            </div>
-          </div>
-        )}
-      </div>
+          ) : undefined
+        }
+      />
 
       {/* 2. Configuration & Parameter Panel */}
       <div className="bg-surface p-6 rounded-2xl border border-border shadow-soft space-y-4">

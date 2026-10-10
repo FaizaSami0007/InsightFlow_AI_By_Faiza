@@ -25,6 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHero } from "@/components/ui/page-hero";
 
 interface ForecastWorkspaceProps {
   dataset?: Dataset;
@@ -335,42 +336,46 @@ export const ForecastWorkspace: React.FC<ForecastWorkspaceProps> = ({
 
   return (
     <div className="w-full space-y-6">
-      {/* Header & Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
-        <div>
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="w-6 h-6 text-teal" />
-            <h2 className="text-xl font-bold text-ink tracking-tight">
-              Predictive Analytics & Forecasting Intelligence
-            </h2>
+      {/* Header Banner via Shared PageHero */}
+      <PageHero
+        variant="gradient"
+        phaseBadge="Phase 9 Active"
+        subtitle="Chronological Backtesting & Horizons"
+        icon={<TrendingUp className="w-5 h-5" />}
+        title="Predictive Analytics & Forecasting Intelligence"
+        description="Deterministic time-series forecasting with chronological cross-validation, prediction intervals, and automated model selection."
+        statusBadge={
+          <>
+            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
+            <span>Verified Prediction Intervals</span>
+          </>
+        }
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setViewMode(viewMode === "chart" ? "table" : "chart")}
+              leftIcon={viewMode === "chart" ? <TableIcon className="w-3.5 h-3.5" /> : <BarChart3 className="w-3.5 h-3.5" />}
+              className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs shadow-soft"
+            >
+              {viewMode === "chart" ? "Table Fallback" : "Chart View"}
+            </Button>
+
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleRunForecast}
+              disabled={isLoading || !targetField || !timeField}
+              isLoading={isLoading}
+              leftIcon={<Zap className="w-4 h-4" />}
+              className="text-xs shadow-soft font-semibold"
+            >
+              Run Forecast
+            </Button>
           </div>
-          <p className="text-xs text-slate mt-1">
-            Deterministic time-series forecasting with chronological cross-validation and prediction intervals.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setViewMode(viewMode === "chart" ? "table" : "chart")}
-            leftIcon={viewMode === "chart" ? <TableIcon className="w-3.5 h-3.5" /> : <BarChart3 className="w-3.5 h-3.5" />}
-          >
-            {viewMode === "chart" ? "Table Fallback" : "Chart View"}
-          </Button>
-
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleRunForecast}
-            disabled={isLoading || !targetField || !timeField}
-            isLoading={isLoading}
-            leftIcon={<Zap className="w-4 h-4" />}
-          >
-            Run Forecast
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Control Panel Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-surface p-5 rounded-2xl border border-border shadow-soft">

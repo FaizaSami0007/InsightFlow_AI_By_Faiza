@@ -340,15 +340,22 @@ export function SecurityWorkspace() {
     <div className="space-y-6">
       {/* Top Banner Header via Shared Responsive PageHero */}
       <PageHero
-        icon={<ShieldCheck className="h-6 w-6" />}
-        iconVariant="teal"
+        variant="gradient"
+        phaseBadge="Phase 15 Active"
+        subtitle="Zero-Trust Identity & Defense-in-Depth"
+        icon={<ShieldCheck className="h-5 w-5" />}
         title="Production Security & Enterprise Compliance"
         description="15-Dimension Technical Scorecard • Zero-Trust Identity • Prompt Injection Defense • Immutable Audit Trail"
+        statusBadge={
+          <>
+            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
+            <span>Zero-Trust Enforced</span>
+          </>
+        }
         metric={{
           label: "Security Posture Score",
           value: scorecard?.overall_score || 93.5,
           unit: "/100",
-          variant: "teal",
         }}
         actions={
           <Button
@@ -356,7 +363,7 @@ export function SecurityWorkspace() {
             size="sm"
             onClick={fetchSecurityData}
             disabled={isLoading}
-            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5 whitespace-nowrap"
+            className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs gap-1.5 whitespace-nowrap"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Re-Audit Posture

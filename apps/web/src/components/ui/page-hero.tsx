@@ -10,6 +10,10 @@ export interface PageHeroMetric {
 }
 
 export interface PageHeroProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "gradient";
+  phaseBadge?: string;
+  subtitle?: string;
+  statusBadge?: React.ReactNode;
   icon?: React.ReactNode;
   title: string;
   description?: React.ReactNode;
@@ -23,6 +27,10 @@ export const PageHero = React.forwardRef<HTMLDivElement, PageHeroProps>(
   (
     {
       className,
+      variant = "default",
+      phaseBadge,
+      subtitle,
+      statusBadge,
       icon,
       title,
       description,
@@ -50,6 +58,97 @@ export const PageHero = React.forwardRef<HTMLDivElement, PageHeroProps>(
       danger: "text-danger",
       default: "text-ink",
     };
+
+    if (variant === "gradient") {
+      return (
+        <div
+          ref={ref}
+          className={cn(
+            "w-full rounded-2xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-5 sm:p-6 shadow-soft-lg border border-teal-700/30 transition-all",
+            className
+          )}
+          {...props}
+        >
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 min-w-0">
+            {/* Left: Metadata, Title, Description */}
+            <div className="min-w-0 flex-1">
+              {(phaseBadge || subtitle) && (
+                <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                  {phaseBadge && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-xs font-semibold uppercase tracking-wider border border-teal-400/30">
+                      {phaseBadge}
+                    </span>
+                  )}
+                  {subtitle && (
+                    <span className="text-xs text-teal-200/80 font-medium">
+                      {subtitle}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2.5 flex-wrap">
+                {icon && (
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 border border-white/15 text-teal-300 shadow-soft">
+                    {icon}
+                  </div>
+                )}
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white break-words">
+                  {title}
+                </h1>
+                {badge}
+              </div>
+
+              {description && (
+                <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-1 leading-relaxed">
+                  {description}
+                </p>
+              )}
+            </div>
+
+            {/* Right: Status badge, Metrics, Actions */}
+            {(statusBadge || metric || actions) && (
+              <div className="flex flex-wrap items-center gap-3 shrink-0">
+                {statusBadge && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur border border-white/15 text-xs text-teal-100 whitespace-nowrap">
+                    {statusBadge}
+                  </div>
+                )}
+
+                {metric && (
+                  <div className="text-left sm:text-right shrink-0 px-3.5 py-2 rounded-xl bg-white/10 backdrop-blur border border-white/15">
+                    <span className="text-[10px] text-teal-200 block font-medium uppercase tracking-wider">
+                      {metric.label}
+                    </span>
+                    <div className="flex items-baseline gap-1 sm:justify-end">
+                      <span className="text-lg sm:text-xl font-bold font-mono tracking-tight text-white">
+                        {metric.value}
+                      </span>
+                      {metric.unit && (
+                        <span className="text-xs font-normal text-teal-200/80">
+                          {metric.unit}
+                        </span>
+                      )}
+                    </div>
+                    {metric.description && (
+                      <span className="text-[10px] text-slate-300 block">
+                        {metric.description}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {actions && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    {actions}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div

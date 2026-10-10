@@ -18,6 +18,7 @@ import {
   Sparkles,
   Info,
   ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 import {
   Dataset,
@@ -268,16 +269,24 @@ export function CollectionManagement() {
     <div className="space-y-6">
       {/* Top Header via PageHero */}
       <PageHero
-        icon={<Layers className="h-6 w-6" />}
-        iconVariant="teal"
+        variant="gradient"
+        phaseBadge="Phase 4 Active"
+        subtitle="Federated Query Mesh & Virtual Schema"
+        icon={<Layers className="h-5 w-5" />}
         title="Dataset Collections & Federation"
         description="Group datasets logically and define validated referential relationships for cross-dataset AI analytics."
+        statusBadge={
+          <>
+            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
+            <span>Verified Referential Graph</span>
+          </>
+        }
         actions={
           <Button
             variant="primary"
             size="sm"
             onClick={() => setShowCreateModal(true)}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap font-semibold shadow-soft text-xs"
             leftIcon={<Plus className="h-4 w-4" />}
           >
             New Collection
