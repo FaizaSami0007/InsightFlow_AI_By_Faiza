@@ -190,8 +190,15 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
   const [registeredAgents, setRegisteredAgents] = useState<AgentMetadataResponse[]>([]);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showMobileSessions, setShowMobileSessions] = useState(false);
-  const [isSessionsSidebarOpen, setIsSessionsSidebarOpen] = useState(true);
+  const [isSessionsSidebarOpen, setIsSessionsSidebarOpen] = useState(false);
   const [loadingTasks, setLoadingTasks] = useState(false);
+
+  // Auto-expand Past Conversations on wide screens (>= 1200px)
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth >= 1200) {
+      setIsSessionsSidebarOpen(true);
+    }
+  }, []);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const token = useAuthStore((s) => s.token);
@@ -452,7 +459,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
         className={cn(
           "border-r border-border bg-cloud/40 flex-col shrink-0 min-h-0 transition-all duration-200 ease-in-out hidden md:flex",
           isSessionsSidebarOpen
-            ? "w-56 lg:w-64 opacity-100"
+            ? "w-48 sm:w-52 lg:w-60 xl:w-64 opacity-100"
             : "w-0 opacity-0 overflow-hidden border-r-0 pointer-events-none p-0 m-0"
         )}
       >
@@ -531,8 +538,8 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
       {/* ─── MAIN ANALYST CHAT WORKSPACE ─── */}
       <div className="flex-1 flex flex-col h-full overflow-hidden bg-surface min-w-0">
         {/* Header Bar: Dataset & Version Selector */}
-        <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 sm:gap-3 px-3 sm:px-5 py-3 border-b border-border bg-cloud/30 shrink-0">
-          <div className="flex items-center justify-between gap-2 min-w-0 flex-1">
+        <header className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2.5 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-border bg-cloud/30 shrink-0 min-w-0">
+          <div className="flex items-center justify-between gap-2 min-w-0 w-full xl:w-auto">
             <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
               {/* Desktop Expand Past Conversations Button */}
               {!isSessionsSidebarOpen && (
@@ -545,7 +552,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                   aria-label="Expand Past Conversations"
                 >
                   <PanelLeftOpen className="h-4 w-4 text-teal" />
-                  <span className="text-[11px] font-medium text-slate hidden lg:inline">Past Conversations</span>
+                  <span className="text-[11px] font-medium text-slate hidden sm:inline">Conversations</span>
                   {conversations.length > 0 && (
                     <Badge variant="teal" className="text-[10px] px-1.5 py-0 h-4">
                       {conversations.length}
@@ -558,11 +565,11 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                 <Sparkles className="h-4 w-4" />
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1.5">
                   <h2 className="text-xs sm:text-sm font-bold text-ink truncate">Conversational AI Analyst</h2>
-                  <Badge variant="teal" className="text-[10px] hidden sm:inline-flex shrink-0">Multi-Agent DAG</Badge>
+                  <Badge variant="teal" className="text-[10px] hidden xs:inline-flex shrink-0">Multi-Agent DAG</Badge>
                 </div>
-                <p className="text-[10px] sm:text-[11px] text-slate truncate max-w-[180px] sm:max-w-xs lg:max-w-none">
+                <p className="text-[10px] sm:text-[11px] text-slate truncate max-w-[180px] sm:max-w-xs md:max-w-md hidden sm:block">
                   Governed 9-agent DAG orchestrator with deterministic tools &amp; Critic validation
                 </p>
               </div>
@@ -593,7 +600,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
           </div>
 
           {/* Dataset & Version Selectors + Task Graph Trigger */}
-          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0 w-full md:w-auto">
+          <div className="flex items-center gap-2 flex-wrap w-full xl:w-auto shrink-0 justify-start xl:justify-end">
             {activeConversationId && (
               <Button
                 variant="outline"
@@ -601,7 +608,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                   loadConversationTasks(activeConversationId);
                   setShowTaskModal(true);
                 }}
-                className="text-xs h-8 px-2.5 flex items-center gap-1.5 border-teal-border text-teal-dark bg-teal-soft/40 hover:bg-teal-soft whitespace-nowrap"
+                className="text-xs h-8 px-2.5 flex items-center gap-1.5 border-teal-border text-teal-dark bg-teal-soft/40 hover:bg-teal-soft whitespace-nowrap shrink-0"
                 title="View Multi-Agent Task Execution Graph"
               >
                 <Network className="h-3.5 w-3.5 text-teal" />
@@ -609,21 +616,21 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
               </Button>
             )}
 
-            <div className="flex-1 sm:w-40 md:w-44 min-w-[110px]">
+            <div className="flex-1 sm:flex-none sm:w-48 lg:w-56 min-w-[120px]">
               <Select
                 options={datasets.map((d) => ({ value: d.id, label: d.name }))}
                 value={selectedDatasetId}
                 onChange={(e) => handleDatasetChange(e.target.value)}
-                className="text-xs"
+                className="text-xs h-8"
               />
             </div>
             {versionOptions.length > 0 && (
-              <div className="flex-1 sm:w-32 md:w-36 min-w-[90px]">
+              <div className="w-auto sm:w-32 lg:w-36 min-w-[90px]">
                 <Select
                   options={versionOptions}
                   value={selectedVersionId}
                   onChange={(e) => setSelectedVersionId(e.target.value)}
-                  className="text-xs"
+                  className="text-xs h-8"
                 />
               </div>
             )}
@@ -731,7 +738,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
                   {/* Tool Execution Details */}
                   {msg.toolCalls && msg.toolCalls.length > 0 && (
                     <div className="mb-3 space-y-2 border-b border-border/40 pb-3">
-                      <div className="flex items-center justify-between text-[11px] font-semibold text-teal-dark">
+                      <div className="flex flex-wrap items-center justify-between gap-1 text-[11px] font-semibold text-teal-dark">
                         <div className="flex items-center gap-1.5">
                           <Cpu className="h-3.5 w-3.5" />
                           <span>Executed Deterministic Analytics ({msg.toolCalls.length} tool)</span>
@@ -908,7 +915,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`Ask anything about ${selectedDataset?.name || "the dataset"} (e.g. "What channel has highest cost?")`}
+              placeholder={`Ask anything about ${selectedDataset?.name || "the dataset"}...`}
               rows={2}
               className="flex-1 resize-none rounded-xl border border-border bg-cloud px-3 py-2 text-xs text-ink placeholder:text-slate focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal min-h-[44px]"
               aria-label="Analytical query input"

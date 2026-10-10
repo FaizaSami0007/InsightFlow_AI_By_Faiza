@@ -55,10 +55,10 @@ export function Header() {
 
       <div className="flex items-center gap-3">
         {/* Search Bar / Quick Command */}
-        <div className="relative hidden sm:flex items-center">
-          <div className="flex h-8 items-center gap-2 rounded-xl border border-border bg-cloud px-3 text-xs text-slate shadow-soft">
+        <div className="relative hidden md:flex items-center">
+          <div className="flex h-8 items-center gap-2 rounded-xl border border-border bg-cloud px-2.5 sm:px-3 text-xs text-slate shadow-soft">
             <Search className="h-3.5 w-3.5 text-slate" />
-            <span>Search datasets, queries...</span>
+            <span className="hidden lg:inline">Search datasets, queries...</span>
             <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-slate">
               Ctrl K
             </kbd>
@@ -66,7 +66,7 @@ export function Header() {
         </div>
 
         {/* System Health Badge */}
-        <Badge variant="teal" dot className="text-[11px] font-medium hidden sm:inline-flex">
+        <Badge variant="teal" dot className="text-[11px] font-medium hidden md:inline-flex">
           <Activity className="h-3 w-3 mr-1" />
           API Online
         </Badge>
