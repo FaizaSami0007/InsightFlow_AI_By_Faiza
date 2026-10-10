@@ -45,7 +45,7 @@ export function TabList({ children, className }: { children: React.ReactNode; cl
     <div
       role="tablist"
       className={cn(
-        "inline-flex items-center gap-1 rounded-xl border border-border bg-cloud p-1 text-slate",
+        "inline-flex items-center gap-1 rounded-xl border border-border bg-cloud p-1 text-slate max-w-full overflow-x-auto scrollbar-none",
         className
       )}
     >
@@ -77,7 +77,7 @@ export function TabTrigger({
       disabled={disabled}
       onClick={() => context.setActiveTab(value)}
       className={cn(
-        "inline-flex items-center justify-center rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal",
+        "inline-flex items-center justify-center shrink-0 whitespace-nowrap rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal",
         isSelected
           ? "bg-surface text-ink font-semibold shadow-soft"
           : "text-slate hover:text-ink hover:bg-surface/50",

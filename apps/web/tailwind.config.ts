@@ -48,6 +48,11 @@ const config: Config = {
           soft: "#FEE4E2",
           border: "#FECDCA",
         },
+        rose: {
+          DEFAULT: "#E11D48",
+          soft: "#FFE4E6",
+          border: "#FECDD3",
+        },
         border: {
           DEFAULT: "#E3E8EF",
           subtle: "#EDF2F7",

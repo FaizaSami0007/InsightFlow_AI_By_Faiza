@@ -141,7 +141,7 @@ export function SchemaTab({ profile }: SchemaTabProps) {
                     <span
                       className={`text-xs ${
                         col.null_percentage > 20
-                          ? "text-rose font-semibold"
+                          ? "text-danger font-semibold"
                           : col.null_percentage > 0
                           ? "text-amber font-medium"
                           : "text-slate"

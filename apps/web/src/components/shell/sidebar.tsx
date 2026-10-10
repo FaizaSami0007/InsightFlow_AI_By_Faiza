@@ -65,16 +65,16 @@ export function Sidebar() {
       <div className="flex h-12 shrink-0 items-center justify-between px-2 pb-2">
         <Link
           href="/"
-          className="flex items-center gap-2.5 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal rounded-xl"
+          className="flex items-center gap-2.5 min-w-0 flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal rounded-xl"
           aria-label="InsightFlow AI Home"
         >
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-teal text-white shadow-soft">
             <Sparkles className="h-4 w-4" />
           </div>
           {isSidebarExpanded && (
-            <div className="flex flex-col overflow-hidden leading-tight">
-              <span className="truncate text-sm font-semibold text-ink tracking-tight">InsightFlow AI</span>
-              <span className="truncate text-[10px] text-slate font-medium">Enterprise Analytics</span>
+            <div className="flex flex-col min-w-0 leading-tight">
+              <span className="text-sm font-semibold text-ink tracking-tight whitespace-nowrap">InsightFlow AI</span>
+              <span className="text-[10px] text-slate font-medium whitespace-nowrap">Enterprise Analytics</span>
             </div>
           )}
         </Link>
