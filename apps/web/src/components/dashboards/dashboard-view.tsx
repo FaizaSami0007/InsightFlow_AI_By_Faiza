@@ -243,16 +243,16 @@ export function DashboardView({
       )}
 
       {/* Dashboard Top Header */}
-      <header className="rounded-2xl border border-border bg-surface p-5 md:p-6 shadow-soft">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-1.5">
+      <header className="rounded-2xl border border-border bg-surface p-4 sm:p-5 lg:p-6 shadow-soft">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+          <div className="space-y-2 min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2.5">
-              <h1 className="text-xl md:text-2xl font-bold tracking-tight text-ink">
+              <h1 className="text-xl md:text-2xl font-bold tracking-tight text-ink break-words">
                 {dashboardTitle}
               </h1>
               <span
                 className={cn(
-                  "rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
+                  "rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider shrink-0",
                   dashboard.status === "READY" && "bg-teal-soft text-teal border border-teal-border",
                   dashboard.status === "GENERATING" && "bg-amber-50 text-amber-700 border border-amber-200",
                   dashboard.status === "PARTIAL" && "bg-amber-100 text-amber-800",
@@ -267,24 +267,42 @@ export function DashboardView({
                 {dashboard.description}
               </p>
             )}
-            <div className="flex flex-wrap items-center gap-4 pt-1 text-[11px] text-slate">
-              <span className="flex items-center gap-1.5">
-                <Layers className="h-3.5 w-3.5 text-teal" />
-                Dataset: <strong className="text-ink font-semibold">{dashboard.dataset_id}</strong>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 text-[11px] text-slate">
+              <span className="flex items-center gap-1.5 min-w-0">
+                <Layers className="h-3.5 w-3.5 text-teal shrink-0" />
+                <span>Dataset:</span>
+                <span
+                  className="font-mono font-semibold text-ink truncate max-w-[140px] sm:max-w-xs"
+                  title={dashboard.dataset_id}
+                >
+                  {dashboard.dataset_id.length > 18
+                    ? `${dashboard.dataset_id.slice(0, 8)}...${dashboard.dataset_id.slice(-4)}`
+                    : dashboard.dataset_id}
+                </span>
               </span>
-              <span className="flex items-center gap-1.5">
-                <Calendar className="h-3.5 w-3.5 text-slate" />
-                Version: <strong className="text-ink font-semibold">{dashboard.dataset_version_id}</strong>
+              <span className="flex items-center gap-1.5 min-w-0">
+                <Calendar className="h-3.5 w-3.5 text-slate shrink-0" />
+                <span>Version:</span>
+                <span
+                  className="font-mono font-semibold text-ink truncate max-w-[140px] sm:max-w-xs"
+                  title={dashboard.dataset_version_id}
+                >
+                  {dashboard.dataset_version_id.length > 18
+                    ? `${dashboard.dataset_version_id.slice(0, 8)}...${dashboard.dataset_version_id.slice(-4)}`
+                    : dashboard.dataset_version_id}
+                </span>
               </span>
-              <span>Updated: {new Date(dashboard.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              <span className="text-slate shrink-0">
+                Updated: {new Date(dashboard.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
             </div>
           </div>
 
           {/* Action Buttons Bar */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 md:pt-0">
+          <div className="flex flex-wrap items-center gap-2 pt-2 xl:pt-0 border-t xl:border-t-0 border-border/70 shrink-0">
             <button
               onClick={() => setShareModalOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-1.5 sm:py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
               title="Share dashboard securely with external viewers"
             >
               <Share2 className="h-3.5 w-3.5 text-teal" />
@@ -293,7 +311,7 @@ export function DashboardView({
 
             <button
               onClick={() => setExportModalOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-1.5 sm:py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
               title="Export as PDF, PNG, CSV, JSON or Print"
             >
               <Download className="h-3.5 w-3.5 text-teal" />
@@ -302,7 +320,7 @@ export function DashboardView({
 
             <button
               onClick={fetchQualityScore}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-1.5 sm:py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal"
               title="Inspect Explainable Quality Score"
             >
               <ShieldCheck className="h-3.5 w-3.5 text-teal" />
@@ -312,7 +330,7 @@ export function DashboardView({
             <button
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-cloud-subtle px-3 py-1.5 sm:py-2 text-xs font-medium text-slate hover:bg-cloud hover:text-ink transition-colors focus-visible:ring-2 focus-visible:ring-teal disabled:opacity-50"
               title="Refresh all analytical computations"
             >
               <RefreshCw className={cn("h-3.5 w-3.5", isRefreshing && "animate-spin text-teal")} />
@@ -322,7 +340,7 @@ export function DashboardView({
             <button
               onClick={() => setIsEditMode(!isEditMode)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-teal",
+                "inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 sm:py-2 text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-teal",
                 isEditMode
                   ? "bg-teal text-white shadow-soft"
                   : "border border-border bg-surface text-ink hover:bg-cloud"
@@ -344,7 +362,7 @@ export function DashboardView({
         </div>
 
         {/* AI Natural Language Refinement Input */}
-        <div className="mt-5 border-t border-border/80 pt-4">
+        <div className="mt-4 sm:mt-5 border-t border-border/80 pt-3 sm:pt-4">
           <form onSubmit={handleRefineSubmit} className="relative flex items-center">
             <div className="pointer-events-none absolute left-3.5 flex items-center text-teal">
               <Sparkles className="h-4 w-4" />
@@ -353,8 +371,8 @@ export function DashboardView({
               type="text"
               value={refinePrompt}
               onChange={(e) => setRefinePrompt(e.target.value)}
-              placeholder="Ask AI to refine this dashboard (e.g., 'Change Revenue chart to horizontal bar', 'Remove region widget', 'Add monthly order trend')..."
-              className="w-full rounded-xl border border-border bg-cloud-subtle/50 py-2.5 pl-10 pr-24 text-xs text-ink placeholder:text-slate/60 focus:border-teal focus:bg-surface focus:outline-none focus:ring-2 focus:ring-teal/20"
+              placeholder="Ask AI to refine this dashboard (e.g. 'Add bar chart', 'Remove region widget')..."
+              className="w-full rounded-xl border border-border bg-cloud-subtle/50 py-2.5 pl-10 pr-20 sm:pr-24 text-xs text-ink placeholder:text-slate/60 focus:border-teal focus:bg-surface focus:outline-none focus:ring-2 focus:ring-teal/20"
               disabled={isRefining}
             />
             <button

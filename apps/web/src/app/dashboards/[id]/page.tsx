@@ -50,7 +50,7 @@ export default function DashboardDetailPage() {
 
   return (
     <AppShell>
-      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+      <div className="space-y-6">
         {/* Breadcrumb / Back Link */}
         <div className="flex items-center gap-2">
           <Link

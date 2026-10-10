@@ -24,9 +24,9 @@ export function DashboardFilterBar({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 bg-white border border-[#E3E8EF] px-4 py-2.5 rounded-lg shadow-sm">
-      <div className="flex items-center gap-1.5 text-xs font-semibold text-[#536176] uppercase tracking-wider mr-1">
-        <Filter className="w-3.5 h-3.5 text-[#0F766E]" />
+    <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 bg-surface border border-border px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl shadow-soft">
+      <div className="flex items-center gap-1.5 text-xs font-semibold text-slate uppercase tracking-wider mr-1 shrink-0">
+        <Filter className="w-3.5 h-3.5 text-teal" />
         <span>Filters</span>
       </div>
 
@@ -37,15 +37,15 @@ export function DashboardFilterBar({
         return (
           <div
             key={f.id || f.column_name}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs transition-colors border ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs transition-colors border ${
               isSet
-                ? "bg-[#E6F4F1] border-[#0F766E] text-[#0F766E]"
-                : "bg-[#F7F9FC] border-[#E3E8EF] text-[#172033]"
+                ? "bg-teal-soft border-teal text-teal font-medium"
+                : "bg-cloud border-border text-ink"
             }`}
           >
-            {f.filter_type === "temporal" && <Calendar className="w-3.5 h-3.5 opacity-70" />}
-            {f.filter_type === "categorical" && <Tag className="w-3.5 h-3.5 opacity-70" />}
-            {f.filter_type === "numeric" && <Hash className="w-3.5 h-3.5 opacity-70" />}
+            {f.filter_type === "temporal" && <Calendar className="w-3.5 h-3.5 opacity-70 shrink-0" />}
+            {f.filter_type === "categorical" && <Tag className="w-3.5 h-3.5 opacity-70 shrink-0" />}
+            {f.filter_type === "numeric" && <Hash className="w-3.5 h-3.5 opacity-70 shrink-0" />}
 
             <span className="font-medium">{f.display_name}:</span>
 
