@@ -179,13 +179,13 @@ export function AnalyticsWorkspace() {
         }
         description="Verified statistical calculations, multidimensional group-bys, percent-changes, and Tukey outlier filters."
         actions={
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap shrink-0">
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <label className="text-xs font-semibold text-slate whitespace-nowrap">Active Dataset:</label>
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full xl:w-auto min-w-0">
+            <div className="flex items-center gap-2 min-w-0 flex-1 sm:flex-initial">
+              <label className="text-xs font-semibold text-slate whitespace-nowrap shrink-0">Dataset:</label>
               <select
                 value={selectedDatasetId}
                 onChange={(e) => handleDatasetChange(e.target.value)}
-                className="bg-surface text-ink text-xs rounded-xl border border-border px-3 py-1.5 focus:ring-2 focus:ring-teal outline-none font-medium flex-1 sm:w-auto max-w-xs truncate"
+                className="bg-surface text-ink text-xs rounded-xl border border-border px-3 py-1.5 focus:ring-2 focus:ring-teal outline-none font-medium flex-1 sm:w-56 max-w-full truncate"
               >
                 {datasets.length === 0 ? (
                   <option value="" disabled className="text-slate-500 bg-white">
@@ -202,7 +202,7 @@ export function AnalyticsWorkspace() {
             </div>
 
             {selectedDataset && (
-              <Link href={`/datasets/${selectedDataset.id}`}>
+              <Link href={`/datasets/${selectedDataset.id}`} className="shrink-0">
                 <Button variant="outline" size="sm" className="text-xs whitespace-nowrap">
                   View Schema Lineage &rarr;
                 </Button>

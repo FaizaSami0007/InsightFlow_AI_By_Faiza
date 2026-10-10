@@ -96,7 +96,12 @@ export const PageHero = React.forwardRef<HTMLDivElement, PageHeroProps>(
 
           {/* Right / Bottom: Metric + Actions */}
           {(metric || actions) && (
-            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 sm:gap-4 pt-3 xl:pt-0 border-t xl:border-t-0 border-border/70 shrink-0">
+            <div
+              className={cn(
+                "flex flex-wrap items-center gap-3 sm:gap-4 pt-3 xl:pt-0 border-t xl:border-t-0 border-border/70 min-w-0 w-full xl:w-auto",
+                metric ? "justify-between xl:justify-end" : "justify-start xl:justify-end"
+              )}
+            >
               {metric && (
                 <div className="text-left sm:text-right shrink-0 pr-1">
                   <span className="text-[10px] sm:text-[11px] text-slate block font-medium uppercase tracking-wider">
@@ -126,7 +131,7 @@ export const PageHero = React.forwardRef<HTMLDivElement, PageHeroProps>(
               )}
 
               {actions && (
-                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 min-w-0">
                   {actions}
                 </div>
               )}

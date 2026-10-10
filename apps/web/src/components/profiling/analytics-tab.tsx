@@ -193,12 +193,12 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
   return (
     <div className="space-y-6">
       {/* Top Header Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border shadow-soft">
-        <div>
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-teal" />
-            <h3 className="font-semibold text-ink text-base">Deterministic Analytics Engine</h3>
-            <Badge variant="teal">DuckDB Powered</Badge>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4 p-4 rounded-xl bg-surface border border-border shadow-soft">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <Sparkles className="w-5 h-5 text-teal shrink-0" />
+            <h3 className="font-semibold text-ink text-sm sm:text-base">DuckDB Query Execution</h3>
+            <Badge variant="teal" className="text-[10px] shrink-0">DuckDB Powered</Badge>
           </div>
           <p className="text-xs text-slate mt-1">
             Execute verified mathematical computations, aggregations, distributions, and statistical models.
@@ -209,7 +209,7 @@ export function AnalyticsTab({ datasetId, versionId, profile }: AnalyticsTabProp
           onClick={handleRunAnalysis}
           disabled={loading}
           variant="primary"
-          className="gap-2"
+          className="gap-2 whitespace-nowrap shrink-0 w-full md:w-auto"
         >
           {loading ? (
             <>
