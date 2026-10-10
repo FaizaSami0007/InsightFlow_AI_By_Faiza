@@ -42,12 +42,12 @@ export function DashboardWidgetCard({
     widget.grid_w >= 12
       ? "col-span-12"
       : widget.grid_w >= 8
-      ? "col-span-12 lg:col-span-8"
+      ? "col-span-12 xl:col-span-8"
       : widget.grid_w >= 6
-      ? "col-span-12 md:col-span-6"
+      ? "col-span-12 lg:col-span-6"
       : widget.grid_w >= 4
-      ? "col-span-12 md:col-span-6 lg:col-span-4"
-      : "col-span-12 md:col-span-6 lg:col-span-3";
+      ? "col-span-12 lg:col-span-6 xl:col-span-4"
+      : "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3";
 
   return (
     <div
@@ -162,7 +162,7 @@ export function DashboardWidgetCard({
               spec={widget.chart_spec!}
               data={rows}
               columns={columns}
-              className="border-none shadow-none p-0"
+              className="border-none shadow-none p-0 my-0"
             />
           </div>
         ) : (

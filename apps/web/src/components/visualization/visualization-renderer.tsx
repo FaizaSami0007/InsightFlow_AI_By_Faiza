@@ -116,21 +116,27 @@ export function VisualizationRenderer({
       className={`flex flex-col border border-border rounded-xl bg-surface shadow-sm overflow-hidden my-3 ${className}`}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 border-b border-border bg-cloud/30">
-        <div>
-          <div className="flex items-center gap-2">
-            <h4 className="text-sm font-bold text-ink tracking-tight">{spec.title}</h4>
+      <div className="flex flex-wrap items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border-b border-border bg-cloud/30">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h4 className="text-xs sm:text-sm font-bold text-ink tracking-tight truncate max-w-full" title={spec.title}>
+              {spec.title}
+            </h4>
             {spec.is_fallback && (
-              <span className="text-[10px] font-semibold uppercase bg-amber/10 text-amber px-2 py-0.5 rounded-full border border-amber/20">
+              <span className="text-[10px] font-semibold uppercase bg-amber/10 text-amber px-2 py-0.5 rounded-full border border-amber/20 shrink-0">
                 Fallback View
               </span>
             )}
           </div>
-          {spec.subtitle && <p className="text-xs text-slate mt-0.5">{spec.subtitle}</p>}
+          {spec.subtitle && (
+            <p className="text-[11px] sm:text-xs text-slate mt-0.5 truncate" title={spec.subtitle}>
+              {spec.subtitle}
+            </p>
+          )}
         </div>
 
         {/* Toolbar Controls */}
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1.5 flex-wrap shrink-0">
           {/* Chart Type Selector */}
           <div className="flex items-center bg-cloud border border-border rounded-lg p-0.5">
             {availableTypes.map((type) => {
@@ -144,15 +150,15 @@ export function VisualizationRenderer({
                     setActiveType(type);
                     setIsTableView(type === "table");
                   }}
-                  className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-md transition-all ${
+                  className={`flex items-center gap-1 text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-1 rounded-md transition-all ${
                     isActive
                       ? "bg-surface text-ink shadow-xs border border-border"
                       : "text-slate hover:text-ink"
                   }`}
                   title={`${type.replace(/_/g, " ").toUpperCase()}${isRecommended ? " (Recommended)" : ""}`}
                 >
-                  {isRecommended && <Sparkles className="w-3 h-3 text-teal" />}
-                  <span className="capitalize">{type.replace(/_/g, " ")}</span>
+                  {isRecommended && <Sparkles className="w-3 h-3 text-teal shrink-0" />}
+                  <span className="capitalize whitespace-nowrap">{type.replace(/_/g, " ")}</span>
                 </button>
               );
             })}
@@ -162,7 +168,7 @@ export function VisualizationRenderer({
           {!isTableView && activeType !== "table" && activeType !== "kpi" && (
             <button
               onClick={exportPNG}
-              className="flex items-center gap-1 text-xs font-medium text-slate hover:text-ink px-2.5 py-1.5 rounded-lg border border-border hover:bg-cloud/60 transition-colors"
+              className="flex items-center gap-1 text-[11px] sm:text-xs font-medium text-slate hover:text-ink px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border border-border hover:bg-cloud/60 transition-colors shrink-0"
               title="Export as PNG image"
             >
               <Download className="w-3.5 h-3.5" />

@@ -72,7 +72,7 @@ export function BarChart({ spec, data, horizontal = false }: BarChartProps) {
 
   return (
     <div className="w-full overflow-x-auto py-2">
-      <div className="relative min-w-[380px] flex justify-center">
+      <div className="relative w-full min-w-0 flex justify-center">
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           className="w-full h-auto max-h-[260px] select-none"
@@ -88,6 +88,8 @@ export function BarChart({ spec, data, horizontal = false }: BarChartProps) {
             const xPos = 60 + idx * ((svgWidth - 80) / Math.max(items.length, 1));
             const yPos = 20 + chartHeight - barHeight;
             const isHovered = hoveredIdx === idx;
+            const maxLabelLen = items.length <= 2 ? 18 : items.length <= 5 ? 12 : 8;
+            const displayLabel = item.label.length > maxLabelLen ? `${item.label.slice(0, maxLabelLen - 1)}…` : item.label;
 
             return (
               <g
@@ -123,7 +125,8 @@ export function BarChart({ spec, data, horizontal = false }: BarChartProps) {
                   textAnchor="middle"
                   className="text-[11px] fill-slate font-medium"
                 >
-                  {item.label.length > 8 ? `${item.label.slice(0, 7)}…` : item.label}
+                  <title>{item.label}</title>
+                  {displayLabel}
                 </text>
               </g>
             );
