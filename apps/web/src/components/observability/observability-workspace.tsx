@@ -204,22 +204,15 @@ export function ObservabilityWorkspace() {
     <div className="space-y-6">
       {/* Top Banner Header via Shared Responsive PageHero */}
       <PageHero
-        variant="gradient"
-        phaseBadge="Phase 16 Active"
-        subtitle="Telemetry, Prometheus & SLO Tracking"
-        icon={<Activity className="h-5 w-5" />}
+        icon={<Activity className="h-6 w-6" />}
+        iconVariant="teal"
         title="Scalability, Performance & Observability"
         description="P50/P95/P99 Telemetry • Prometheus Metrics • Multi-Tenant LRU Cache • SLO Tracking • Capacity Benchmarks"
-        statusBadge={
-          <>
-            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
-            <span>SLO 99.9% Target Met</span>
-          </>
-        }
         metric={{
           label: "Global P95 Latency",
           value: telemetry?.latency_ms?.p95 || 68.1,
           unit: "ms",
+          variant: "teal",
         }}
         actions={
           <Button
@@ -227,7 +220,7 @@ export function ObservabilityWorkspace() {
             size="sm"
             onClick={fetchObservabilityData}
             disabled={isLoading}
-            className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs gap-1.5 whitespace-nowrap"
+            className="border-border bg-surface text-ink hover:bg-cloud-subtle text-xs gap-1.5 whitespace-nowrap"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Refresh Telemetry

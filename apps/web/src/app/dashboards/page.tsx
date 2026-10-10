@@ -11,13 +11,12 @@ import {
   ArrowRight,
   Search,
   Trash2,
-  ShieldCheck,
 } from "lucide-react";
 import { AppShell } from "@/components/shell/app-shell";
-import { PageHero } from "@/components/ui/page-hero";
 import { DashboardGeneratorModal } from "@/components/dashboards/dashboard-generator-modal";
 import { Dashboard, Dataset } from "@/types";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api-client";
 
 const DEMO_FALLBACK_DATASET: Dataset = {
   id: "a309c861-5e76-4dda-a84a-5651aa925317",
@@ -101,30 +100,29 @@ export default function DashboardsListPage() {
   return (
     <AppShell>
       <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
-        {/* Header Banner via Shared PageHero */}
-        <PageHero
-          variant="gradient"
-          phaseBadge="Phase 8 Active"
-          subtitle="Context-Aware Dashboard Intelligence"
-          icon={<LayoutDashboard className="h-5 w-5" />}
-          title="Analytics Dashboards"
-          description="AI-generated, grounded, deterministic analytical dashboards with structured provenance and multi-dimensional filtering."
-          statusBadge={
-            <>
-              <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
-              <span>Deterministic Provenance</span>
-            </>
-          }
-          actions={
-            <button
-              onClick={() => setIsGeneratorOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-teal px-4 py-2.5 text-xs font-semibold text-white shadow-soft hover:bg-teal-hover transition-colors focus-visible:ring-2 focus-visible:ring-teal"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Generate Dashboard</span>
-            </button>
-          }
-        />
+        {/* Header with Title & Create CTA */}
+        <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-teal font-semibold text-xs tracking-wider uppercase">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Phase 8 Context-Aware Dashboard Intelligence</span>
+            </div>
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink mt-1">
+              Analytics Dashboards
+            </h1>
+            <p className="text-xs text-slate mt-1">
+              AI-generated, grounded, deterministic analytical dashboards with structured provenance.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setIsGeneratorOpen(true)}
+            className="inline-flex items-center gap-2 rounded-xl bg-teal px-4 py-2.5 text-xs font-semibold text-white shadow-soft hover:bg-teal-hover transition-colors focus-visible:ring-2 focus-visible:ring-teal"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Generate Dashboard</span>
+          </button>
+        </header>
 
         {/* Search & Filter bar */}
         <div className="flex items-center justify-between gap-4">

@@ -15,7 +15,6 @@ import {
   Upload,
   UploadCloud,
   X,
-  ShieldCheck,
 } from "lucide-react";
 import { AppShell } from "@/components/shell/app-shell";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -252,25 +251,17 @@ export default function DatasetsPage() {
       <div className="space-y-6">
         {/* Top Header & Actions Bar via PageHero */}
         <PageHero
-          variant="gradient"
-          phaseBadge="Phase 2 Active"
-          subtitle="Deterministic Versioning & Storage"
-          icon={<Database className="h-5 w-5" />}
+          icon={<Database className="h-6 w-6" />}
+          iconVariant="teal"
           title="Datasets & Versioning"
           description="Manage uploaded structured datasets, inspect version lineage, and prepare files for deterministic analytics."
-          statusBadge={
-            <>
-              <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
-              <span>Immutable Version Hashes</span>
-            </>
-          }
           actions={
-            <div className="flex flex-wrap items-center gap-2">
+            <>
               <Link href="/collections">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="whitespace-nowrap bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs"
+                  className="whitespace-nowrap"
                   leftIcon={<Layers className="h-3.5 w-3.5" />}
                 >
                   Collections & Federation
@@ -281,7 +272,7 @@ export default function DatasetsPage() {
                 size="sm"
                 onClick={fetchDatasets}
                 isLoading={isLoading}
-                className="whitespace-nowrap bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs"
+                className="whitespace-nowrap"
                 leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
                 aria-label="Refresh datasets list"
               >
@@ -291,12 +282,12 @@ export default function DatasetsPage() {
                 variant="primary"
                 size="sm"
                 onClick={handleOpenUploadNew}
-                className="whitespace-nowrap text-xs font-semibold shadow-soft"
+                className="whitespace-nowrap"
                 leftIcon={<Plus className="h-4 w-4" />}
               >
                 Upload Dataset
               </Button>
-            </div>
+            </>
           }
         />
 

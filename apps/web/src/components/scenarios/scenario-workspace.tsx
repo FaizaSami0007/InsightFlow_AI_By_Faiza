@@ -35,7 +35,6 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
-import { PageHero } from "@/components/ui/page-hero";
 
 interface ScenarioWorkspaceProps {
   dataset?: Dataset;
@@ -240,27 +239,35 @@ export const ScenarioWorkspace: React.FC<ScenarioWorkspaceProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header Banner via Shared PageHero */}
-      <PageHero
-        variant="gradient"
-        phaseBadge="Phase 11 Active"
-        subtitle="Deterministic Parameter Sweeps & Decision Intelligence"
-        icon={<SlidersHorizontal className="w-5 h-5" />}
-        title="Decision Intelligence & Scenario Simulation"
-        description="Deterministic what-if modeling, sensitivity parameter sweeps, and branch comparisons with guaranteed source data immutability."
-        statusBadge={
-          <>
-            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
-            <span>Immutable Source Data</span>
-          </>
-        }
-        actions={
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur border border-white/15 text-xs text-teal-100 whitespace-nowrap">
-            <Sparkles className="w-4 h-4 text-teal-300 shrink-0" />
-            <span>Zero Hallucination Simulation</span>
+      {/* Header Banner */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-surface p-5 sm:p-6 rounded-2xl border border-border shadow-soft">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal border border-teal-border">
+              <SlidersHorizontal className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-ink flex items-center gap-2">
+                Decision Intelligence & Scenario Simulation
+              </h1>
+              <p className="text-xs text-slate mt-0.5">
+                Deterministic what-if modeling, sensitivity parameter sweeps, and branch comparisons with guaranteed source data immutability.
+              </p>
+            </div>
           </div>
-        }
-      />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-soft border border-teal-border text-teal text-xs font-medium">
+            <ShieldCheck className="w-4 h-4" />
+            <span>Immutable Source Data</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-soft border border-blue-border text-blue text-xs font-medium">
+            <Sparkles className="w-4 h-4" />
+            <span>Zero Hallucination</span>
+          </div>
+        </div>
+      </div>
 
       {/* Main Workspace Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

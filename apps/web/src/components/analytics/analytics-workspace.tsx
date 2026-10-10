@@ -12,7 +12,6 @@ import {
   RefreshCw,
   Clock,
   CheckCircle2,
-  ShieldCheck,
 } from "lucide-react";
 import { Dataset, DatasetListResponse, DatasetProfile } from "@/types";
 import { api, ApiError } from "@/lib/api-client";
@@ -170,31 +169,23 @@ export function AnalyticsWorkspace() {
     <div className="space-y-6">
       {/* Top Header & Dataset Switcher via PageHero */}
       <PageHero
-        variant="gradient"
-        phaseBadge="Phase 7 Active"
-        subtitle="DuckDB + Polars High-Performance Analytics"
-        icon={<LineChart className="h-5 w-5" />}
+        icon={<LineChart className="h-6 w-6" />}
+        iconVariant="teal"
         title="Deterministic Analytics Engine"
         badge={
-          <Badge variant="teal" dot className="bg-teal-500/20 text-teal-300 border-teal-400/30 text-[10px] sm:text-xs shrink-0">
+          <Badge variant="teal" dot className="text-[10px] sm:text-xs shrink-0">
             DuckDB + Polars
           </Badge>
         }
         description="Verified statistical calculations, multidimensional group-bys, percent-changes, and Tukey outlier filters."
-        statusBadge={
-          <>
-            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
-            <span>Grounded Calculation Chain</span>
-          </>
-        }
         actions={
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full xl:w-auto min-w-0">
             <div className="flex items-center gap-2 min-w-0 flex-1 sm:flex-initial">
-              <label className="text-xs font-semibold text-teal-200 whitespace-nowrap shrink-0">Dataset:</label>
+              <label className="text-xs font-semibold text-slate whitespace-nowrap shrink-0">Dataset:</label>
               <select
                 value={selectedDatasetId}
                 onChange={(e) => handleDatasetChange(e.target.value)}
-                className="bg-white/10 text-white text-xs rounded-xl border border-white/20 px-3 py-1.5 focus:ring-2 focus:ring-teal outline-none font-medium flex-1 sm:w-56 max-w-full truncate"
+                className="bg-surface text-ink text-xs rounded-xl border border-border px-3 py-1.5 focus:ring-2 focus:ring-teal outline-none font-medium flex-1 sm:w-56 max-w-full truncate"
               >
                 {datasets.length === 0 ? (
                   <option value="" disabled className="text-slate-500 bg-white">
@@ -202,7 +193,7 @@ export function AnalyticsWorkspace() {
                   </option>
                 ) : (
                   datasets.map((d) => (
-                    <option key={d.id} value={d.id} className="text-[#172033] bg-white font-medium">
+                    <option key={d.id} value={d.id} className="text-[#172033] bg-white">
                       {d.name} (v{d.version_count})
                     </option>
                   ))
@@ -212,7 +203,7 @@ export function AnalyticsWorkspace() {
 
             {selectedDataset && (
               <Link href={`/datasets/${selectedDataset.id}`} className="shrink-0">
-                <Button variant="outline" size="sm" className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs whitespace-nowrap">
+                <Button variant="outline" size="sm" className="text-xs whitespace-nowrap">
                   View Schema Lineage &rarr;
                 </Button>
               </Link>

@@ -23,7 +23,6 @@ import {
   Play,
   KeyRound,
   ExternalLink,
-  ShieldCheck,
 } from "lucide-react";
 import {
   ConnectorType,
@@ -425,25 +424,17 @@ export function ConnectionWorkspace() {
     <div className="space-y-6">
       {/* Top Header & Actions via Shared PageHero */}
       <PageHero
-        variant="gradient"
-        phaseBadge="Phase 3 Active"
-        subtitle="Encrypted Integrations & Secret Management"
-        icon={<Shield className="h-5 w-5" />}
+        icon={<Shield className="h-6 w-6" />}
+        iconVariant="teal"
         title="Enterprise Data Connectors"
         description="Secure, encrypted real-world integrations for SQL databases, REST APIs, cloud object storage, and spreadsheets."
-        statusBadge={
-          <>
-            <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0" />
-            <span>Encrypted Secret Isolation</span>
-          </>
-        }
         actions={
-          <div className="flex flex-wrap items-center gap-2">
+          <>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setActiveTab(activeTab === "catalog" ? "connections" : "catalog")}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs whitespace-nowrap"
+              className="border-border text-foreground hover:bg-muted text-xs whitespace-nowrap"
             >
               {activeTab === "catalog" ? "View Active Connections" : "Browse Connector Catalog"}
             </Button>
@@ -454,12 +445,12 @@ export function ConnectionWorkspace() {
                 setIsWizardOpen(true);
                 setWizardStep(1);
               }}
-              className="bg-teal text-white hover:bg-teal-hover shadow-soft flex items-center gap-1.5 text-xs whitespace-nowrap font-semibold"
+              className="bg-teal text-white hover:bg-teal-hover shadow-soft flex items-center gap-1.5 text-xs whitespace-nowrap"
             >
               <Plus className="h-4 w-4 shrink-0" />
               <span>New Connection</span>
             </Button>
-          </div>
+          </>
         }
       />
 
