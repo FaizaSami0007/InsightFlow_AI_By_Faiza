@@ -14,7 +14,6 @@ import {
   ShieldAlert,
   ShieldCheck,
   ArrowRight,
-  ArrowDown,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -628,95 +627,47 @@ export function ModelOperationsView() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
-            <div className="flex flex-col xl:flex-row items-stretch justify-between gap-3 xl:gap-4 p-4 md:p-5 rounded-2xl bg-cloud border border-border">
+            <div className="flex flex-col md:flex-row items-stretch justify-between gap-3 md:gap-4 p-4 md:p-5 rounded-2xl bg-cloud border border-border">
               {/* Node 1: Dataset */}
-              <div className="flex-1 w-full min-w-0 flex flex-row xl:flex-col items-center justify-between xl:justify-center p-3.5 sm:p-4 rounded-xl border border-border bg-surface text-left xl:text-center shadow-soft min-h-[64px] xl:min-h-[148px] gap-3">
-                <div className="flex items-center gap-3 xl:flex-col xl:gap-0 min-w-0 flex-1">
-                  <Database className="h-5 w-5 xl:h-6 xl:w-6 text-blue xl:mb-2.5 shrink-0" />
-                  <div className="min-w-0 flex-1 xl:w-full">
-                    <span className="text-xs font-semibold text-ink block truncate" title="Dataset: ds-q4-sales">
-                      Dataset: ds-q4-sales
-                    </span>
-                    <span className="text-[11px] text-slate block truncate xl:mt-1">
-                      Version dv-3 (3,600 rows)
-                    </span>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-slate/60 uppercase tracking-wider shrink-0 bg-cloud px-2 py-0.5 rounded border border-border/50 xl:hidden">
-                  Stage 1
+              <div className="flex-1 w-full min-w-0 flex flex-col items-center justify-center p-4 rounded-xl border border-border bg-surface text-center shadow-soft min-h-[148px]">
+                <Database className="h-6 w-6 text-blue mb-2.5 shrink-0" />
+                <span className="text-xs font-semibold text-ink line-clamp-2" title="Dataset: ds-q4-sales">
+                  Dataset: ds-q4-sales
                 </span>
+                <span className="text-[11px] text-slate mt-1 line-clamp-2">Version dv-3 (3,600 rows)</span>
               </div>
 
-              {/* Connector 1 */}
-              <div className="flex justify-center xl:hidden my-0.5">
-                <ArrowDown className="h-4 w-4 text-slate/40" />
-              </div>
-              <ArrowRight className="h-5 w-5 text-slate/40 hidden xl:block shrink-0 self-center" />
+              <ArrowRight className="h-5 w-5 text-slate/40 hidden md:block shrink-0 self-center" />
 
               {/* Node 2: Pipeline */}
-              <div className="flex-1 w-full min-w-0 flex flex-row xl:flex-col items-center justify-between xl:justify-center p-3.5 sm:p-4 rounded-xl border border-border bg-surface text-left xl:text-center shadow-soft min-h-[64px] xl:min-h-[148px] gap-3">
-                <div className="flex items-center gap-3 xl:flex-col xl:gap-0 min-w-0 flex-1">
-                  <Layers className="h-5 w-5 xl:h-6 xl:w-6 text-teal xl:mb-2.5 shrink-0" />
-                  <div className="min-w-0 flex-1 xl:w-full">
-                    <span className="text-xs font-semibold text-ink block truncate" title="Feature Contract v1.1.0">
-                      Feature Contract v1.1.0
-                    </span>
-                    <span className="text-[11px] text-slate block truncate xl:mt-1">
-                      3 features validated
-                    </span>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-slate/60 uppercase tracking-wider shrink-0 bg-cloud px-2 py-0.5 rounded border border-border/50 xl:hidden">
-                  Stage 2
+              <div className="flex-1 w-full min-w-0 flex flex-col items-center justify-center p-4 rounded-xl border border-border bg-surface text-center shadow-soft min-h-[148px]">
+                <Layers className="h-6 w-6 text-teal mb-2.5 shrink-0" />
+                <span className="text-xs font-semibold text-ink line-clamp-2" title="Feature Contract v1.1.0">
+                  Feature Contract v1.1.0
                 </span>
+                <span className="text-[11px] text-slate mt-1 line-clamp-2">3 features validated</span>
               </div>
 
-              {/* Connector 2 */}
-              <div className="flex justify-center xl:hidden my-0.5">
-                <ArrowDown className="h-4 w-4 text-slate/40" />
-              </div>
-              <ArrowRight className="h-5 w-5 text-slate/40 hidden xl:block shrink-0 self-center" />
+              <ArrowRight className="h-5 w-5 text-slate/40 hidden md:block shrink-0 self-center" />
 
               {/* Node 3: Model */}
-              <div className="flex-1 w-full min-w-0 flex flex-row xl:flex-col items-center justify-between xl:justify-center p-3.5 sm:p-4 rounded-xl border border-teal-border bg-teal-soft/40 text-left xl:text-center shadow-soft min-h-[64px] xl:min-h-[148px] gap-3">
-                <div className="flex items-center gap-3 xl:flex-col xl:gap-0 min-w-0 flex-1">
-                  <Cpu className="h-5 w-5 xl:h-6 xl:w-6 text-teal xl:mb-2.5 shrink-0" />
-                  <div className="min-w-0 flex-1 xl:w-full">
-                    <span className="text-xs font-semibold text-teal block truncate" title="SARIMA v1.2.0">
-                      SARIMA v1.2.0
-                    </span>
-                    <span className="text-[11px] text-slate block truncate xl:mt-1">
-                      SHA-256 Validated
-                    </span>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-teal/80 uppercase tracking-wider shrink-0 bg-teal/10 px-2 py-0.5 rounded border border-teal-border/50 xl:hidden">
-                  Stage 3
+              <div className="flex-1 w-full min-w-0 flex flex-col items-center justify-center p-4 rounded-xl border border-teal-border bg-teal-soft/40 text-center shadow-soft min-h-[148px]">
+                <Cpu className="h-6 w-6 text-teal mb-2.5 shrink-0" />
+                <span className="text-xs font-semibold text-teal line-clamp-2" title="SARIMA v1.2.0">
+                  SARIMA v1.2.0
                 </span>
+                <span className="text-[11px] text-slate mt-1 line-clamp-2">SHA-256 Validated</span>
               </div>
 
-              {/* Connector 3 */}
-              <div className="flex justify-center xl:hidden my-0.5">
-                <ArrowDown className="h-4 w-4 text-slate/40" />
-              </div>
-              <ArrowRight className="h-5 w-5 text-slate/40 hidden xl:block shrink-0 self-center" />
+              <ArrowRight className="h-5 w-5 text-slate/40 hidden md:block shrink-0 self-center" />
 
               {/* Node 4: Deployment */}
-              <div className="flex-1 w-full min-w-0 flex flex-row xl:flex-col items-center justify-between xl:justify-center p-3.5 sm:p-4 rounded-xl border border-border bg-surface text-left xl:text-center shadow-soft min-h-[64px] xl:min-h-[148px] gap-3">
-                <div className="flex items-center gap-3 xl:flex-col xl:gap-0 min-w-0 flex-1">
-                  <ShieldCheck className="h-5 w-5 xl:h-6 xl:w-6 text-teal xl:mb-2.5 shrink-0" />
-                  <div className="min-w-0 flex-1 xl:w-full">
-                    <span className="text-xs font-semibold text-ink block truncate" title="Production Cluster">
-                      Production Cluster
-                    </span>
-                    <span className="text-[11px] text-teal font-medium block truncate xl:mt-1">
-                      Active Deployment
-                    </span>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-teal/80 uppercase tracking-wider shrink-0 bg-teal/10 px-2 py-0.5 rounded border border-teal-border/50 xl:hidden">
-                  Stage 4
+              <div className="flex-1 w-full min-w-0 flex flex-col items-center justify-center p-4 rounded-xl border border-border bg-surface text-center shadow-soft min-h-[148px]">
+                <ShieldCheck className="h-6 w-6 text-teal mb-2.5 shrink-0" />
+                <span className="text-xs font-semibold text-ink line-clamp-2" title="Production Cluster">
+                  Production Cluster
                 </span>
+                <span className="text-[11px] text-teal font-medium mt-1 line-clamp-2">Active Deployment</span>
               </div>
             </div>
           </CardContent>
