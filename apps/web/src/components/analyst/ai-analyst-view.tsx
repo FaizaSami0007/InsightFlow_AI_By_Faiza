@@ -337,6 +337,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
   // 6. Delete Conversation
   const handleDeleteConversation = async (convId: string) => {
     setIsDeleting(true);
+    setError(null);
     try {
       await api.delete(`/api/v1/ai/conversations/${convId}`);
       setConversations((prev) => prev.filter((c) => c.id !== convId));
@@ -344,8 +345,18 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
         handleNewConversation();
       }
       setConversationToDelete(null);
-    } catch (err) {
-      setError((err as Error).message || "Failed to delete conversation.");
+    } catch (err: unknown) {
+      const errObj = err as { statusCode?: number; code?: string; message?: string };
+      // If the session was already removed from the server, clean up local UI state gracefully
+      if (errObj?.statusCode === 404 || errObj?.code === "NOT_FOUND" || errObj?.message?.includes("not found")) {
+        setConversations((prev) => prev.filter((c) => c.id !== convId));
+        if (activeConversationId === convId) {
+          handleNewConversation();
+        }
+        setConversationToDelete(null);
+      } else {
+        setError(errObj?.message || "Failed to delete conversation.");
+      }
     } finally {
       setIsDeleting(false);
     }
@@ -1079,6 +1090,7 @@ export function AIAnalystView({ initialDatasetId, initialVersionId }: AIAnalystV
               <Button
                 variant="danger"
                 disabled={isDeleting}
+                isLoading={isDeleting}
                 onClick={() => handleDeleteConversation(conversationToDelete)}
                 className="text-xs"
               >

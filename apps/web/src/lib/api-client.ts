@@ -81,8 +81,20 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
 
     clearTimeout(timeoutId);
 
-    const isJson = response.headers.get("content-type")?.includes("application/json");
-    const data = isJson ? await response.json() : null;
+    let data: unknown = null;
+    if (response.status !== 204 && response.status !== 205) {
+      const isJson = response.headers.get("content-type")?.includes("application/json");
+      if (isJson) {
+        const text = await response.text();
+        if (text && text.trim().length > 0) {
+          try {
+            data = JSON.parse(text);
+          } catch {
+            data = null;
+          }
+        }
+      }
+    }
 
     if (!response.ok) {
       const errorData = data as ApiErrorResponse | null;

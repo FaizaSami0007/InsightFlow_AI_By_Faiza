@@ -3,7 +3,7 @@
 import logging
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -160,7 +160,7 @@ async def delete_conversation(
     conversation_id: str,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> None:
+) -> Response:
     """Delete an AI conversation."""
     stmt = select(AIConversation).where(AIConversation.id == conversation_id, AIConversation.user_id == current_user.id)
     res = await db.execute(stmt)
@@ -170,6 +170,7 @@ async def delete_conversation(
 
     await db.delete(conv)
     await db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/datasets/{dataset_id}/versions/{version_id}/starters", response_model=List[str])
