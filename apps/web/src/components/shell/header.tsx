@@ -8,9 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
 import { useAuthStore } from "@/stores/use-auth-store";
 import { useShellStore } from "@/stores/use-shell-store";
+import { CommandPalette } from "./command-palette";
 
 export function Header() {
-  const { setMobileSidebarOpen, activeView } = useShellStore();
+  const { setMobileSidebarOpen, activeView, setIsSearchOpen } = useShellStore();
   const { user, isAuthenticated, logout } = useAuthStore();
 
   const viewTitles: Record<string, string> = {
@@ -54,16 +55,33 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Search Bar / Quick Command */}
-        <div className="relative hidden md:flex items-center">
-          <div className="flex h-8 items-center gap-2 rounded-xl border border-border bg-cloud px-2.5 sm:px-3 text-xs text-slate shadow-soft">
-            <Search className="h-3.5 w-3.5 text-slate" />
-            <span className="hidden lg:inline">Search datasets, queries...</span>
-            <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-slate">
-              Ctrl K
-            </kbd>
-          </div>
-        </div>
+        {/* Mobile Search Button */}
+        <button
+          type="button"
+          onClick={() => setIsSearchOpen(true)}
+          className="rounded-xl border border-border p-2 text-slate hover:bg-cloud hover:text-ink md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+          aria-label="Search across platform"
+          title="Search (Ctrl + K)"
+        >
+          <Search className="h-4 w-4" />
+        </button>
+
+        {/* Search Bar / Quick Command Button */}
+        <button
+          type="button"
+          onClick={() => setIsSearchOpen(true)}
+          className="group relative hidden md:flex h-8 items-center gap-2 rounded-xl border border-border bg-cloud px-2.5 sm:px-3 text-xs text-slate shadow-soft hover:border-teal-border hover:bg-surface hover:text-ink transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+          aria-label="Open search and command palette"
+          title="Search (Ctrl + K)"
+        >
+          <Search className="h-3.5 w-3.5 text-slate group-hover:text-teal transition-colors" />
+          <span className="hidden lg:inline text-slate group-hover:text-ink transition-colors">
+            Search datasets, queries...
+          </span>
+          <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-slate group-hover:border-teal-border group-hover:text-teal transition-colors">
+            Ctrl K
+          </kbd>
+        </button>
 
         {/* System Health Badge */}
         <Badge variant="teal" dot className="text-[11px] font-medium hidden md:inline-flex">
@@ -131,6 +149,9 @@ export function Header() {
           )}
         </div>
       </div>
+
+      {/* Global Command Palette & Search Modal */}
+      <CommandPalette />
     </header>
   );
 }
