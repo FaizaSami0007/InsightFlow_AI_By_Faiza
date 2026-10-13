@@ -4,38 +4,18 @@
     "api": {
       "root": "apps/api/",
       "framework": "fastapi",
-      "entrypoint": "main:app"
+      "entrypoint": "main.py"
     },
     "web": {
       "root": "apps/web/",
-      "framework": "nextjs",
-      "bindings": [
-        {
-          "type": "service",
-          "service": "api",
-          "format": "url",
-          "env": "API_URL"
-        }
-      ]
+      "framework": "nextjs"
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/docs",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/openapi.json",
-      "destination": {
-        "service": "api"
+        "service": "web"
       }
     },
     {
