@@ -49,7 +49,7 @@ export interface DatasetListResponse {
   total_pages: number;
 }
 
-// Phase 3 Profiling & Semantics Types
+// Profiling & Semantics Types
 export type ConceptualType =
   | "STRING"
   | "INTEGER"
@@ -245,7 +245,7 @@ export interface ApiErrorResponse {
   };
 }
 
-// Phase 4 Analytics Types
+// Analytics Types
 export interface AnalysisProvenance {
   dataset_id: string;
   dataset_version_id: string;
@@ -297,7 +297,7 @@ export interface AnalysisHistoryItem {
   error_message?: string | null;
 }
 
-// Phase 5 AI Analyst Types
+// AI Analyst Types
 export type MessageRole = "user" | "assistant" | "system" | "tool";
 
 export interface ChatToolCall {
@@ -375,7 +375,7 @@ export interface AIChatResponse {
   created_at: string;
 }
 
-// Phase 7 Visualization Intelligence Types
+// Visualization Intelligence Types
 export type ChartType =
   | "bar"
   | "horizontal_bar"
@@ -445,7 +445,7 @@ export interface ChartTypeMetadata {
   supports_series: boolean;
 }
 
-// Phase 8 Dashboard Intelligence Types
+// Dashboard Intelligence Types
 export type DashboardStatus = "GENERATING" | "READY" | "PARTIAL" | "FAILED";
 export type DashboardWidgetType = "kpi" | "chart" | "table";
 
@@ -559,7 +559,7 @@ export interface DashboardGenerateRequest {
   max_widgets?: number;
 }
 
-// Phase 9 Export & Sharing Types
+// Export & Sharing Types
 export type ExportFormat = "pdf" | "png" | "csv" | "json";
 export type ExportStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED" | "EXPIRED";
 
@@ -649,7 +649,7 @@ export interface SharedFilterRefreshRequest {
 }
 
 // ==========================================
-// Phase 10 — Multi-Dataset & Federation Types
+// Multi-Dataset & Federation Types
 // ==========================================
 
 export type RelationshipType = "ONE_TO_ONE" | "ONE_TO_MANY" | "MANY_TO_ONE" | "MANY_TO_MANY";
@@ -759,7 +759,7 @@ export interface FederatedAnalysisResponse {
   warnings: string[];
 }
 
-// Phase 11 Predictive Analytics & Forecasting Types
+// Predictive Analytics & Forecasting Types
 export type ForecastModelType =
   | "AUTO"
   | "NAIVE"
@@ -851,7 +851,7 @@ export interface ForecastListResponse {
   total: number;
 }
 
-// Phase 12 Anomaly Detection & Proactive Insight Intelligence Types
+// Anomaly Detection & Proactive Insight Intelligence Types
 export type AnomalySeverity = "INFO" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 export type AnomalyType = "POINT" | "TREND" | "SEASONAL" | "MAGNITUDE" | "DISTRIBUTION" | "GROUP";
 export type AnomalyStatus = "DETECTED" | "ACKNOWLEDGED" | "DISMISSED" | "RESOLVED";
@@ -955,7 +955,7 @@ export interface InsightListResponse {
 }
 
 // ==========================================
-// Phase 13 — Decision Intelligence & Scenario Simulation Types
+// Decision Intelligence & Scenario Simulation Types
 // ==========================================
 
 export type ScenarioStatus =
@@ -1086,7 +1086,7 @@ export interface ScenarioListResponse {
 }
 
 // ==========================================
-// Phase 14 — Knowledge Intelligence & RAG Types
+// Knowledge Intelligence & RAG Types
 // ==========================================
 
 export type DocumentProcessingStatus =
@@ -1256,7 +1256,7 @@ export interface DatasetKnowledgeLinkResponse {
   created_at: string;
 }
 
-// Phase 15 Multi-Agent Intelligence Types
+// Multi-Agent Intelligence Types
 export type AgentID =
   | "supervisor"
   | "data_analyst"
@@ -1372,7 +1372,7 @@ export interface AITaskResponse {
 }
 
 // ==============================================================================
-// Phase 16 MLOps & Model Monitoring Types
+// MLOps & Model Monitoring Types
 // ==============================================================================
 
 export type MLModelType =
@@ -1535,7 +1535,7 @@ export interface MLModelHealthResponse {
 }
 
 // =============================================================================
-// PHASE 17 — ENTERPRISE DATA CONNECTORS & REAL-WORLD INGESTION
+// ENTERPRISE DATA CONNECTORS & REAL-WORLD INGESTION
 // =============================================================================
 
 export type ConnectorType =
@@ -1691,7 +1691,7 @@ export interface ConnectionHealthResponse {
 }
 
 // ==========================================
-// Phase 18 — Production Security & Compliance Types
+// Production Security & Compliance Types
 // ==========================================
 
 export type SecurityRole = "owner" | "admin" | "analyst" | "member" | "viewer";
@@ -1764,7 +1764,7 @@ export interface PasswordValidationResponse {
 }
 
 // ==========================================
-// Phase 19 — Scalability, Performance & Observability Types
+// Scalability, Performance & Observability Types
 // ==========================================
 
 export interface LatencyPercentiles {

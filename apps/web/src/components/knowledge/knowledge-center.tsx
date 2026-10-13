@@ -384,7 +384,7 @@ export const KnowledgeCenter: React.FC<KnowledgeCenterProps> = ({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-xs font-semibold uppercase tracking-wider border border-teal-400/30">
-              Phase 14 Active
+              Knowledge Engine Active
             </span>
             <span className="text-xs text-teal-200/80">Deterministic Hybrid RAG</span>
           </div>

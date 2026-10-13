@@ -105,7 +105,7 @@ export default function DashboardsListPage() {
           <div>
             <div className="flex items-center gap-2 text-teal font-semibold text-xs tracking-wider uppercase">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Phase 8 Context-Aware Dashboard Intelligence</span>
+              <span>Context-Aware Dashboard Intelligence</span>
             </div>
             <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink mt-1">
               Analytics Dashboards

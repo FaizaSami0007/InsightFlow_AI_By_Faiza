@@ -355,7 +355,7 @@ class ExportEngine:
         gen_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
         draw.text((30, 20), doc_title, fill=(23, 32, 51))
-        draw.text((30, 48), f"{dataset_info}  |  Generated: {gen_time}  |  InsightFlow AI Phase 9", fill=(83, 97, 118))
+        draw.text((30, 48), f"{dataset_info}  |  Generated: {gen_time}  |  InsightFlow AI", fill=(83, 97, 118))
 
         current_y = 110
 

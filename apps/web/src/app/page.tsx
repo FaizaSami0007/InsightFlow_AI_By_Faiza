@@ -72,7 +72,7 @@ export default function Home() {
             <div className="max-w-2xl space-y-2">
               <div className="inline-flex items-center gap-2 rounded-lg bg-teal-soft px-2.5 py-1 text-xs font-semibold text-teal border border-teal-border">
                 <Sparkles className="h-3.5 w-3.5" />
-                Phase 1 Foundation Ready
+                Enterprise Ready
               </div>
               <h1 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink">
                 InsightFlow AI Analytics Platform
@@ -148,7 +148,7 @@ export default function Home() {
                     <Database className="h-4 w-4" />
                   </div>
                   <CardTitle>Data Ingestion & Lineage</CardTitle>
-                  <CardDescription>Phase 2 Foundation</CardDescription>
+                  <CardDescription>Storage & Metadata Engine</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-slate leading-relaxed">
@@ -166,7 +166,7 @@ export default function Home() {
                     <LineChart className="h-4 w-4" />
                   </div>
                   <CardTitle>Deterministic Analytics</CardTitle>
-                  <CardDescription>Phase 4 Engine</CardDescription>
+                  <CardDescription>Analytical Compute Engine</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-slate leading-relaxed">
@@ -184,7 +184,7 @@ export default function Home() {
                     <ShieldCheck className="h-4 w-4" />
                   </div>
                   <CardTitle>AI Tool Allowlisting</CardTitle>
-                  <CardDescription>Phase 5 Orchestrator</CardDescription>
+                  <CardDescription>Tool Security & Governance</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-slate leading-relaxed">
@@ -202,7 +202,7 @@ export default function Home() {
                     <FileSpreadsheet className="h-4 w-4" />
                   </div>
                   <CardTitle>Context-Aware Dashboards</CardTitle>
-                  <CardDescription>Phase 7 Visualizer</CardDescription>
+                  <CardDescription>Visual Layout Engine</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-slate leading-relaxed">
@@ -326,9 +326,9 @@ export default function Home() {
                 </Alert>
 
                 <Alert variant="warning">
-                  <AlertTitle>Phase 1 Constraint</AlertTitle>
+                  <AlertTitle>Security Policy</AlertTitle>
                   <AlertDescription>
-                    Live dataset upload and LLM integration will be unlocked in Phase 2 and Phase 5.
+                    Live dataset upload and analytical query execution enforce strict column type validation and allowlisting.
                   </AlertDescription>
                 </Alert>
               </div>
@@ -536,7 +536,7 @@ export default function Home() {
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
           title="InsightFlow Architecture Primitives"
-          description="Phase 1 Foundation establishes clean boundaries before data engineering."
+          description="Core architecture establishes clean boundaries for enterprise data engineering."
         >
           <div className="space-y-4 text-xs text-slate">
             <p className="leading-relaxed">
@@ -544,7 +544,7 @@ export default function Home() {
               communicates with FastAPI through centralized, typed, error-normalized API contracts.
             </p>
             <div className="rounded-xl bg-cloud p-3 space-y-1">
-              <div className="font-semibold text-ink">Phase 1 Verification Checklist:</div>
+              <div className="font-semibold text-ink">System Architecture Checklist:</div>
               <ul className="list-disc list-inside space-y-0.5 text-slate text-[11px]">
                 <li>FastAPI liveness and readiness endpoints</li>
                 <li>Pydantic settings with environment validation</li>

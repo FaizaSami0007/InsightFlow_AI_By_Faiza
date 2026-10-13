@@ -523,7 +523,7 @@ export function DashboardView({
         )}
       </Dialog>
 
-      {/* Phase 9 Export Modal */}
+      {/* Export Modal */}
       <DashboardExportModal
         isOpen={exportModalOpen}
         onClose={() => setExportModalOpen(false)}
@@ -531,7 +531,7 @@ export function DashboardView({
         activeFilters={activeFilters}
       />
 
-      {/* Phase 9 Share Modal */}
+      {/* Share Modal */}
       <DashboardShareModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
