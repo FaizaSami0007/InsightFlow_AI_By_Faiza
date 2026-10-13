@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   Activity,
   CheckCircle2,
@@ -33,7 +34,7 @@ import { ApiHealthResponse, ApiReadinessResponse } from "@/types";
 
 export default function Home() {
   const [activeTab, setActiveTab] = React.useState("overview");
-  const [selectedUxState, setSelectedUxState] = React.useState<"loading" | "empty" | "error" | "success" | "processing">("loading");
+  const [selectedUxState, setSelectedUxState] = React.useState<"loading" | "empty" | "error" | "success" | "processing">("success");
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [healthStatus, setHealthStatus] = React.useState<ApiHealthResponse | null>(null);
   const [readinessStatus, setReadinessStatus] = React.useState<ApiReadinessResponse | null>(null);
@@ -397,8 +398,13 @@ export default function Home() {
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
-                    <CardTitle>Global UX State Handlers</CardTitle>
-                    <CardDescription>Consistent feedback patterns preventing blank screen antipatterns</CardDescription>
+                    <div className="flex items-center gap-2">
+                      <CardTitle>Global UX State Handlers</CardTitle>
+                      <Badge variant="blue">Interactive Showcase</Badge>
+                    </div>
+                    <CardDescription>
+                      Interactive preview of system feedback states. Click the state buttons to preview how the UI renders each stage.
+                    </CardDescription>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {(["loading", "empty", "error", "success", "processing"] as const).map((stateKey) => (
@@ -420,13 +426,27 @@ export default function Home() {
                   <LoadingState
                     title="Profiling Dataset Schema"
                     description="Analyzing column distributions, null ratios, and data types..."
+                    action={
+                      <div className="flex flex-wrap items-center justify-center gap-2">
+                        <Button variant="outline" size="sm" onClick={() => setSelectedUxState("processing")}>
+                          Simulate Progress →
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => setSelectedUxState("success")}>
+                          Simulate Completion ✓
+                        </Button>
+                      </div>
+                    }
                   />
                 )}
                 {selectedUxState === "empty" && (
                   <EmptyState
                     title="No datasets uploaded yet"
                     description="Upload a CSV or Parquet file to begin profiling and natural-language analysis."
-                    action={<Button variant="primary" size="sm">Upload First Dataset</Button>}
+                    action={
+                      <Link href="/datasets">
+                        <Button variant="primary" size="sm">Go to Datasets</Button>
+                      </Link>
+                    }
                   />
                 )}
                 {selectedUxState === "error" && (
@@ -440,16 +460,30 @@ export default function Home() {
                   <SuccessState
                     title="Analysis Plan Validated & Saved"
                     message="Calculations completed with verified provenance. Result hash: 8f7e2a9b."
-                    action={<Button variant="outline" size="sm">View Provenance Log</Button>}
+                    action={
+                      <Link href="/datasets">
+                        <Button variant="outline" size="sm">Explore Datasets</Button>
+                      </Link>
+                    }
                   />
                 )}
                 {selectedUxState === "processing" && (
-                  <ProcessingState
-                    title="Executing Deterministic Analysis"
-                    stage="Aggregating Revenue by Region"
-                    progressPercent={65}
-                    description="Step 2 of 3: Computing monthly descriptive statistics."
-                  />
+                  <div className="space-y-4">
+                    <ProcessingState
+                      title="Executing Deterministic Analysis"
+                      stage="Aggregating Revenue by Region"
+                      progressPercent={65}
+                      description="Step 2 of 3: Computing monthly descriptive statistics."
+                    />
+                    <div className="flex items-center justify-center gap-2">
+                      <Button variant="outline" size="sm" onClick={() => setSelectedUxState("success")}>
+                        Complete: View Success ✓
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => setSelectedUxState("error")}>
+                        Simulate Error ✕
+                      </Button>
+                    </div>
+                  </div>
                 )}
               </CardContent>
             </Card>

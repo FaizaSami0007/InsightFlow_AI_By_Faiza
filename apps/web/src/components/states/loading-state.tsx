@@ -5,12 +5,14 @@ interface LoadingStateProps {
   title?: string;
   description?: string;
   className?: string;
+  action?: React.ReactNode;
 }
 
 export function LoadingState({
   title = "Loading data...",
   description = "Please wait while we retrieve the latest information.",
   className,
+  action,
 }: LoadingStateProps) {
   return (
     <div
@@ -24,6 +26,7 @@ export function LoadingState({
       <Loader2 className="h-8 w-8 animate-spin text-teal" aria-hidden="true" />
       <h4 className="mt-4 text-sm font-semibold text-ink">{title}</h4>
       {description && <p className="mt-1 text-xs text-slate max-w-sm">{description}</p>}
+      {action && <div className="mt-4">{action}</div>}
     </div>
   );
 }
