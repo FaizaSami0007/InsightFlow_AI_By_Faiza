@@ -41,3 +41,36 @@ def test_production_accepts_secure_secret() -> None:
     )
     assert config.app_env == "production"
     assert config.jwt_secret == secure_secret
+
+
+def test_database_url_normalization_postgres() -> None:
+    config = Settings(
+        database_url="postgres://user:pass@host:5432/dbname?sslmode=require",
+        jwt_secret="a" * 32,
+    )
+    assert config.database_url == "postgresql+asyncpg://user:pass@host:5432/dbname?sslmode=require"
+
+
+def test_database_url_normalization_postgresql() -> None:
+    config = Settings(
+        database_url="postgresql://user:pass@host:5432/dbname",
+        jwt_secret="a" * 32,
+    )
+    assert config.database_url == "postgresql+asyncpg://user:pass@host:5432/dbname"
+
+
+def test_database_url_preserves_asyncpg() -> None:
+    config = Settings(
+        database_url="postgresql+asyncpg://user:pass@host:5432/dbname",
+        jwt_secret="a" * 32,
+    )
+    assert config.database_url == "postgresql+asyncpg://user:pass@host:5432/dbname"
+
+
+def test_database_url_preserves_sqlite() -> None:
+    config = Settings(
+        database_url="sqlite+aiosqlite:///./test.db",
+        jwt_secret="a" * 32,
+    )
+    assert config.database_url == "sqlite+aiosqlite:///./test.db"
+

@@ -23,8 +23,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     # Initialize tables if not present (e.g. in SQLite)
     try:
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
+        import asyncio
+
+        async def _init_tables() -> None:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+
+        await asyncio.wait_for(_init_tables(), timeout=4.0)
     except Exception as e:
         logger.warning(f"Database initialization warning (proceeding with liveness): {e}")
 

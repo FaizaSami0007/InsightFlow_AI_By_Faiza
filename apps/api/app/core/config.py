@@ -1,7 +1,7 @@
 import os
 from typing import List, Literal
 
-from pydantic import field_validator
+from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -16,10 +16,13 @@ class Settings(BaseSettings):
     api_port: int = 8000
 
     # Database
-    database_url: str = (
-        "sqlite+aiosqlite:////tmp/insightflow.db"
-        if os.path.exists("/tmp") and not os.path.exists("./insightflow.db")
-        else "sqlite+aiosqlite:///./insightflow.db"
+    database_url: str = Field(
+        default=(
+            "sqlite+aiosqlite:////tmp/insightflow.db"
+            if os.path.exists("/tmp") and not os.path.exists("./insightflow.db")
+            else "sqlite+aiosqlite:///./insightflow.db"
+        ),
+        validation_alias=AliasChoices("DATABASE_URL", "POSTGRES_URL", "database_url"),
     )
     database_echo: bool = False
     database_pool_size: int = 10
@@ -29,7 +32,10 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
 
     # Security & Auth
-    jwt_secret: str = "insightflow-insecure-dev-secret-key-replace-for-production"
+    jwt_secret: str = Field(
+        default="insightflow-insecure-dev-secret-key-replace-for-production",
+        validation_alias=AliasChoices("JWT_SECRET", "SECRET_KEY", "jwt_secret", "secret_key"),
+    )
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     cors_origins: List[str] = [
@@ -77,13 +83,30 @@ class Settings(BaseSettings):
             return [i.strip() for i in v.split(",") if i.strip()]
         return v
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def assemble_database_url(cls, v: str | None) -> str:
+        if not v:
+            return (
+                "sqlite+aiosqlite:////tmp/insightflow.db"
+                if os.path.exists("/tmp") and not os.path.exists("./insightflow.db")
+                else "sqlite+aiosqlite:///./insightflow.db"
+            )
+        # Normalize cloud-provider postgres:// URLs to asyncpg
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql+asyncpg://", 1)
+        # Normalize postgresql:// URLs missing explicit async driver to asyncpg
+        if v.startswith("postgresql://") and not v.startswith("postgresql+"):
+            return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
+
     @field_validator("jwt_secret")
     @classmethod
     def validate_production_secret(cls, v: str, info) -> str:
         env = info.data.get("app_env", "development")
         if env == "production" and ("insecure" in v.lower() or "replace" in v.lower() or len(v) < 32):
             raise ValueError(
-                "In production, JWT_SECRET must be at least 32 characters and cannot use default dev secret."
+                "In production, JWT_SECRET (or SECRET_KEY) must be at least 32 characters and cannot use default dev secret."
             )
         return v
 
