@@ -1,3 +1,4 @@
+import os
 from typing import List, Literal
 
 from pydantic import field_validator
@@ -15,7 +16,11 @@ class Settings(BaseSettings):
     api_port: int = 8000
 
     # Database
-    database_url: str = "postgresql+asyncpg://insightflow:insightflow@localhost:5432/insightflow"
+    database_url: str = (
+        "sqlite+aiosqlite:////tmp/insightflow.db"
+        if os.path.exists("/tmp") and not os.path.exists("./insightflow.db")
+        else "sqlite+aiosqlite:///./insightflow.db"
+    )
     database_echo: bool = False
     database_pool_size: int = 10
     database_max_overflow: int = 20
@@ -27,7 +32,12 @@ class Settings(BaseSettings):
     jwt_secret: str = "insightflow-insecure-dev-secret-key-replace-for-production"
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
-    cors_origins: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    cors_origins: List[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://insightflowaibyfaiza.vercel.app",
+        "*",
+    ]
 
     # AI Provider Abstraction
     llm_provider: str = "mock"

@@ -22,8 +22,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info(f"Starting {settings.app_name} API in [{settings.app_env}] environment (port={settings.api_port})")
 
     # Initialize tables if not present (e.g. in SQLite)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    except Exception as e:
+        logger.warning(f"Database initialization warning (proceeding with liveness): {e}")
 
     yield
     logger.info(f"Shutting down {settings.app_name} API")
