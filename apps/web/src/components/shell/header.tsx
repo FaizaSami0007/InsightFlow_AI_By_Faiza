@@ -48,18 +48,18 @@ export function Header() {
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <span className="text-xs font-medium text-slate hidden xs:inline">Workspace</span>
           <span className="text-xs text-slate/60 hidden xs:inline">/</span>
-          <h1 className="text-xs sm:text-sm font-semibold text-ink truncate max-w-[130px] sm:max-w-xs md:max-w-none">
+          <h1 className="text-xs sm:text-sm font-semibold text-ink truncate max-w-[130px] sm:max-w-xs md:max-w-sm lg:max-w-none">
             {viewTitles[activeView] || "InsightFlow AI"}
           </h1>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Mobile Search Button */}
         <button
           type="button"
           onClick={() => setIsSearchOpen(true)}
-          className="rounded-xl border border-border p-2 text-slate hover:bg-cloud hover:text-ink md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+          className="flex h-8 w-8 items-center justify-center rounded-xl border border-border p-2 text-slate hover:bg-cloud hover:text-ink md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal shrink-0"
           aria-label="Search across platform"
           title="Search (Ctrl + K)"
         >
@@ -70,27 +70,30 @@ export function Header() {
         <button
           type="button"
           onClick={() => setIsSearchOpen(true)}
-          className="group relative hidden md:flex h-8 items-center gap-2 rounded-xl border border-border bg-cloud px-2.5 sm:px-3 text-xs text-slate shadow-soft hover:border-teal-border hover:bg-surface hover:text-ink transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+          className="group relative hidden md:flex h-8 items-center justify-between gap-2 rounded-xl border border-border bg-cloud px-2.5 text-xs text-slate shadow-soft hover:border-teal-border hover:bg-surface hover:text-ink transition-all cursor-pointer shrink-0 w-36 sm:w-44 lg:w-60 xl:w-72 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal"
           aria-label="Open search and command palette"
           title="Search (Ctrl + K)"
         >
-          <Search className="h-3.5 w-3.5 text-slate group-hover:text-teal transition-colors" />
-          <span className="hidden lg:inline text-slate group-hover:text-ink transition-colors">
-            Search datasets, queries...
-          </span>
-          <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-slate group-hover:border-teal-border group-hover:text-teal transition-colors">
+          <div className="flex items-center gap-2 min-w-0">
+            <Search className="h-3.5 w-3.5 shrink-0 text-slate group-hover:text-teal transition-colors" />
+            <span className="truncate text-slate group-hover:text-ink transition-colors text-left">
+              <span className="hidden lg:inline">Search datasets, queries...</span>
+              <span className="lg:hidden">Search...</span>
+            </span>
+          </div>
+          <kbd className="inline-flex items-center shrink-0 whitespace-nowrap rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-slate group-hover:border-teal-border group-hover:text-teal transition-colors select-none leading-none">
             Ctrl K
           </kbd>
         </button>
 
         {/* System Health Badge */}
-        <Badge variant="teal" dot className="text-[11px] font-medium hidden md:inline-flex">
+        <Badge variant="teal" dot className="text-[11px] font-medium hidden md:inline-flex shrink-0">
           <Activity className="h-3 w-3 mr-1" />
           API Online
         </Badge>
 
         {/* Security Indicator */}
-        <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate font-medium">
+        <div className="hidden xl:flex items-center gap-1.5 text-xs text-slate font-medium shrink-0">
           <ShieldCheck className="h-4 w-4 text-teal" />
           <span className="text-[11px]">Allowlist Enforced</span>
         </div>
