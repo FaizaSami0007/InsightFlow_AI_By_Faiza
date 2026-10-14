@@ -18,6 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHero } from "@/components/ui/page-hero";
 import {
   MLModelAlertResponse,
   MLModelResponse,
@@ -237,66 +238,62 @@ export function ModelOperationsView() {
   return (
     <div className="space-y-6">
       {/* 1. Header & Overview KPIs */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
-              <Cpu className="h-6 w-6 text-teal" />
-              Production MLOps & Model Operations
-            </h1>
-            <Badge variant="teal" dot>
-              Active Models
-            </Badge>
+      <PageHero
+        icon={<Cpu className="h-5 w-5 sm:h-6 sm:w-6" />}
+        iconVariant="teal"
+        title="Production MLOps & Model Operations"
+        badge={
+          <Badge variant="teal" dot className="shrink-0 whitespace-nowrap">
+            Active Models
+          </Badge>
+        }
+        description="Model registry, version lifecycle state machine, PSI/KS drift detection, and multi-factor health monitoring."
+        actions={
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <Button
+              variant={activeTab === "registry" ? "primary" : "outline"}
+              size="sm"
+              onClick={() => setActiveTab("registry")}
+              className="text-xs"
+            >
+              <Layers className="h-3.5 w-3.5 mr-1.5" />
+              Registry & Versions
+            </Button>
+            <Button
+              variant={activeTab === "monitoring" ? "primary" : "outline"}
+              size="sm"
+              onClick={() => setActiveTab("monitoring")}
+              className="text-xs"
+            >
+              <Activity className="h-3.5 w-3.5 mr-1.5" />
+              Drift & Health
+            </Button>
+            <Button
+              variant={activeTab === "lineage" ? "primary" : "outline"}
+              size="sm"
+              onClick={() => setActiveTab("lineage")}
+              className="text-xs"
+            >
+              <GitBranch className="h-3.5 w-3.5 mr-1.5" />
+              Lineage DAG
+            </Button>
+            <Button
+              variant={activeTab === "alerts" ? "primary" : "outline"}
+              size="sm"
+              onClick={() => setActiveTab("alerts")}
+              className="text-xs relative"
+            >
+              <ShieldAlert className="h-3.5 w-3.5 mr-1.5" />
+              Alerts
+              {alerts.filter((a) => !a.is_acknowledged).length > 0 && (
+                <span className="ml-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber text-[10px] font-bold text-white">
+                  {alerts.filter((a) => !a.is_acknowledged).length}
+                </span>
+              )}
+            </Button>
           </div>
-          <p className="text-xs text-slate mt-0.5">
-            Model registry, version lifecycle state machine, PSI/KS drift detection, and multi-factor health monitoring.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant={activeTab === "registry" ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setActiveTab("registry")}
-            className="text-xs"
-          >
-            <Layers className="h-3.5 w-3.5 mr-1.5" />
-            Registry & Versions
-          </Button>
-          <Button
-            variant={activeTab === "monitoring" ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setActiveTab("monitoring")}
-            className="text-xs"
-          >
-            <Activity className="h-3.5 w-3.5 mr-1.5" />
-            Drift & Health
-          </Button>
-          <Button
-            variant={activeTab === "lineage" ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setActiveTab("lineage")}
-            className="text-xs"
-          >
-            <GitBranch className="h-3.5 w-3.5 mr-1.5" />
-            Lineage DAG
-          </Button>
-          <Button
-            variant={activeTab === "alerts" ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setActiveTab("alerts")}
-            className="text-xs relative"
-          >
-            <ShieldAlert className="h-3.5 w-3.5 mr-1.5" />
-            Alerts
-            {alerts.filter((a) => !a.is_acknowledged).length > 0 && (
-              <span className="ml-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber text-[10px] font-bold text-white">
-                {alerts.filter((a) => !a.is_acknowledged).length}
-              </span>
-            )}
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
