@@ -364,7 +364,7 @@ export function ObservabilityWorkspace() {
 
         {/* TAB 2: MULTI-TENANT LRU CACHE */}
         <TabsContent value="cache" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <Card className="border-teal-200/70 bg-teal-50/40">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs font-medium text-teal-800">Cache Hit Ratio</CardDescription>
@@ -481,27 +481,32 @@ export function ObservabilityWorkspace() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {workloads.map((w) => (
                   <div
                     key={w.tier}
                     onClick={() => setSelectedTier(w.tier)}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
                       selectedTier === w.tier
-                        ? "border-amber-500 bg-amber-50/50 shadow-sm"
+                        ? "border-amber-500 bg-amber-50/50 shadow-sm ring-1 ring-amber-500/30"
                         : "border-slate-200 bg-white hover:border-slate-300"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <Badge variant="outline" className="font-bold text-xs bg-slate-100">
-                        {w.tier} TIER
-                      </Badge>
-                      <span className="text-[11px] text-slate-500 font-medium">{w.concurrent_users} users</span>
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <Badge variant="outline" className="font-bold text-xs bg-slate-100 shrink-0 whitespace-nowrap">
+                          {w.tier} TIER
+                        </Badge>
+                        <span className="text-[11px] text-slate-500 font-medium shrink-0 whitespace-nowrap">
+                          {w.concurrent_users} users
+                        </span>
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">{w.label}</h4>
+                      <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">{w.description}</p>
                     </div>
-                    <h4 className="text-xs font-bold text-slate-900">{w.label}</h4>
-                    <p className="text-[11px] text-slate-600 mt-1">{w.description}</p>
-                    <div className="mt-2 text-[10px] text-slate-500 font-mono">
-                      Scale: {w.dataset_rows.toLocaleString()} rows • Target P95 &lt; {w.target_p95_ms}ms
+                    <div className="mt-3 pt-2.5 border-t border-slate-100 text-[10px] text-slate-500 font-mono flex items-center justify-between flex-wrap gap-1">
+                      <span>Scale: {w.dataset_rows.toLocaleString()} rows</span>
+                      <span className="text-amber-700 font-semibold">Target P95 &lt; {w.target_p95_ms}ms</span>
                     </div>
                   </div>
                 ))}
