@@ -175,7 +175,7 @@ export default function DashboardsListPage() {
               <Link
                 key={dash.id}
                 href={`/dashboards/${dash.id}`}
-                className="group flex flex-col justify-between rounded-2xl border border-border bg-surface p-5 shadow-soft hover:border-teal/50 hover:shadow-soft-lg transition-all focus-visible:ring-2 focus-visible:ring-teal"
+                className="group flex flex-col justify-between rounded-2xl border border-border bg-surface p-4 sm:p-5 shadow-soft hover:border-teal/50 hover:shadow-soft-lg transition-all focus-visible:ring-2 focus-visible:ring-teal"
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
@@ -206,7 +206,7 @@ export default function DashboardsListPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-semibold text-ink group-hover:text-teal transition-colors">
+                    <h3 className="text-sm font-semibold text-ink group-hover:text-teal transition-colors leading-snug">
                       {dash.name}
                     </h3>
                     {dash.description && (
@@ -217,15 +217,20 @@ export default function DashboardsListPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 border-t border-border pt-3 flex items-center justify-between text-[11px] text-slate">
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1">
-                      <Layers className="h-3 w-3 text-teal" />
-                      {dash.dataset_id}
+                <div className="mt-4 border-t border-border pt-3 flex items-center justify-between text-[11px] text-slate gap-2 min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                    <span
+                      className="flex items-center gap-1 font-mono text-[10px] text-slate/70 truncate min-w-0 flex-1 max-w-[110px] sm:max-w-[130px]"
+                      title={`Dataset ID: ${dash.dataset_id}`}
+                    >
+                      <Layers className="h-3 w-3 text-teal shrink-0" />
+                      <span className="truncate">{dash.dataset_id}</span>
                     </span>
-                    <span>{dash.widgets.length} widgets</span>
+                    <span className="shrink-0 whitespace-nowrap text-slate/80 font-medium">
+                      {dash.widgets.length} widgets
+                    </span>
                   </div>
-                  <div className="flex items-center gap-1 text-teal font-medium group-hover:translate-x-0.5 transition-transform">
+                  <div className="flex items-center gap-1 text-teal font-semibold shrink-0 whitespace-nowrap group-hover:translate-x-0.5 transition-transform text-xs">
                     <span>Open</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>
