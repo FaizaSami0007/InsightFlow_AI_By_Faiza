@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Activity, LogOut, Menu, Search, ShieldCheck, User as UserIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,18 +11,48 @@ import { useAuthStore } from "@/stores/use-auth-store";
 import { useShellStore } from "@/stores/use-shell-store";
 import { CommandPalette } from "./command-palette";
 
-export function Header() {
-  const { setMobileSidebarOpen, activeView, setIsSearchOpen } = useShellStore();
-  const { user, isAuthenticated, logout } = useAuthStore();
+const PATH_TITLES: Record<string, string> = {
+  "/": "Platform Overview",
+  "/datasets": "Datasets & Lineage",
+  "/collections": "Collections & Federation",
+  "/connections": "Data Connections",
+  "/analytics": "Deterministic Analytics",
+  "/analyst": "AI Analyst Studio",
+  "/dashboards": "Dashboards",
+  "/forecast": "Forecasting",
+  "/insights": "Insights & Anomalies",
+  "/scenarios": "Scenarios & What-If",
+  "/models": "Model Operations",
+  "/knowledge": "Knowledge Center",
+  "/security": "Security & Compliance",
+  "/observability": "Observability & Scaling",
+  "/settings": "System Configuration",
+  "/login": "Sign In",
+  "/register": "Register",
+};
 
-  const viewTitles: Record<string, string> = {
-    overview: "Platform Overview",
-    datasets: "Datasets & Lineage",
-    analytics: "Deterministic Analytics",
-    ai: "AI Analyst Studio",
-    dashboards: "Dashboards",
-    settings: "System Configuration",
-  };
+function getHeaderTitle(pathname: string | null): string {
+  if (!pathname) return "Platform Overview";
+  if (PATH_TITLES[pathname]) return PATH_TITLES[pathname];
+  for (const [route, title] of Object.entries(PATH_TITLES)) {
+    if (route !== "/" && pathname.startsWith(route)) {
+      return title;
+    }
+  }
+  return "InsightFlow AI";
+}
+
+export function Header() {
+  const pathname = usePathname();
+  const { setMobileSidebarOpen, setIsSearchOpen } = useShellStore();
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const activeTitle = getHeaderTitle(pathname);
 
   const userInitials = user?.full_name
     ? user.full_name
@@ -49,7 +80,7 @@ export function Header() {
           <span className="text-xs font-medium text-slate hidden xs:inline">Workspace</span>
           <span className="text-xs text-slate/60 hidden xs:inline">/</span>
           <h1 className="text-xs sm:text-sm font-semibold text-ink truncate max-w-[130px] sm:max-w-xs md:max-w-sm lg:max-w-none">
-            {viewTitles[activeView] || "InsightFlow AI"}
+            {activeTitle}
           </h1>
         </div>
       </div>
@@ -100,7 +131,7 @@ export function Header() {
 
         {/* User Profile / Auth State */}
         <div className="flex items-center gap-2 border-l border-border pl-3">
-          {isAuthenticated && user ? (
+          {mounted && isAuthenticated && user ? (
             <Dropdown
               trigger={
                 <button
